@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+<style>
+.rain{animation:rn .7s linear infinite}
+@keyframes rn{from{transform:translate(0,-40px)}to{transform:translate(-12px,40px)}}
+.neon{animation:ne 4s infinite}
+@keyframes ne{0%,100%{opacity:1}42%{opacity:1}43%{opacity:.35}45%{opacity:1}47%{opacity:.5}48%{opacity:1}}
+.rip{animation:rp 2.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes rp{from{transform:scale(.3);opacity:.7}to{transform:scale(1.6);opacity:0}}
+.sh{animation:sh 5s ease-in-out infinite alternate}
+@keyframes sh{to{opacity:.55}}
+</style>
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c0a1f"/><stop offset=".6" stop-color="#2b1840"/><stop offset="1" stop-color="#5a2a55"/></linearGradient>
+<linearGradient id="haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6fae" stop-opacity="0"/><stop offset="1" stop-color="#ff6fae" stop-opacity=".25"/></linearGradient>
+<linearGradient id="street" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1428"/><stop offset="1" stop-color="#0a0812"/></linearGradient>
+<linearGradient id="refl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff4f9a" stop-opacity=".55"/><stop offset="1" stop-color="#ff4f9a" stop-opacity="0"/></linearGradient>
+<linearGradient id="reflA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb35c" stop-opacity=".6"/><stop offset="1" stop-color="#ffb35c" stop-opacity="0"/></linearGradient>
+<radialGradient id="lamp"><stop offset="0" stop-color="#ffd59a" stop-opacity=".85"/><stop offset="1" stop-color="#ffd59a" stop-opacity="0"/></radialGradient>
+<filter id="gl" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="300" height="400" fill="url(#sky)"/>
+<circle cx="236" cy="66" r="20" fill="#f3d9e8" opacity=".14"/><circle cx="236" cy="66" r="13" fill="#f6e3ec" opacity=".75"/>
+<!-- far skyline -->
+<path d="M0 220 V160 h18 v-20 h14 v30 h20 v-46 h10 v-10 h6 v10 h10 v56 h22 v-30 h26 v40 h16 v-64 h20 v64 h14 v-24 h24 v-36 h8 v-8 h4 v8 h8 v60 h22 v-22 h18 V220Z" fill="#251a3a"/>
+<g fill="#ffcf7a" opacity=".55"><rect x="22" y="150" width="3" height="3"/><rect x="56" y="134" width="3" height="3"/><rect x="56" y="150" width="3" height="3"/><rect x="66" y="128" width="3" height="3"/><rect x="128" y="132" width="3" height="3"/><rect x="134" y="146" width="3" height="3"/><rect x="190" y="132" width="3" height="3"/><rect x="198" y="144" width="3" height="3"/><rect x="232" y="170" width="3" height="3"/><rect x="104" y="170" width="3" height="3"/></g>
+<rect y="150" width="300" height="80" fill="url(#haze)"/>
+<!-- near buildings -->
+<path d="M0 260 V176 h44 v-14 h36 v98Z" fill="#170f26"/>
+<path d="M210 260 V150 h48 v-12 h12 v12 h30 V260Z" fill="#150e23"/>
+<g fill="#ffb35c"><rect x="10" y="190" width="9" height="12" opacity=".9"/><rect x="28" y="190" width="9" height="12" opacity=".35"/><rect x="52" y="178" width="9" height="12" opacity=".7"/><rect x="10" y="214" width="9" height="12" opacity=".4"/><rect x="226" y="166" width="10" height="13" opacity=".8"/><rect x="246" y="166" width="10" height="13" opacity=".3"/><rect x="276" y="166" width="10" height="13" opacity=".75"/><rect x="226" y="192" width="10" height="13" opacity=".45"/><rect x="276" y="192" width="10" height="13" opacity=".9"/></g>
+<!-- café front -->
+<rect x="80" y="196" width="130" height="64" fill="#1f1830"/>
+<rect x="88" y="214" width="52" height="40" fill="#ffb35c" opacity=".88"/>
+<rect x="150" y="214" width="20" height="46" fill="#3a2a2a"/>
+<rect x="152" y="216" width="16" height="20" fill="#ffcf8a" opacity=".8"/>
+<rect x="176" y="214" width="28" height="40" fill="#ffb35c" opacity=".75"/>
+<path d="M88 234 h52 M114 214 v40 M190 214 v40" stroke="#1f1830" stroke-width="2"/>
+<path d="M84 206 h122 l-6 8 h-110z" fill="#2c6b6b"/>
+<path d="M84 206 h12 l-3 8 h-6z M108 206 h12 l-3 8 h-6z M132 206 h12 l-3 8 h-6z M156 206 h12 l-3 8 h-6z M180 206 h12 l-3 8 h-6z" fill="#e7e1d6" opacity=".8"/>
+<g filter="url(#gl)" class="neon"><text x="145" y="194" font-family="Georgia,serif" font-style="italic" font-size="17" fill="#ff7cbb" text-anchor="middle" letter-spacing="1">The Gull</text></g>
+<!-- street lamp -->
+<circle cx="250" cy="226" r="40" fill="url(#lamp)" opacity=".6"/>
+<path d="M250 340 V232 q0 -8 -10 -8" stroke="#0b0812" stroke-width="3" fill="none"/>
+<rect x="236" y="222" width="10" height="6" rx="2" fill="#ffe2ad"/>
+<!-- wet street with reflections -->
+<rect y="260" width="300" height="140" fill="url(#street)"/>
+<rect x="100" y="262" width="90" height="70" fill="url(#refl)" opacity=".6" class="sh"/>
+<rect x="88" y="262" width="52" height="56" fill="url(#reflA)" opacity=".7"/>
+<rect x="176" y="262" width="28" height="50" fill="url(#reflA)" opacity=".6"/>
+<rect x="244" y="262" width="10" height="80" fill="url(#reflA)" opacity=".5"/>
+<ellipse class="rip" cx="60" cy="300" rx="10" ry="2.4" fill="none" stroke="#c9a7d6" stroke-width=".6"/>
+<ellipse class="rip" cx="200" cy="330" rx="12" ry="2.8" fill="none" stroke="#c9a7d6" stroke-width=".6" style="animation-delay:-1s"/>
+<ellipse class="rip" cx="130" cy="360" rx="12" ry="3" fill="none" stroke="#c9a7d6" stroke-width=".6" style="animation-delay:-.5s"/>
+<!-- detective silhouette -->
+<g fill="#07050c">
+<path d="M48 352 l6 -54 q2 -12 14 -12 q12 0 14 12 l6 54 z"/>
+<circle cx="68" cy="278" r="7"/>
+<path d="M54 274 h28 l-3 -3 h-22z"/>
+<rect x="58" y="266" width="20" height="6" rx="2"/>
+<path d="M32 270 q36 -26 72 0 z" fill="#0d0a14"/>
+<line x1="68" y1="252" x2="68" y2="300" stroke="#07050c" stroke-width="1.6"/>
+</g>
+<ellipse cx="68" cy="354" rx="26" ry="3" fill="#000" opacity=".5"/>
+<!-- rain -->
+<g stroke="#c8b8e8" stroke-width=".7" opacity=".5">
+<g class="rain"><path d="M20 20 l-4 14 M70 60 l-4 14 M120 10 l-4 14 M170 80 l-4 14 M220 30 l-4 14 M270 70 l-4 14 M40 140 l-4 14 M95 180 l-4 14 M150 120 l-4 14 M205 170 l-4 14 M255 130 l-4 14 M30 230 l-4 14 M110 250 l-4 14 M180 230 l-4 14 M280 240 l-4 14 M60 320 l-4 14 M140 300 l-4 14 M230 310 l-4 14"/></g>
+<g class="rain" style="animation-delay:-.35s"><path d="M45 0 l-4 14 M95 40 l-4 14 M145 30 l-4 14 M195 0 l-4 14 M245 50 l-4 14 M295 10 l-4 14 M15 110 l-4 14 M65 100 l-4 14 M125 160 l-4 14 M175 140 l-4 14 M225 100 l-4 14 M85 220 l-4 14 M160 200 l-4 14 M260 200 l-4 14 M20 290 l-4 14 M100 340 l-4 14 M190 280 l-4 14 M270 340 l-4 14"/></g>
+</g>
+</svg>

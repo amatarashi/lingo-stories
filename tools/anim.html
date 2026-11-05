@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Retarget test</title>
+<style>html,body{margin:0;background:#334;color:#fff;font:12px monospace}canvas{display:block}#l{position:fixed;top:4px;left:4px}</style>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js","three/addons/":"../vendor/addons/"}}</script>
+</head><body><div id="l"></div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { retarget } from '../js/engine/retarget.js';
+const q = new URLSearchParams(location.search);
+const who = q.get('c') || 'women_Suit';
+const r = new THREE.WebGLRenderer({ antialias: true }); r.setSize(innerWidth, innerHeight); document.body.appendChild(r.domElement);
+r.outputColorSpace = THREE.SRGBColorSpace;
+const s = new THREE.Scene(); s.background = new THREE.Color('#556');
+s.add(new THREE.HemisphereLight('#fff', '#666', 2)); const dl = new THREE.DirectionalLight('#fff', 2); dl.position.set(3, 5, 4); s.add(dl);
+const grid = new THREE.GridHelper(20, 20); s.add(grid);
+const cam = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.1, 200);
+const L = new GLTFLoader(); L.setMeshoptDecoder(MeshoptDecoder);
+const [a1, a2] = await Promise.all([L.loadAsync('../assets/models/anim_ual1.glb'), L.loadAsync('../assets/models/anim_ual2.glb')]);
+const src = a1.scene; const all = [...a1.animations, ...a2.animations];
+const rest = all.find(c => c.name === 'A_TPose');
+const names = (q.get('a') || 'bind,A_TPose,Idle_Loop,Idle_Talking_Loop,Idle_FoldArms_Loop,Idle_No_Loop,Yes,Idle_TalkingPhone_Loop,Hit_Chest,Walk_Formal_Loop').split(',');
+const mixers = [];
+const t0 = performance.now();
+const clips = retarget((await L.loadAsync(`../assets/models/m_${who}.glb`)).scene, src, all.filter(c => names.includes(c.name)), rest);
+document.getElementById('l').textContent = `retarget ${(performance.now() - t0).toFixed(0)}ms · ` + names.join(' | ');
+let i = 0;
+for (const n of names) {
+  const g = await L.loadAsync(`../assets/models/m_${who}.glb`);
+  const o = g.scene; o.position.x = (i++ - (names.length - 1) / 2) * 1.1; s.add(o);
+  if (n !== 'bind') { const m = new THREE.AnimationMixer(o); m.clipAction(clips.find(c => c.name === n)).play(); mixers.push(m); }
+}
+cam.position.set(0, 1.3, 11); cam.lookAt(0, 1, 0);
+window.ready = true;
+const clock = new THREE.Clock();
+r.setAnimationLoop(() => { const dt = clock.getDelta(); mixers.forEach(m => m.update(dt)); r.render(s, cam); });
+</script></body></html>

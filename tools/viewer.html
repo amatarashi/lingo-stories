@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Model viewer</title>
+<style>html,body{margin:0;background:#223;color:#fff;font:12px monospace}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js","three/addons/":"../vendor/addons/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const mode = new URLSearchParams(location.search).get('m') || 'chars';
+const r = new THREE.WebGLRenderer({ antialias: true }); r.setSize(innerWidth, innerHeight); document.body.appendChild(r.domElement);
+r.outputColorSpace = THREE.SRGBColorSpace;
+const s = new THREE.Scene(); s.background = new THREE.Color('#556');
+s.add(new THREE.HemisphereLight('#fff', '#666', 2)); const d = new THREE.DirectionalLight('#fff', 2); d.position.set(3, 5, 4); s.add(d);
+const cam = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.1, 200);
+const L = new GLTFLoader(); L.setMeshoptDecoder(MeshoptDecoder);
+const mixers = []; const info = {};
+if (mode === 'chars') {
+  const names = ['Suit_Female', 'Casual_Male', 'Casual2_Male', 'Casual3_Male', 'Casual_Female', 'Casual2_Female', 'Casual3_Female', 'OldClassy_Male', 'Suit_Male', 'Worker_Male'];
+  let i = 0;
+  for (const n of names) {
+    const g = await L.loadAsync(`../assets/models/char_${n}.glb`);
+    const o = g.scene; o.position.x = (i++ - names.length / 2) * 1.0; s.add(o);
+    const b = new THREE.Box3().setFromObject(o); info[n] = { h: +(b.max.y - b.min.y).toFixed(2), anims: g.animations.map(a => a.name) };
+    const m = new THREE.AnimationMixer(o); m.clipAction(g.animations.find(a => a.name === 'Idle')).play(); mixers.push(m);
+  }
+  cam.position.set(0, 1.4, 9); cam.lookAt(0, 1, 0);
+} else {
+  const g = await L.loadAsync('../assets/models/props_interior.glb');
+  const root = g.scene; let i = 0;
+  for (const c of [...root.children]) {
+    const b = new THREE.Box3().setFromObject(c), sz = b.getSize(new THREE.Vector3());
+    info[c.name] = sz.toArray().map(v => +v.toFixed(2));
+    c.position.set((i % 8) * 3 - 10, 0, Math.floor(i / 8) * 3 - 8); s.add(c); i++;
+  }
+  cam.position.set(0, 18, 18); cam.lookAt(0, 0, 0);
+}
+window.info = info; console.log(JSON.stringify(info));
+const clock = new THREE.Clock();
+r.setAnimationLoop(() => { const dt = clock.getDelta(); mixers.forEach(m => m.update(dt)); r.render(s, cam); });
+</script></body></html>
