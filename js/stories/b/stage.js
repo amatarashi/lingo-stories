@@ -242,6 +242,8 @@ export function createStage(canvas) {
   }
   const cur = { pos: new THREE.Vector3(5, 2.6, 6.6), at: new THREE.Vector3(0, 1.3, -1.6) };
   const goal = { pos: cur.pos.clone(), at: cur.at.clone() };
+  let fovGoal = 42;
+  const baseFov = () => portrait() ? 55 : 42;
   let shotName = 'wide', panGoal = 0, panCur = 0, savedPan = 0, shakeT = 0;
   function shot(name, instant = false) {
     if (!loc) return;
@@ -253,9 +255,10 @@ export function createStage(canvas) {
     let s = raw; if (portrait() && raw.portrait) s = { ...raw.portrait, portrait: true };
     if (name === loc.wide) panGoal = savedPan; else { if (shotName === loc.wide) savedPan = panGoal; panGoal = 0; }
     shotName = name;
+    fovGoal = s.fov || baseFov();
     goal.at.set(...s.at); goal.pos.set(...s.pos);
     if (portrait() && !s.portrait && !s.fixed && !loc.chars[name] && !loc.chars[name.replace('-close', '')]) goal.pos.sub(goal.at).multiplyScalar(1.25).add(goal.at);
-    if (instant) { cur.pos.copy(goal.pos); cur.at.copy(goal.at); }
+    if (instant) { cur.pos.copy(goal.pos); cur.at.copy(goal.at); camera.fov = fovGoal; camera.updateProjectionMatrix(); }
   }
 
   // -------- tapping clues
@@ -357,7 +360,7 @@ export function createStage(canvas) {
   // -------- resize + adaptive quality + loop
   function resize() {
     renderer.setSize(innerWidth, innerHeight, false);
-    camera.aspect = innerWidth / innerHeight; camera.fov = portrait() ? 55 : 42; camera.updateProjectionMatrix();
+    camera.aspect = innerWidth / innerHeight; if (!loc) camera.fov = fovGoal = baseFov(); camera.updateProjectionMatrix();
   }
   addEventListener('resize', resize); resize();
   let frames = 0, acc = 0, ratio = renderer.getPixelRatio();
@@ -379,6 +382,7 @@ export function createStage(canvas) {
     const k = 1 - Math.pow(0.02, dt);
     cur.pos.lerp(goal.pos, k); cur.at.lerp(goal.at, k);
     panCur += (panGoal - panCur) * k;
+    if (Math.abs(camera.fov - fovGoal) > 0.05) { camera.fov += (fovGoal - camera.fov) * k; camera.updateProjectionMatrix(); }
     shakeT = Math.max(0, shakeT - dt);
     const sh = shakeT * 0.12;
     camera.position.set(cur.pos.x + panCur + Math.sin(t * 0.31) * 0.03 + (Math.random() - 0.5) * sh, cur.pos.y + Math.sin(t * 0.23) * 0.02 + (Math.random() - 0.5) * sh, cur.pos.z);
@@ -398,5 +402,6 @@ export function createStage(canvas) {
     makePortraits, portraits,
     pause: v => { paused = v; if (!v) clock.getDelta(); },
     get info() { return { calls: renderer.info.render.calls, tris: renderer.info.render.triangles, dpr: renderer.getPixelRatio(), loc: loc?.key }; },
+    get loc() { return loc; },
   };
 }

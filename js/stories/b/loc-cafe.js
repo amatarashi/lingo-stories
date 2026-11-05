@@ -235,7 +235,7 @@ export function buildCafe(ctx) {
   L.shots = {
     title: () => ({ pos: [5.2, 2.6, 6.6], at: [0.4, 1.3, -1.6], portrait: { pos: [2.4, 2.0, 4.2], at: [1.2, 1.6, -2.5] } }),
     establish: () => ({ pos: [-1.2, 2.2, 6.8], at: [-1.6, 1.8, -4.5] }),
-    wide: () => ({ pos: [4.4, 3.0, 5.4], at: [-0.2, 1.0, -0.9], portrait: { pos: [1.2, 4.6, 7.0], at: [0.4, 0.8, -0.8] } }),
+    wide: () => ({ pos: [4.4, 3.0, 5.4], at: [-0.2, 1.0, -0.9], portrait: { pos: [0.9, 2.95, 3.85], at: [0.6, 0.5, -1.3], fov: 72 } }),
     // on portrait screens: face-on and a bit lower in frame so the dialogue box does not cover it
     reyes: () => { const h = head('reyes'), p = portrait(); return { pos: [h.x + (p ? 0.3 : 0.85), h.y + 0.05, h.z + (p ? 2.3 : 1.9)], at: [h.x + (p ? 0.05 : 0), h.y - (p ? 0.45 : 0.08), h.z], fixed: true }; },
     'reyes-close': () => { const h = head('reyes'), p = portrait(); return { pos: [h.x + (p ? 0.15 : 0.35), h.y + 0.02, h.z + (p ? 1.2 : 0.95)], at: [h.x, h.y - (p ? 0.25 : 0.02), h.z], fixed: true }; },
