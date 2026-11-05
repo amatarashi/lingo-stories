@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- Bot avatar (640×640): the three series as slices, a speech bubble with "EN" in the middle. Telegram crops it to a circle.
+     Render: chrome-headless-shell --screenshot=avatar.png --window-size=640,640 http://localhost:5178/tools/avatar.html -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;width:640px;height:640px;overflow:hidden;background:#0b1020}
+.s{position:absolute;inset:0;display:flex;transform:skewX(-8deg) scale(1.2)}
+.s div{flex:1;background:center/cover no-repeat;transform:skewX(8deg) scale(1.15);margin:0 -1px}
+.s .a{background-image:url(../assets/posters/a.svg);background-position:40% 30%}
+.s .b{background-image:url(../assets/posters/b.svg);background-position:50% 55%}
+.s .c{background-image:url(../assets/posters/c.svg);background-position:60% 60%}
+.cut{position:absolute;top:-10%;bottom:-10%;width:10px;background:#0b1020;transform:skewX(-8deg)}
+.v{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(11,16,32,.05) 0%,rgba(11,16,32,.35) 55%,rgba(11,16,32,.75) 75%)}
+.bub{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:340px;height:270px;display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:14px;background:#f6f1e7;border-radius:70px;box-shadow:0 24px 60px rgba(0,0,0,.6);display:grid;place-items:center}
+.bub::after{content:"";position:absolute;left:62px;bottom:-58px;width:0;height:0;border-left:22px solid transparent;border-right:46px solid transparent;border-top:66px solid #f6f1e7}
+.bub b{font:900 150px/1 Inter,sans-serif;letter-spacing:-6px;color:#141a2b}
+.bub b span{color:#ff9d3c}
+.dots{display:flex;gap:12px}
+.dots i{width:22px;height:22px;border-radius:50%;background:#ff9d3c}
+.dots i:nth-child(2){background:#ff4f9a}.dots i:nth-child(3){background:#5dffb0}
+</style></head><body>
+<div class="s"><div class="a"></div><div class="b"></div><div class="c"></div></div>
+<div class="v"></div>
+<div class="bub"><b>E<span>N</span></b><div class="dots"><i></i><i></i><i></i></div></div>
+</body></html>
