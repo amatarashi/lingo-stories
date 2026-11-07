@@ -1,5 +1,5 @@
 // The Gull café. mood 'night' (case 1, part 1) or 'morning' (part 2: grey dawn, neon off, a few lamps, lighter rain).
-import { toon, toonMap, canvasTex, glow, rainLines, streakTexture, MOBILE } from './stage.js';
+import { toon, toonMap, canvasTex, glow, rainLines, streakTexture, MOBILE } from '../stage.js';
 
 export function buildCafe(ctx) {
   const { THREE, L, scene, statics, add, place, box, cyl, mood = 'night', head, portrait } = ctx;

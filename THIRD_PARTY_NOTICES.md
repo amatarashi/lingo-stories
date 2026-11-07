@@ -96,7 +96,7 @@ All packs above were obtained before the Quaternius Asset License v1.0 (2026-08-
 All voice lines in `assets/voice/*.mp3` were generated locally by the Lingo Stories authors with the Kokoro-82M text-to-speech model. They are synthetic voices, not recordings of real people.
 
 - Model: Kokoro-82M by hexgrad — Apache License 2.0 — https://huggingface.co/hexgrad/Kokoro-82M (`kokoro-v1.0.onnx`, `voices-v1.0.bin`)
-- Voices used: bf_isabella, am_adam, af_nova, bm_george, bf_lily, bm_lewis
+- Voices used: bf_isabella, am_adam, af_nova, bm_george, bf_lily, bm_lewis, af_kore, af_sarah, am_puck, bm_daniel (some passed through an ffmpeg radio / echo filter)
 - Tool: kokoro-onnx 0.6.1 (MIT) — https://github.com/thewh1teagle/kokoro-onnx; phonemizer 3.6.0 and espeakng-loader 0.2.4 used only on the authors' computer (not distributed)
 - Generator script: `tools/make_voices.py`
 

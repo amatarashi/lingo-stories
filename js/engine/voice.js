@@ -5,7 +5,7 @@ import { plain } from './text.js';
 export function spoken(text) {
   return plain(text)
     .replace(/22:40/g, 'ten forty').replace(/22:30/g, 'ten thirty').replace(/23:00/g, 'eleven')
-    .replace(/\bO\. Blackwood/g, 'O Blackwood').replace(/_{2,}/g, '…').replace(/—/g, ',').replace(/\.\.\./g, '…').replace(/\s+/g, ' ').trim();
+    .replace(/\bO\. Blackwood/g, 'O Blackwood').replace(/Aurora-7/g, 'Aurora Seven').replace(/\bARIA\b/g, 'Aria').replace(/_{2,}/g, '…').replace(/—/g, ',').replace(/\.\.\./g, '…').replace(/\s+/g, ' ').trim();
 }
 export function voiceKey(voice, text) {
   const s = voice + '|' + spoken(text);

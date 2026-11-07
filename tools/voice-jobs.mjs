@@ -4,10 +4,14 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const imp = p => import(pathToFileURL(path.join(root, p)).href);
-export const EPISODES = ['js/content/b01.js', 'js/content/b02.js'];
+export const EPISODES = ['js/content/a01.js', 'js/content/b01.js', 'js/content/b02.js'];
 const eps = await Promise.all(EPISODES.map(async f => (await imp(f)).default));
 const common = await imp('js/content/common.js');
 const { voiceKey, spoken } = await imp('js/engine/voice.js');
+// decode beats: the line with the gap, then the full line (same rules as play/player.js)
+const mapText = (t, f) => typeof t === 'string' ? f(t) : Object.fromEntries(Object.entries(t).map(([k, v]) => [k, f(v)]));
+const decodeGap = t => mapText(t, v => v.replace(/\{([^}]+)\}/g, '___'));
+const decodeFull = t => mapText(t, v => v.replace(/\{([^}]+)\}/g, '[$1]'));
 
 const jobs = new Map();
 const allWords = Object.assign({}, ...eps.map(e => e.words));   // recall can ask any word met before
@@ -19,6 +23,8 @@ for (const ep of eps) {
   };
   for (const b of ep.beats) {
     if (b.type === 'line') add(b.who, b.text);
+    if (b.type === 'task') for (const st of b.steps) add(b.who, st.text);
+    if (b.type === 'decode') { add(b.who, decodeGap(b.text)); add(b.who, decodeFull(b.text)); }
     if (b.type === 'explore') add('narr', b.hint);
     if (b.type === 'recap') for (const f of b.frames) add('narr', f.text);
     if (b.type === 'interrogate') {
@@ -37,6 +43,6 @@ for (const ep of eps) {
   }
   for (const c of Object.values(ep.clues)) add('narr', c.text);
   add('narr', ep.teaser);
-  for (const l of common.WRONG) add(l.who, l.text);
+  if (ep.chars.reyes) for (const l of common.WRONG) add(l.who, l.text);
 }
 process.stdout.write(JSON.stringify([...jobs.values()], null, 1));

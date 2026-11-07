@@ -47,7 +47,8 @@ function storyCard(s) {
   const next = storyNext(s), st = epStatus(next), done = storyDone(s), total = s.episodes.length;
   const badge = st === 'open' ? (done ? '<span class="badge">Новый эпизод</span>' : '<span class="badge">Начать</span>')
     : st === 'tomorrow' ? '<span class="badge wait">🌙 Новый — завтра</span>'
-    : st === 'soon' ? `<span class="badge soon">${done ? 'Продолжение скоро' : 'Скоро'}</span>` : '';
+    : st === 'soon' ? `<span class="badge soon">${done ? 'Продолжение скоро' : 'Скоро'}</span>`
+    : st === 'done' && done === total ? '<span class="badge soon">Продолжение скоро</span>' : '';
   return `<button class="pc" data-story="${s.id}" style="--acc:${s.accent}">
     <img src="${s.poster}" alt="" loading="lazy"><div class="sh"></div>${badge}
     <div class="in"><div class="gen">${esc(s.genre)}</div>
@@ -81,7 +82,7 @@ function renderStory() {
     const es = epStatus(e), r = S.eps[e.id];
     return `<button class="er ${es}" data-ep="${e.id}"><span class="no">${es === 'done' ? '✓' : e.n}</span>
       <span class="tx"><b>${esc(e.title)}</b><small>${esc(e.about)}${r?.pct != null ? ` · без перевода ${r.pct}%` : ''}</small></span><span class="st">${STATUS[es]}</span></button>`;
-  }).join('');
+  }).join('') + '<div class="er soon"><span class="no">…</span><span class="tx"><b>Новые эпизоды скоро</b><small>сериал продолжается</small></span></div>';
   const label = st === 'open' ? `▶ Играть: ${s.unit.toLowerCase()} ${next.n}` : st === 'tomorrow' ? '🌙 Новый эпизод откроется завтра' : st === 'done' ? '↻ Пройти последний ещё раз' : 'Новые эпизоды скоро';
   $('story').innerHTML = `<div class="hero" style="--acc:${s.accent}"><img src="${s.poster}" alt=""><div class="sh"></div>
       <button class="ib back" id="st-back">←</button>

@@ -1,5 +1,24 @@
 // Tap-to-translate dictionary: base forms + a tiny lemmatizer. Tracked words come from episodes.
 const G = {
+  // ---- Last Signal, episode 1
+  across: 'через, по (across the sky — по небу)', ago: 'назад (three days ago — три дня назад)', air: 'воздух', alive: 'живой', alone: 'один, в одиночестве',
+  anybody: 'кто-нибудь', aria: 'ARIA (имя компьютера станции)', asleep: 'спящий (be asleep — спать)', aurora: 'северное сияние; Аврора (название станции)',
+  battery: 'батарея, аккумулятор', begin: 'начинать(ся)', breathe: 'дышать', calm: 'спокойный', chen: 'Чен (фамилия)', clear: 'ясный (loud and clear — слышу отлично)',
+  click: 'щелчок; щёлк', computer: 'компьютер', control: 'кнопка, рычаг управления', crackle: 'трещать', cut: 'резать (cut out — вырезать)', dance: 'танцевать',
+  eight: 'восемь', emergency: 'аварийный, экстренный', enough: 'достаточно', entry: 'запись (в журнале)', episode: 'эпизод, серия', eye: 'глаз', flash: 'мигать',
+  fly: 'лететь, летать', follow: 'следовать', forty: 'сорок', fourteen: 'четырнадцать', freezing: 'ледяной, морозный', frozen: 'замёрзший',
+  god: 'Бог (thank God — слава богу)', great: 'отличный, большой', green: 'зелёный', grin: 'широко улыбаться', heater: 'обогреватель', howl: 'выть',
+  hum: 'гудеть', ice: 'лёд', important: 'важный', include: 'включать в себя', instruction: 'инструкция', intelligence: 'интеллект',
+  interesting: 'интересный', knob: 'ручка (круглая)', lever: 'рычаг', life: 'жизнь (come to life — оживать)', light: 'свет, лампа', long: 'длинный, долгий',
+  loud: 'громкий', low: 'низкий (power is low — энергии мало)', massive: 'огромный', matter: 'иметь значение', maya: 'Майя (имя)', metal: 'металлический, металл',
+  mic: 'микрофон (сокр.)', minus: 'минус', mug: 'кружка', negative: 'отрицательно (нет)', noise: 'шум', nope: 'не-а (нет)', nord: 'Норд (название станции)',
+  "o'clock": 'час (eight o\'clock — восемь часов)', onboard: 'бортовой', percent: 'процент', polar: 'полярный', power: 'энергия, питание', pull: 'тянуть (pull down — опустить)',
+  pulse: 'пульсировать', recommend: 'рекомендовать', red: 'красный', rest: 'отдых; остальные (the rest — остальные)', ripple: 'колыхаться волнами',
+  roll: 'катиться (rolling in — надвигается)', room: 'комната (radio room — радиорубка)', run: 'бежать; управлять (run on — работать на)',
+  sharp: 'ровно (eight sharp — ровно в восемь)', shutter: 'ставня, металлическая штора', sky: 'небо', sleep: 'спать; сон', slowly: 'медленно', snow: 'снег',
+  sound: 'звучать (you sound calm — голос спокойный)', static: 'помехи (в эфире)', switch: 'переключать (switch on — включать)', tea: 'чай', team: 'команда',
+  thaw: 'оттаивать', twelve: 'двенадцать', voice: 'голос', warm: 'тёплый (stay warm — не замёрзнуть)', way: 'путь, способ', welcome: 'добро пожаловать',
+  wind: 'ветер', winter: 'зима, зимний', minute: 'минута', nobody: 'никто', press: 'нажимать', small: 'маленький', big: 'большой', first: 'первый; сначала',
   // ---- case 1, part 2
   according: 'согласно (according to — судя по)', afford: 'позволить себе (по деньгам)', always: 'всегда', another: 'другой, ещё один', anymore: 'больше (не)',
   available: 'доступен, свободен', back: 'назад, обратно', bake: 'печь (хлеб)', baker: 'пекарь', belong: 'принадлежать', better: 'лучше', bingo: 'в точку! (бинго)',
@@ -87,6 +106,9 @@ const G = {
 
 // irregular and contracted forms
 const FORMS = {
+  "they've": 'они (they have)', "you've": 'ты (you have)', slept: 'sleep', warmer: 'warm', lights: 'light', eyes: 'eye', channels: 'channel', controls: 'control',
+  begins: 'begin', dancing: 'dance', flashing: 'flash', grinning: 'grin', howling: 'howl', howls: 'howl', hums: 'hum', includes: 'include', instructions: 'instruction',
+  matters: 'matter', pulsing: 'pulse', rippling: 'ripple', rolling: 'roll', running: 'run', switches: 'switch', crackles: 'crackle',
   "coffee's": 'кофе (coffee is)', "daisy's": 'Дейзи (её)', "he'd": 'он бы / он (he would / had)', "they'd": 'они бы (they would)', "you'll": 'ты (будешь) (you will)',
   "shouldn't": 'не следует (should not)', thoughts: 'мысли (my thoughts exactly — я как раз об этом)', drove: 'drive', known: 'know', lost: 'lose', paid: 'pay',
   swore: 'swear', taken: 'take', writing: 'почерк; письмо', died: 'die',

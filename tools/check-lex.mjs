@@ -4,7 +4,7 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const imp = p => import(pathToFileURL(path.join(root, p)).href);
-const files = ['js/content/b01.js', 'js/content/b02.js', 'js/content/common.js'];
+const files = ['js/content/a01.js', 'js/content/b01.js', 'js/content/b02.js', 'js/content/common.js'];
 const { lookup, registerWords } = await imp('js/engine/lex.js');
 const { parse } = await imp('js/engine/text.js');
 const mods = await Promise.all(files.map(imp));

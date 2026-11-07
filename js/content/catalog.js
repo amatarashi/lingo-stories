@@ -1,5 +1,5 @@
 // The three series: what the home and story screens show, and how each playable episode loads.
-// An episode with `load` is playable; one without it is announced as "скоро" (written in later stages).
+// Only written episodes are listed; the season plan lives in docs/05-design.md. After the last one the screen says "новые эпизоды скоро".
 import { S, dayNum } from '../engine/vocab.js';
 
 export const STORIES = [
@@ -10,9 +10,7 @@ export const STORIES = [
     hook: 'Do it by the instruction', hookRu: 'Чини, веди и расшифровывай по инструкциям на английском',
     cast: [['🧪', 'Maya Chen', 'учёная с соседней станции'], ['✈️', 'Rook', 'пилот, застрял в 20 км'], ['📻', 'Eli', 'голос подростка с помехами'], ['🤖', 'ARIA', 'ИИ станции, иногда странный']],
     episodes: [
-      ['A-01', 'Wake Up', 'первый сигнал по рации'], ['A-02', 'Power', 'запустить генератор'], ['A-03', 'Food & Heat', 'кухня и запасы'],
-      ['A-04', "Rook's Crash", 'ведём пилота по рации'], ['A-05', 'The Lab', 'записи пропавших'], ['A-06', 'Storm', 'отказ систем'],
-      ['A-07', 'Eli', 'кто он?'], ['A-08', 'The Night Frequency', 'чужой голос'], ['A-09', 'Trust', 'Maya или ARIA?'], ['A-10', 'Signal Out', 'финал сезона'],
+      ['A-01', 'Wake Up', 'один на станции, первый сигнал по рации', () => import('./a01.js')],
     ],
   },
   {
@@ -23,8 +21,6 @@ export const STORIES = [
     cast: [['🕵️‍♀️', 'Inspector Reyes', 'шефиня: строгая и честная'], ['💻', 'Jenna Park', 'архив и хакер, говорит сленгом'], ['🎩', 'Oscar Blackwood', 'партнёр, вечно «в отъезде»'], ['👮', 'Milo Grant', 'полицейский, недоговаривает']],
     episodes: [
       ['B-01', 'Coffee & Lies · 1', 'кража выручки в кафе', () => import('./b01.js')], ['B-02', 'Coffee & Lies · 2', 'развязка: кто взял деньги?', () => import('./b02.js')],
-      ['B-03', 'The Missing Cat', 'пропажа на набережной'], ['B-04', 'Room 214', 'пропажа в отеле'], ['B-05', 'The Fake Painting', 'подделка в музее'],
-      ['B-06', 'Container 9', 'контрабанда в порту'], ['B-07', 'The Last Train', 'свидетель исчез'], ['B-08', 'Market Day', 'шантаж на рынке'], ['B-09', 'The Mole', 'кто сливает информацию?'],
     ],
   },
   {
@@ -34,9 +30,7 @@ export const STORIES = [
     hook: 'Life choices', hookRu: 'Твой тон в разговорах меняет отношения — и то, кто поможет с тайной',
     cast: [['☕', 'Fiona', 'хозяйка кафе и комнаты'], ['🎸', 'Kai', 'сосед, музыкант, шутник'], ['📚', 'Priya', 'однокурсница, умная и амбициозная'], ['🗼', 'Mr. Duncan', 'смотритель маяка']],
     episodes: [
-      ['C-01', 'Arrival', 'вокзал и Fiona'], ['C-02', 'The Room', 'дневник Sam'], ['C-03', 'First Shift', 'смена в кафе'], ['C-04', 'College', 'первый день'],
-      ['C-05', 'Pub Quiz', 'вечер с Kai'], ['C-06', 'Bad Day', 'потерянный кошелёк'], ['C-07', 'The Lighthouse', 'Mr. Duncan и Sam'],
-      ['C-08', 'Storm Night', 'вся улица в кафе'], ['C-09', "Sam's Message", 'неожиданное сообщение'], ['C-10', 'Halloween', 'финал сезона'],
+      ['C-01', 'Arrival', 'вокзал, Fiona и кафе The Puffin'],
     ],
   },
 ].map(s => ({ ...s, episodes: s.episodes.map(([id, title, about, load], i) => ({ id, title, about, load, n: i + 1, story: s.id })) }));

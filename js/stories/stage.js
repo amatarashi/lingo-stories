@@ -6,10 +6,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { retarget } from '../../engine/retarget.js';
+import { retarget } from '../engine/retarget.js';
 
 export const MOBILE = matchMedia('(pointer: coarse)').matches || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
-const M_URL = new URL('../../../assets/models/', import.meta.url).href;
+const M_URL = new URL('../../assets/models/', import.meta.url).href;
 
 // ---------------------------------------------------------------- shared look (also used by the location builders)
 export const GRAD = (() => { // 4 soft light bands
@@ -163,7 +163,7 @@ export function createStage(canvas) {
     await Promise.all([loadOnce('props_interior.glb').then(tick), loadOnce('anim_ual1.glb').then(tick), loadOnce('anim_ual2.glb').then(tick)]);
     await base();
     const scene = new THREE.Scene(), statics = new THREE.Group(); scene.add(statics);
-    const L = { key, scene, statics, clues: {}, shots: {}, spots: {}, anims: [], chars: {}, mixers: [], markers: {}, wide: 'wide', pan: 3.6 };
+    const L = { key, scene, statics, clues: {}, shots: {}, spots: {}, anims: [], chars: {}, mixers: [], markers: {}, fx: {}, wide: 'wide', pan: 3.6 };
     const add = (geo, mat, x, y, z, parent = statics, o = {}) => {
       const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z);
       if (o.rot) m.rotation.set(...o.rot);
@@ -267,6 +267,10 @@ export function createStage(canvas) {
     g.fillStyle = gr; g.fillRect(0, 0, 128, 128); g.fillStyle = '#2a1a05'; g.font = 'bold 56px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', 64, 68);
   });
   const checkTex = canvasTex(128, 128, (g) => { g.fillStyle = 'rgba(120,220,160,.95)'; g.beginPath(); g.arc(64, 64, 30, 0, 7); g.fill(); g.fillStyle = '#063'; g.font = 'bold 44px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('✓', 64, 67); });
+  const dotTex = canvasTex(128, 128, (g) => {
+    const gr = g.createRadialGradient(64, 64, 6, 64, 64, 62); gr.addColorStop(0, 'rgba(120,255,200,0)'); gr.addColorStop(0.3, 'rgba(120,255,200,0)'); gr.addColorStop(0.42, 'rgba(120,255,200,.55)'); gr.addColorStop(1, 'rgba(120,255,200,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128); g.strokeStyle = 'rgba(220,255,240,.95)'; g.lineWidth = 6; g.beginPath(); g.arc(64, 64, 22, 0, 7); g.stroke();
+  });
   let tapHandler = null;
   function makeMarkers() {
     for (const [k, o] of Object.entries(loc.clues)) {
@@ -274,14 +278,15 @@ export function createStage(canvas) {
       const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: markerTex, depthTest: false, transparent: true, fog: false }));
       sp.scale.setScalar(0.42); sp.renderOrder = 10; sp.visible = false; loc.scene.add(sp);
       const b = new THREE.Box3().setFromObject(o); const c = b.getCenter(new THREE.Vector3());
-      sp.position.set(c.x, b.max.y + 0.28, c.z); loc.markers[k] = sp;
+      sp.position.set(c.x, b.max.y + 0.28, c.z); sp.userData.top = sp.position.clone(); sp.userData.mid = c.clone(); loc.markers[k] = sp;
     }
   }
-  function setExplore(list, found) {
+  // style 'dot': a plain ring (instructions — the player has to read which one), otherwise a '?'
+  function setExplore(list, found, style) {
     if (!loc) return;
     makeMarkers();
     loc.exploring = list; if (!list) panGoal = savedPan = 0;
-    for (const [k, sp] of Object.entries(loc.markers)) { sp.visible = !!list && list.includes(k); sp.material.map = found?.has(k) ? checkTex : markerTex; }
+    for (const [k, sp] of Object.entries(loc.markers)) { sp.visible = !!list && list.includes(k); sp.material.map = found?.has(k) ? checkTex : style === 'dot' ? dotTex : markerTex; sp.userData.small = style === "dot"; sp.position.copy(style === "dot" ? sp.userData.mid : sp.userData.top); }
   }
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
   let down = null, dragX = null;
@@ -299,6 +304,14 @@ export function createStage(canvas) {
 
   // -------- portraits for the dialogue box (rendered once per character, in a tiny studio)
   const portraits = {};
+  function iconPortrait(def) {
+    const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+    const gr = g.createRadialGradient(128, 110, 10, 128, 128, 180); gr.addColorStop(0, def.color || '#556'); gr.addColorStop(1, '#0b0f18');
+    g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    g.globalAlpha = 0.18; g.fillStyle = '#000'; for (let y = 0; y < 256; y += 6) g.fillRect(0, y, 256, 2); g.globalAlpha = 1;
+    g.font = '120px serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(def.icon, 128, 136);
+    return c.toDataURL('image/jpeg', 0.85);
+  }
   async function makePortraits(defs) {
     await base();
     const studio = new THREE.Scene();
@@ -309,7 +322,8 @@ export function createStage(canvas) {
     const rt = new THREE.WebGLRenderTarget(256, 256, { samples: 4 }); rt.texture.colorSpace = THREE.SRGBColorSpace;
     const px = new Uint8Array(256 * 256 * 4);
     for (const [id, def] of Object.entries(defs)) {
-      if (!def.model || portraits[id]) continue;
+      if (portraits[id]) continue;
+      if (!def.model) { if (def.icon) portraits[id] = iconPortrait(def); continue; }
       const ch = await makeChar(def);
       ch.o.rotation.set(0, 0.25, 0); studio.add(ch.o);
       ch.acts[CLIP[def.portraitPose || 'idle']].play(); ch.mixer.setTime(def.portraitPose === 'phone' ? 1.2 : 0.8);
@@ -387,7 +401,7 @@ export function createStage(canvas) {
     const sh = shakeT * 0.12;
     camera.position.set(cur.pos.x + panCur + Math.sin(t * 0.31) * 0.03 + (Math.random() - 0.5) * sh, cur.pos.y + Math.sin(t * 0.23) * 0.02 + (Math.random() - 0.5) * sh, cur.pos.z);
     camera.lookAt(cur.at.x + panCur, cur.at.y, cur.at.z);
-    for (const sp of Object.values(loc.markers)) if (sp.visible) sp.scale.setScalar(0.4 + Math.sin(t * 4) * 0.04);
+    for (const sp of Object.values(loc.markers)) if (sp.visible) sp.scale.setScalar((sp.userData.small ? 0.2 : 0.4) + Math.sin(t * 4) * (sp.userData.small ? 0.02 : 0.04));
     renderer.render(loc.scene, camera);
   });
 
@@ -403,5 +417,6 @@ export function createStage(canvas) {
     pause: v => { paused = v; if (!v) clock.getDelta(); },
     get info() { return { calls: renderer.info.render.calls, tris: renderer.info.render.triangles, dpr: renderer.getPixelRatio(), loc: loc?.key }; },
     get loc() { return loc; },
+    fx: (name, v) => loc?.fx[name]?.(v),
   };
 }

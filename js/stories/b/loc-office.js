@@ -1,6 +1,6 @@
 // Blackwood & Reyes Investigations: the agency office, the home base of the whole series.
 // Grey rainy morning through venetian blinds, warm desk lamps, Jenna's glowing monitors, a cork board with red string.
-import { toon, toonMap, canvasTex, glow, rainLines, streakTexture, MOBILE } from './stage.js';
+import { toon, toonMap, canvasTex, glow, rainLines, streakTexture, MOBILE } from '../stage.js';
 
 export function buildOffice(ctx) {
   const { THREE, L, scene, statics, add, place, box, cyl, head, portrait } = ctx;

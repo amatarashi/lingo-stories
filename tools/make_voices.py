@@ -15,17 +15,24 @@ home = Path.home() / '.cache' / 'hyperframes' / 'tts'
 kokoro = Kokoro(str(home / 'models' / 'kokoro-v1.0.onnx'), str(home / 'voices' / 'voices-v1.0.bin'))
 
 # a touch of character per voice: speed
-SPEED = {'bf_isabella': 0.95, 'am_adam': 1.05, 'af_nova': 1.1, 'bm_george': 0.92, 'bf_lily': 1.02, 'bm_lewis': 0.9}
+SPEED = {'bf_isabella': 0.95, 'am_adam': 1.05, 'af_nova': 1.1, 'bm_george': 0.92, 'bf_lily': 1.02, 'bm_lewis': 0.9,
+         'af_kore': 0.92, 'af_sarah': 1.05, 'am_puck': 1.0, 'bm_daniel': 0.92}
+# 'voice+fx' in a job: the same Kokoro voice through a filter (radio, the station computer)
+FX = {
+    'radio': 'highpass=f=320,lowpass=f=3100,acompressor=threshold=-20dB:ratio=6,volume=1.6',
+    'aria': 'aecho=0.8:0.5:18:0.3,highpass=f=140,lowpass=f=7000',
+}
 done = 0
 for j in jobs:
     mp3 = out / f"{j['key']}.mp3"
     if mp3.exists():
         continue
-    lang = 'en-gb' if j['voice'].startswith('b') else 'en-us'
-    samples, sr = kokoro.create(j['text'], voice=j['voice'], speed=SPEED.get(j['voice'], 1.0), lang=lang)
+    voice, _, fx = j['voice'].partition('+')
+    lang = 'en-gb' if voice.startswith('b') else 'en-us'
+    samples, sr = kokoro.create(j['text'], voice=voice, speed=SPEED.get(voice, 1.0), lang=lang)
     with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp:
         sf.write(tmp.name, samples, sr)
-    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp.name, '-af', 'silenceremove=start_periods=1:start_threshold=-50dB,loudnorm=I=-18:TP=-2',
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp.name, '-af', 'silenceremove=start_periods=1:start_threshold=-50dB,' + (FX[fx] + ',' if fx else '') + 'loudnorm=I=-18:TP=-2',
                     '-ac', '1', '-ar', '24000', '-b:a', '40k', str(mp3)], check=True)
     os.unlink(tmp.name)
     done += 1

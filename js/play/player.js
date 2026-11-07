@@ -4,7 +4,7 @@ import { WRONG, HINT, RECALL_INTRO, RECALL_OK } from '../content/common.js';
 import { pick, parse, plain, trackedIn, LEVELS, LEVEL_NAME } from '../engine/text.js';
 import { lookup, registerWords, trackedInfo, trackedKeys } from '../engine/lex.js';
 import { S, save, meet, dueWords, mastery, MASTERY, daysUntil, countLine, markDay, finishEpisode } from '../engine/vocab.js';
-import { unlock, startRain, startMusic, setMusic, ambience, duck, sfx, speak } from '../engine/sound.js';
+import { unlock, startRain, startMusic, setMusic, setMood, ambience, duck, sfx, speak } from '../engine/sound.js';
 import { playLine, stopLine, voiceState } from '../engine/voice.js';
 
 const tg = window.Telegram?.WebApp;
@@ -15,13 +15,12 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
 
 let ep = null, world = null, hooks = {};
-const worlds = {};
-// each story has one 3D stage and a set of locations (built on first use, then kept)
+// ONE 3D stage for all series (phones dislike several WebGL contexts); each series brings its locations
+let stageP = null;
+const getStage = () => stageP ||= import('../stories/stage.js').then(m => m.createStage($('c')));
 const STORY = {
-  b: {
-    stage: async () => (await import('../stories/b/stage.js')).createStage($('c')),
-    locs: { cafe: async () => (await import('../stories/b/loc-cafe.js')).buildCafe, office: async () => (await import('../stories/b/loc-office.js')).buildOffice },
-  },
+  a: { mood: 'arctic', locs: { radio: async () => (await import('../stories/a/loc-radio.js')).buildRadio } },
+  b: { mood: 'noir', locs: { cafe: async () => (await import('../stories/b/loc-cafe.js')).buildCafe, office: async () => (await import('../stories/b/loc-office.js')).buildOffice } },
 };
 const sceneKey = sc => sc.loc + (sc.mood ? ':' + sc.mood : '');
 // a speaking character who is not in the current location is on the phone
@@ -95,12 +94,13 @@ function setWho(who) {
   dlg.querySelector('.role').textContent = c.role || '';
   const img = world.portraits[who];
   por.classList.toggle('hide', !img); boxEl.classList.toggle('has-por', !!img);
-  const onPhone = remote(who), holder = ep.phoneHolder || 'reyes';
-  if (img) { por.style.backgroundImage = `url(${img})`; por.innerHTML = onPhone ? '<span class="call">📞</span>' : ''; }
+  const onPhone = remote(who), holder = ep.phoneHolder;
+  const badge = c.via === 'radio' ? '📻' : c.via === 'screen' ? '' : '📞';
+  if (img) { por.style.backgroundImage = `url(${img})`; por.innerHTML = onPhone && badge ? `<span class="call">${badge}</span>` : ''; }
   txt.classList.toggle('narr', who === 'narr');
   // staging: the phone holder keeps the phone at the ear while someone on the line talks
-  if (onPhone) world.play(holder, 'phone');
-  else if (lastWho && lastPhone && who !== lastWho) world.play(holder, who === holder ? 'talk' : 'fold');
+  if (holder && onPhone) world.play(holder, 'phone');
+  else if (holder && lastWho && lastPhone && who !== lastWho) world.play(holder, who === holder ? 'talk' : 'fold');
   world.setSpeaker(who === 'narr' || who === 'you' || onPhone ? null : who);
   lastWho = who; lastPhone = onPhone;
 }
@@ -238,11 +238,11 @@ async function exploreBeat(b) {
     const cnt = $('ex-count'); if (cnt) cnt.textContent = `${n}/${b.need.length}`;
     if (n >= b.need.length) finish();
   };
-  world.onTap(async k => { if (busy) return; busy = true; await openClue(k); busy = false; world.shot('wide'); paint(); });
+  world.onTap(async k => { if (busy) return; busy = true; world.setExplore([], R.found); await openClue(k); busy = false; world.shot('wide'); paint(); });
   const line = { who: 'narr', text: b.hint, ru: b.hintRu, noCount: true };
   if (innerWidth / innerHeight < 0.8) setTimeout(() => toast('👆 Свайпай сцену влево-вправо', 2400), 900);
   const p = present(line, (box, done) => {
-    const c = document.createElement('div'); c.className = 'btn'; c.style.flex = 'none'; c.innerHTML = `🔎 Улики: <b id="ex-count">0/${b.need.length}</b>`;
+    const c = document.createElement('div'); c.className = 'btn'; c.style.flex = 'none'; c.innerHTML = `🔎 ${b.countLabel || 'Улики'}: <b id="ex-count">0/${b.need.length}</b>`;
     const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
     h.onclick = e => { e.stopPropagation(); const k = b.need.find(x => !R.found.has(x)); if (k) { world.shot(k); toast('Посмотри сюда 👀'); setTimeout(() => world.shot('wide'), 2200); } };
     box.append(c, h);
@@ -251,7 +251,69 @@ async function exploreBeat(b) {
   paint();
   await p;
   world.setExplore(null); world.onTap(null);
-  toast('🗂️ Улики собраны — они в досье');
+  toast(b.doneToast || '🗂️ Улики собраны — они в досье');
+}
+
+// ---------------------------------------------------------------- "Do it by the instruction": tap the right thing in the scene
+async function taskBeat(b) {
+  const done = new Set();
+  world.setSpeaker(null);
+  for (let si = 0; si < b.steps.length; si++) {
+    const st = b.steps[si];
+    let wrong = 0;
+    world.shot(b.shot);
+    world.setExplore(b.targets, done, 'dot');
+    const showHint = () => { world.setExplore([st.do], done, 'dot'); toast('Вот это 👀'); setTimeout(() => world.setExplore(b.targets, done, 'dot'), 2200); };
+    await present({ who: b.who, shot: b.shot, text: st.text, ru: st.ru }, (box, fin) => {
+      const info = document.createElement('div'); info.className = 'stmt';
+      info.innerHTML = `Шаг ${si + 1}/${b.steps.length} · <span class="ok">нажми в сцене</span>`;
+      const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
+      h.onclick = e => { e.stopPropagation(); R.helped = true; showHint(); };
+      box.append(info, h);
+      world.onTap(k => {
+        if (k === st.do) { world.onTap(null); sfx('click'); haptic('medium'); world.fx('press', k); setTimeout(fin, 450); return; }
+        sfx('bad'); haptic('rigid'); world.fx('press', k);
+        toast(`✋ ${esc(L(b.wrong.text))}<br><small>${esc(L(b.wrong.ru))}</small>`, 2400);
+        if (++wrong >= 2) { R.helped = true; showHint(); }
+      });
+    });
+    done.add(st.do);
+  }
+  world.setExplore(null); world.onTap(null);
+  sfx('ok');
+}
+
+// ---------------------------------------------------------------- a radio message breaks up: pick the word lost in the static
+const mapText = (t, f) => typeof t === 'string' ? f(t) : Object.fromEntries(Object.entries(t).map(([k, v]) => [k, f(v)]));
+export const decodeGap = t => mapText(t, v => v.replace(/\{([^}]+)\}/g, '___'));
+export const decodeFull = t => mapText(t, v => v.replace(/\{([^}]+)\}/g, '[$1]'));
+async function decodeBeat(b) {
+  const answer = (L(b.text).match(/\{([^}]+)\}/) || [])[1];
+  const opts = shuffle(b.options);
+  fxBeat({ fx: 'static' });
+  for (;;) {
+    const pickd = await present({ who: b.who, shot: b.shot, text: decodeGap(b.text), ru: b.ru, noCount: true }, (box, done) => {
+      const info = document.createElement('div'); info.className = 'stmt'; info.textContent = '📡 Помехи! Какое слово пропало?';
+      box.appendChild(info);
+      opts.forEach((o, n) => { const btn = document.createElement('button'); btn.className = 'btn choice'; btn.innerHTML = `<span class="n">${n + 1}</span><span>${esc(o)}</span>`; btn.onclick = e => { e.stopPropagation(); done(o); }; box.appendChild(btn); });
+    });
+    if (pickd === answer) { sfx('ok'); haptic('medium'); break; }
+    sfx('bad'); haptic('rigid'); R.helped = true; toast('Не то слово — послушай ещё раз 🎧', 2000);
+  }
+  await present({ who: b.who, shot: b.shot, text: decodeFull(b.text), ru: b.ru });
+}
+
+// ---------------------------------------------------------------- screen and room effects
+async function fxBeat(b) {
+  const veil = $('veil');
+  if (b.fx === 'black') { veil.className = 'black'; return; }
+  if (b.fx === 'eyes') { dlg.classList.add('hidden'); veil.className = 'eyes'; await sleep(2600); veil.className = ''; return; }
+  if (b.fx === 'static') { sfx('static'); veil.className = ''; void veil.offsetWidth; veil.className = 'static'; setTimeout(() => { if (veil.className === 'static') veil.className = ''; }, 900); return; }
+  if (b.fx === 'shake') { world.shake(0.4); haptic('heavy'); return; }
+  if (b.fx === 'alarm' && b.v) sfx('alarm');
+  if (b.fx === 'lights' && b.v === 'off') sfx('hum');
+  if (b.fx === 'channel') sfx('click');
+  world.fx(b.fx, b.v);
 }
 
 function pickEvidence(sub = 'Какая улика опровергает эти слова?') {
@@ -476,7 +538,7 @@ function finish() {
   el.innerHTML = `<h2>${esc(ep.part)} closed</h2>
     <div class="big"><div><b>${pct}%</b><small>понял(а) без перевода</small></div><div><b>${Object.keys(ep.words).length}</b><small>новых слов и фраз</small></div><div><b>🔥 ${days}</b><small>${days === 1 ? 'день' : 'дней'} подряд</small></div></div>
     ${Object.keys(ep.words).map(k => { const w = S.words[k], info = ep.words[k]; return `<div class="wd"><div><b>${esc(info.form)}</b><div class="ex">${esc(info.ru)}</div></div><div class="m">${MASTERY[mastery(w)]}<small>${w ? (daysUntil(w) ? `повтор через ${daysUntil(w)} дн.` : 'пора повторить') : 'не встретилось'}</small></div></div>`; }).join('')}
-    <div class="teaser">🕵 ${esc(L(ep.teaser))}<div style="font-family:Inter,sans-serif;font-size:13px;color:#d9a7c0;margin-top:4px">${esc(ep.teaserRu)}</div></div>
+    <div class="teaser">${ep.icon || '🕵'} ${esc(L(ep.teaser))}<div style="font-family:Inter,sans-serif;font-size:13px;color:#d9a7c0;margin-top:4px">${esc(ep.teaserRu)}</div></div>
     <div class="row"><button class="btn" id="sm-nb" style="text-align:center;flex:none">📓</button><button class="btn pri" id="sm-home">Готово</button></div>
     <p style="color:var(--muted);font-size:12px;text-align:center;margin:10px 0 0">Слова вернутся в следующих эпизодах — когда придёт время повторить.</p>`;
   ov.classList.remove('hide');
@@ -488,6 +550,7 @@ function finish() {
 function exit(completed = false) {
   R.run++; stopLine(); duck(false); ambience(false); hidePop(); clearInterval(R.typing);
   for (const id of ['card', 'sheet', 'sum', 'ask', 'flash', 'recap', 'caption', 'stamp']) $(id).classList.add('hide');
+  $('veil').className = '';
   document.body.classList.remove('flashback');
   dlg.classList.add('hidden'); document.body.classList.remove('cine', 'playing');
   $('top').classList.add('hide');
@@ -501,8 +564,7 @@ export async function prepare(entry, onProgress) {
   const mod = (await entry.load()).default;
   registerWords(mod.words, mod.id);
   const st = STORY[entry.story];
-  worlds[entry.story] ||= await st.stage();
-  const w = worlds[entry.story], scenes = Object.values(mod.scenes);
+  const w = await getStage(), scenes = Object.values(mod.scenes);
   // progress: each location is an equal share; portraits are the last bit
   for (let i = 0; i < scenes.length; i++) {
     const sc = scenes[i];
@@ -514,11 +576,12 @@ export async function prepare(entry, onProgress) {
 }
 
 export async function play(mod, story, h = {}) {
-  ep = mod; hooks = h; world = worlds[story];
+  ep = mod; hooks = h; world = await getStage();
+  document.body.dataset.story = story; setMood(STORY[story].mood); $('veil').className = '';
   // start in the first location (the one the first scene beat names, or the only one)
   const firstScene = mod.beats.find(b => b.type === 'scene');
   await world.enter(sceneKey(mod.scenes[firstScene ? firstScene.to : Object.keys(mod.scenes)[0]]), firstScene?.shot || 'establish', true);
-  world.pause(false);
+  world.pause(false); world.fx('reset');
   unlock(); startRain(); startMusic(); setMusic(S.music); ambience(true);
   voiceState.on = S.voice; paintVoice();
   resetRun(); hidePop(); R.run++;
@@ -541,6 +604,9 @@ export async function play(mod, story, h = {}) {
     else if (b.type === 'explore') await exploreBeat(b);
     else if (b.type === 'interrogate') await interrogateBeat(b);
     else if (b.type === 'recall') await recallBeat(b);
+    else if (b.type === 'task') await taskBeat(b);
+    else if (b.type === 'decode') await decodeBeat(b);
+    else if (b.type === 'fx') await fxBeat(b);
     else if (b.type === 'end') return finish();
     await maybeAdjust();
     i = go ? beats.findIndex(x => x.label === go) : i + 1;
