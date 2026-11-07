@@ -128,6 +128,38 @@ const G = {
   fall: 'падать', partner: 'партнёр', business: 'бизнес, дело', own: 'собственный', mr: 'мистер', remember: 'помнить', word: 'слово', exactly: 'именно',
   people: 'люди', yesterday: 'вчера', today: 'сегодня', tomorrow: 'завтра', part: 'часть', case: 'дело', file: 'папка, дело',
   city: 'город', mean: 'значить', almost: 'почти', sure: 'уверен; конечно', try: 'пробовать', think: 'думать',
+  // ---- Backstage, episode 1 (British words and slang come with a note)
+  absolutely: 'абсолютно, совершенно', admit: 'признавать', amazing: 'потрясающий', angry: 'злой, сердитый', annoyed: 'раздражённый',
+  apparently: 'судя по всему, похоже', artist: 'артист(ка), исполнитель', autograph: 'автограф', ava: 'Эйва (имя)', aww: 'ой, как мило!',
+  babe: 'детка, дорогая (разг.)', backward: 'назад (without a backward glance — не оглянувшись)', bang: 'бам! (удар)', bassline: 'басовая линия (в музыке)',
+  bathroom: 'ванная', beat: 'биться (о сердце); ритм', best: 'лучший (ur the best — ты лучшая)', bestie: 'лучшая подруга (разг.)',
+  boring: 'скучный (о человеке или вещи); bored — «мне скучно»', boy: 'парень, мальчик', britain: 'Британия', british: 'британский; британцы',
+  budget: 'бюджет; бюджетный, дешёвый', busy: 'занятой', camden: 'Камден (район Лондона)', careful: 'осторожный (careful — осторожно!)',
+  cheap: 'дешёвый', choose: 'выбирать', comfortable: 'удобный', compliment: 'делать комплимент, хвалить', corridor: 'коридор',
+  curl: 'свернуться (curled up — свернувшись калачиком)', cute: 'милый, симпатичный', disc: 'диск (gold disc — золотой диск за продажи)',
+  engineer: 'инженер (sound engineer — звукорежиссёр)', er: 'э-э… (заминка)', exact: 'точный (the exact opposite — ровно наоборот)',
+  expensive: 'дорогой', fader: 'фейдер (ползунок громкости на пульте)', fast: 'быстрый, быстро', feel: 'чувствовать', feeling: 'чувство',
+  flatmate: 'сосед(ка) по квартире (брит.; в США — roommate)', four: 'четыре', free: 'свободный; бесплатный', front: 'передний (front desk — стойка ресепшена)',
+  furious: 'в ярости', gig: 'концерт, выступление (разг.)', girl: 'девушка, девочка', gold: 'золотой; золото', gonna: 'собираюсь (= going to, разг.)',
+  harm: 'вред (no harm done — ничего страшного)', head: 'голова (keep your head down — опусти голову)', high: 'высокий (high street — масс-маркет, сетевые магазины)',
+  hm: 'хм', iconic: 'культовый (go be iconic — иди и блистай, разг.)', identical: 'одинаковый', ignore: 'игнорировать',
+  incident: 'происшествие, инцидент', internet: 'интернет', internship: 'стажировка', into: 'в (внутрь; walk into — врезаться)',
+  involve: 'касаться, включать в себя', jacket: 'куртка, пиджак', kettle: 'чайник (put the kettle on — поставь чайник)', kit: 'Кит (имя)',
+  later: 'позже', leather: 'кожаный; кожа', leo: 'Лео (имя)', likewise: 'взаимно', literally: 'буквально (в разговоре — для усиления)',
+  lol: 'лол, ха-ха (laughing out loud)', london: 'Лондон', luck: 'удача (good luck — удачи)', many: 'много', marvellous: 'чудесно (часто иронично)',
+  meat: 'мясо (fresh meat — новенькая, «свежее мясо», грубовато)', mega: 'мега-, очень (разг.)', ngl: 'честно говоря (not gonna lie — не буду врать)',
+  often: 'часто', online: 'в сети, онлайн', opposite: 'противоположность', person: 'человек', propose: 'предлагать', pure: 'чистый (pure sarcasm — чистый сарказм)',
+  push: 'толкать, нажимать (push up — поднять)', quality: 'качество', quite: 'вполне, совсем (not quite — не совсем)', reach: 'достигать, доходить',
+  record: 'записывать; пластинка (gold record — золотая пластинка)', recording: 'запись', ridiculously: 'до смешного, ужасно', roomie: 'соседка по комнате (разг.)',
+  rowe: 'Роу (фамилия)', rude: 'грубый', sarcasm: 'сарказм', save: 'спасать (save my day — спасти день)', seriously: 'серьёзно?!',
+  share: 'делить, снимать вместе', shattered: 'вымотанный, без сил (брит.)', shiny: 'блестящий', shirt: 'рубашка (T-shirt — футболка)',
+  shoebox: 'коробка из-под обуви (о тесной квартире)', shoe: 'туфля, ботинок', sienna: 'Сиенна (имя)', sign: 'подписывать (signed — с контрактом)',
+  singer: 'певец, певица', smile: 'улыбка; улыбаться', solo: 'сольный', spill: 'пролить', stage: 'сцена (on stage — на сцене)',
+  stalk: 'уходить с гордым видом', street: 'улица', suit: 'подходить (suit yourself — как хочешь)', surprisingly: 'неожиданно',
+  swing: 'качнуться (swing open — распахнуться)', text: 'писать сообщение; сообщение', tidewater: 'Tidewater (название лейбла)', tone: 'тон, интонация',
+  tonight: 'сегодня вечером', totally: 'полностью, совсем', tray: 'поднос', treat: 'обращаться (how is it treating you? — как тебе?)',
+  ur: 'твой / ты (your / you\'re, в переписке)', velvet: 'бархат (Velvet Static — название группы)', wall: 'стена', watch: 'смотреть (watch where you\'re going — смотри, куда идёшь)',
+  well: 'ну…; хорошо', white: 'белый', ruin: 'испортить (ruined — испорчен)', selfie: 'селфи', without: 'без', yeah: 'ага, да (разг.)', yourself: 'себя (make yourself at home — будь как дома)',
 };
 
 // irregular and contracted forms
@@ -149,7 +181,7 @@ const FORMS = {
   "i'll": 'я (буду)', "let's": 'давай(те)', "don't": 'не (do not)', "doesn't": 'не (does not)', "didn't": 'не (в прошлом, did not)',
   "isn't": 'не является (is not)', "aren't": 'не (are not)', "wasn't": 'не был', "can't": 'не могу (cannot)', "won't": 'не буду',
   "who's": 'кто (who is / has)', "what's": 'что (what is)', "till's": 'касса (the till has)', "reyes's": 'Рейес (её)', "tom's": 'Тома (его)',
-  "blackwood's": 'Блэквуда', "hasn't": 'не (has not)', "that'll": 'это будет (that will)', "nobody's": 'никто не (nobody is)', sent: 'send',
+  "blackwood's": 'Блэквуда', seen: 'see', faster: 'fast', "hasn't": 'не (has not)', "that'll": 'это будет (that will)', "nobody's": 'никто не (nobody is)', sent: 'send',
 };
 
 const tracked = {}; // key -> { ru, form, cloze, src }

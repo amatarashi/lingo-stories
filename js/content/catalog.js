@@ -33,6 +33,16 @@ export const STORIES = [
       ['C-01', 'Arrival', 'вокзал, Fiona и кафе The Puffin', () => import('./c01.js')],
     ],
   },
+  {
+    id: 'd', title: 'Backstage', genre: 'романтика · музыка · Лондон', font: "'Caveat',cursive", accent: '#ff8fc8',
+    poster: 'assets/posters/d.svg', season: 'Сезон 1 · Tidewater Records', unit: 'Эпизод',
+    pitch: 'Тебе 18, стажировка на лондонском музыкальном лейбле. Одна чашка кофе — и ты в фиктивных отношениях с самым колючим солистом Британии.',
+    hook: 'Every word counts', hookRu: 'Твои ответы меняют отношения: читай подтекст, лови сарказм и не путай bored с boring',
+    cast: [['🎤', 'Kit Rowe', 'солист Velvet Static, колючий'], ['🎧', 'Leo Hart', 'звукорежиссёр, тёплый'], ['💅', 'Ava', 'соседка по квартире'], ['📱', 'Dana', 'менеджер лейбла'], ['✨', 'Sienna', 'певица, соперница']],
+    episodes: [
+      ['D-01', 'First Day', 'квартира в Камдене, лейбл, кофе на Ките и папарацци', () => import('./d01.js')],
+    ],
+  },
 ].map(s => ({ ...s, episodes: s.episodes.map(([id, title, about, load], i) => ({ id, title, about, load, n: i + 1, story: s.id })) }));
 
 export const storyById = id => STORIES.find(s => s.id === id);

@@ -26,6 +26,12 @@ const STORY = {
     room: async () => (await import('../stories/c/loc-puffin.js')).buildRoom,
   } },
   b: { mood: 'noir', locs: { cafe: async () => (await import('../stories/b/loc-cafe.js')).buildCafe, office: async () => (await import('../stories/b/loc-office.js')).buildOffice } },
+  d: { mood: 'noir', locs: {
+    flat: async () => (await import('../stories/d/loc-flat.js')).buildFlat,
+    label: async () => (await import('../stories/d/loc-label.js')).buildLabel,
+    studio: async () => (await import('../stories/d/loc-label.js')).buildStudio,
+    street: async () => (await import('../stories/d/loc-street.js')).buildStreet,
+  } },
 };
 const sceneKey = sc => sc.loc + (sc.mood ? ':' + sc.mood : '');
 // a speaking character who is not in the current location is on the phone
@@ -594,7 +600,7 @@ function finish() {
   const pct = R.lines ? Math.round(R.clean / R.lines * 100) : 0;
   finishEpisode(ep.id, pct);
   const ov = $('sum'), el = ov.firstElementChild;
-  el.innerHTML = `<h2>${esc(ep.part)} closed</h2>
+  el.innerHTML = `<h2>${esc(ep.endTitle || ep.part + ' closed')}</h2>
     <div class="big"><div><b>${pct}%</b><small>понял(а) без перевода</small></div><div><b>${Object.keys(ep.words).length}</b><small>новых слов и фраз</small></div><div><b>🔥 ${days}</b><small>${days === 1 ? 'день' : 'дней'} подряд</small></div></div>
     ${Object.keys(ep.words).map(k => { const w = S.words[k], info = ep.words[k]; return `<div class="wd"><div><b>${esc(info.form)}</b><div class="ex">${esc(info.ru)}</div></div><div class="m">${MASTERY[mastery(w)]}<small>${w ? (daysUntil(w) ? `повтор через ${daysUntil(w)} дн.` : 'пора повторить') : 'не встретилось'}</small></div></div>`; }).join('')}
     ${ep.rel ? `<div class="rel">${ep.rel.map(id => { const n = relOf(id); return `<span style="--c:${ep.chars[id].color}"><b>${esc(ep.chars[id].name)}</b>${'❤️'.repeat(Math.max(0, Math.min(3, n)))}${n <= 0 ? '🤍' : ''}<small>${n > 1 ? 'тепло' : n === 1 ? 'симпатия' : n === 0 ? 'нейтрально' : 'прохладно'}</small></span>`; }).join('')}</div>` : ''}

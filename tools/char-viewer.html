@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Character viewer</title>
+<style>
+  html,body{margin:0;height:100%;background:#2a2730;color:#eee;font:14px system-ui,sans-serif;overflow:hidden}
+  canvas{display:block;width:100%;height:100%}
+  #ui{position:fixed;left:12px;top:12px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 24px)}
+  button,select{background:#3d3946;color:#eee;border:1px solid #5a5466;border-radius:8px;padding:6px 10px;font:inherit}
+  button.on{background:#e8a25a;color:#222}
+</style>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js","three/addons/":"../vendor/addons/"}}</script>
+</head><body>
+<canvas id="c"></canvas>
+<div id="ui"><select id="model"></select></div>
+<script type="module">
+// Debug page: loads a character GLB, toon-shades it like the game and plays the retargeted UAL clips.
+// Open: tools/char-viewer.html?m=kit (model file assets/models/m_<m>.glb). Compare: &with=men_Casual
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { retarget } from '../js/engine/retarget.js';
+import { toonify } from '../js/stories/stage.js';
+
+const CLIPS = ['Idle_Loop', 'Idle_Talking_Loop', 'Walk_Formal_Loop', 'Idle_FoldArms_Loop', 'Yes', 'Idle_No_Loop', 'Interact', 'Sitting_Idle_Loop', 'Idle_TalkingPhone_Loop'];
+const q = new URLSearchParams(location.search);
+const models = [q.get('m') || 'kit', ...(q.get('with') ? q.get('with').split(',') : [])];
+
+const renderer = new THREE.WebGLRenderer({ canvas: c, antialias: true });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio)); renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#2a2730');
+const cam = new THREE.PerspectiveCamera(35, 1, 0.05, 50); cam.position.set(0, 1.3, 2.6 + models.length * 0.8);
+cam.lookAt(0, 1.0, 0);
+const turn = new THREE.Group(); scene.add(turn); let drag = null;
+c.onpointerdown = e => drag = e.clientX; onpointerup = () => drag = null;
+onpointermove = e => { if (drag !== null) { turn.rotation.y += (e.clientX - drag) * 0.01; drag = e.clientX; } };
+c.onwheel = e => { cam.position.multiplyScalar(e.deltaY > 0 ? 1.08 : 0.93); cam.lookAt(0, 1.0, 0); };
+scene.add(new THREE.HemisphereLight('#fff4e8', '#3a3550', 1.6));
+const sun = new THREE.DirectionalLight('#ffe2c0', 2.2); sun.position.set(2, 4, 3); scene.add(sun);
+const floor = new THREE.Mesh(new THREE.CircleGeometry(2.5, 48), new THREE.MeshLambertMaterial({ color: '#4a4552' })); floor.rotation.x = -Math.PI / 2; scene.add(floor);
+
+const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+const L = f => loader.loadAsync('../assets/models/' + f);
+const [a1, a2] = await Promise.all([L('anim_ual1.glb'), L('anim_ual2.glb')]);
+const all = [...a1.animations, ...a2.animations];
+const rest = all.find(x => x.name === 'A_TPose'), clips = all.filter(x => CLIPS.includes(x.name));
+
+const chars = [];
+for (const [i, m] of models.entries()) {
+  const g = await L(`m_${m}.glb`);
+  const o = SkeletonUtils.clone(g.scene);
+  toonify(o, { skinned: true });
+  o.traverse(x => { if (x.isMesh) x.frustumCulled = false; });
+  o.position.x = (i - (models.length - 1) / 2) * 0.85;
+  turn.add(o);
+  const mixer = new THREE.AnimationMixer(o);
+  const acts = Object.fromEntries(retarget(o, a1.scene, clips, rest).map(cl => [cl.name, mixer.clipAction(cl)]));
+  chars.push({ mixer, acts });
+}
+const ui = document.getElementById('ui');
+let cur = null;
+function play(name) {
+  for (const ch of chars) { ch.acts[cur]?.fadeOut(0.2); ch.acts[name]?.reset().fadeIn(0.2).play(); }
+  cur = name; [...ui.querySelectorAll('button')].forEach(b => b.classList.toggle('on', b.textContent === name));
+}
+for (const n of CLIPS) { const b = document.createElement('button'); b.textContent = n; b.onclick = () => play(n); ui.appendChild(b); }
+const sel = document.getElementById('model');
+for (const n of ['kit', 'leo', 'heroine', 'ava', 'dana', 'sienna', 'men_Casual', 'women_Casual']) sel.add(new Option(n, n, false, n === models[0]));
+sel.onchange = () => { q.set('m', sel.value); location.search = q; };
+play(q.get('clip') || 'Idle_Loop');
+
+const clock = new THREE.Clock();
+function frame() {
+  const w = innerWidth, h = innerHeight;
+  if (c.width !== Math.round(w * renderer.getPixelRatio())) { renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+  const dt = clock.getDelta(); for (const ch of chars) ch.mixer.update(dt);
+  renderer.render(scene, cam); requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body></html>

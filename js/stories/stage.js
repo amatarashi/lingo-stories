@@ -35,6 +35,8 @@ export function toonify(root, { skinned = false, tint = {}, dark = false } = {})
     const conv = m => {
       let base = tint[m.name] ? new THREE.Color(tint[m.name]) : grade(m.color.clone());
       if (dark) base = new THREE.Color('#0c0e14');
+      // textured characters (image-to-3D, Backstage): keep the painted texture, only toon-shade it
+      if (skinned && m.map && !dark) return new THREE.MeshToonMaterial({ map: m.map, color: new THREE.Color(tint[m.name] || '#ffffff'), gradientMap: GRAD, name: m.name });
       return skinned ? new THREE.MeshToonMaterial({ color: base, gradientMap: GRAD, name: m.name }) : toon(base);
     };
     o.material = Array.isArray(o.material) ? o.material.map(conv) : conv(o.material);
