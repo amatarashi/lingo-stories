@@ -1,6 +1,7 @@
 // Tap-to-translate dictionary: base forms + a tiny lemmatizer. Tracked words come from episodes.
 const G = {
   // ---- Fresh Start, chapter 1 (Scottish words come with a note)
+  goodbye: 'до свидания, прощание (no goodbye — не попрощавшись)',
   actually: 'вообще-то, на самом деле', advance: 'продвижение (in advance — заранее)', along: 'вдоль; с кем-то (sing along — подпевать)', apology: 'извинение',
   art: 'искусство', august: 'август', awkward: 'неловкий', backpack: 'рюкзак', bag: 'сумка', band: 'музыкальная группа', battered: 'потрёпанный',
   believe: 'верить', beneath: 'под', biology: 'биология (marine biology — морская биология)', bit: 'кусочек (in a bit — скоро)', blue: 'синий',

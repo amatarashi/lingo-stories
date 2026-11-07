@@ -8,8 +8,8 @@ export default {
   icon: '📖',
   rel: ['fiona', 'kai'],
   clueOk: 'Взять ✓',
-  teaser: { a1: 'Who is Sam? Why is he sorry? Find out in Chapter 2.', a2: 'Who was Sam, and why is he sorry? Chapter 2 — tomorrow.', b1: 'What is Sam sorry for — and why won\'t Fiona talk about him? Chapter 2 — tomorrow.' },
-  teaserRu: 'Кто такой Сэм и за что он извиняется? Узнаем во второй главе.',
+  teaser: { a1: 'Who is Sam? Why is he sorry? Find out in Chapter 2.', a2: 'Who was Sam, and why is he sorry? Chapter 2 is coming soon.', b1: 'What is Sam sorry for — and why won\'t Fiona talk about him? Chapter 2 is coming soon.' },
+  teaserRu: 'Кто такой Сэм и за что он извиняется? Узнаем во второй главе — она скоро выйдет.',
 
   words: {
     platform: { ru: 'платформа', form: 'platform', cloze: { text: 'The train is at ___ two.', ru: 'Поезд на второй платформе.' } },
@@ -181,8 +181,8 @@ export default {
         { text: { a1: 'Yes! 😄', a2: 'Yes, sounds fun! 😄', b1: 'Count me in 😄' }, ru: 'Да, звучит весело! 😄', rel: { kai: 1 }, flag: 'quiz' },
         { text: { a1: 'Maybe…', a2: 'Maybe. I\'m not sure yet.', b1: 'Maybe — let me get unpacked first.' }, ru: 'Может быть. Пока не знаю.' },
       ] },
-      { from: 'kai', text: { a1: 'cool 👍 and… sorry about the Sam thing', a2: 'cool 👍 and… sorry about the Sam thing', b1: 'nice one 👍 and… sorry about the Sam thing earlier' },
-        ru: { a1: 'круто 👍 и… извини за историю с Сэмом', a2: 'круто 👍 и… извини за историю с Сэмом', b1: 'отлично 👍 и… извини за то, что ляпнул про Сэма' } },
+      { from: 'kai', text: { a1: 'cool 👍 and… sorry about Sam. he [left|leave] in august', a2: 'cool 👍 and… sorry about the Sam thing. he [left|leave] so suddenly', b1: 'nice one 👍 and… sorry about the Sam thing earlier. he just [left|leave], no goodbye' },
+        ru: { a1: 'круто 👍 и… извини про Сэма. он уехал в августе', a2: 'круто 👍 и… извини за историю с Сэмом. он уехал так внезапно', b1: 'отлично 👍 и… извини, что ляпнул про Сэма. он просто уехал, не попрощавшись' } },
     ] },
 
     { type: 'scene', to: 'room', shot: 'establish', caption: 'Your room · upstairs' },

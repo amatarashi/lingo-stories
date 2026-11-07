@@ -6,7 +6,7 @@ export default {
   story: 'Case Files',
   title: 'Coffee & Lies',
   part: 'Case 1 · Part 1',
-  teaser: { a1: 'Who is O. Blackwood? Find out in Part 2.', a2: 'Why was Blackwood\'s umbrella in the café? Find out in Part 2.', b1: 'What was Reyes\'s own partner doing at The Gull that night? Part 2 — tomorrow.' },
+  teaser: { a1: 'Who is O. Blackwood? Find out in Part 2.', a2: 'Why was Blackwood\'s umbrella in the café? Find out in Part 2.', b1: 'What was Reyes\'s own partner doing at The Gull that night? Find out in Part 2.' },
   teaserRu: 'Что делал зонт Блэквуда в кафе? Узнаем во второй части.',
 
   words: {

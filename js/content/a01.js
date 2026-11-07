@@ -7,8 +7,8 @@ export default {
   part: 'Episode 1',
   icon: '📻',
   mood: 'arctic',
-  teaser: { a1: 'Who is on channel nine? Find out in Episode 2.', a2: 'Who is talking on channel nine? Episode 2 — tomorrow.', b1: 'Who\'s talking on a channel that\'s been dead for years? Episode 2 — tomorrow.' },
-  teaserRu: 'Кто говорит на девятом канале? Узнаем во втором эпизоде.',
+  teaser: { a1: 'Who is on channel nine? Find out in Episode 2.', a2: 'Who is talking on channel nine? Episode 2 is coming soon.', b1: 'Who\'s talking on a channel that\'s been dead for years? Episode 2 is coming soon.' },
+  teaserRu: 'Кто говорит на девятом канале? Узнаем во втором эпизоде — он скоро выйдет.',
 
   words: {
     'wake up': { ru: 'проснуться', form: 'wake up', cloze: { text: 'It\'s eight o\'clock. Time to ___!', ru: 'Восемь часов. Пора просыпаться!' } },
