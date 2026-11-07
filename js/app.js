@@ -67,7 +67,7 @@ function renderHome() {
     </div>
     <h3 class="sec">Твои сериалы</h3>
     <div class="rail">${STORIES.map(storyCard).join('')}</div>
-    <p class="hint2">Каждый день в каждом сериале открывается новый эпизод</p>
+    <p class="hint2">Новые эпизоды выходят регулярно — следи за ботом</p>
   </div>`;
   $('home').querySelectorAll('[data-story]').forEach(b => b.onclick = () => { sfx('tap'); haptic(); show('story', b.dataset.story); });
   // phones: the rail scrolls sideways, so start at a series that has something to play
@@ -207,7 +207,7 @@ function intro() {
   const draw = () => {
     el.innerHTML = `<div class="bg">${STORIES.map(s => `<img src="${s.poster}" alt="">`).join('')}</div><div class="sh"></div>
       <div class="in"><h1>Choose your <span>story</span></h1>
-        <p>Три сериала на английском. Каждый день — новый эпизод на 10–15 минут.</p>
+        <p>Три сериала на английском. Эпизоды по 10–15 минут, новые выходят регулярно.</p>
         <ul><li><i>👆</i>Не понял слово? Тапни — будет перевод</li><li><i>🎯</i>Уровень подберём сами по первым репликам</li><li><i>🔁</i>Новые слова вернутся в сюжете — зубрить не нужно</li></ul>
         ${pickLevel ? `<div class="lvls">${LV.map(([k, n, d]) => `<button data-lv="${k}"><b>${n}</b><small>${d}</small></button>`).join('')}</div>` : `<button class="btn pri" id="in-go">Выбрать историю</button><button class="lnk" id="in-lv">Я знаю свой уровень английского</button>`}
       </div>`;

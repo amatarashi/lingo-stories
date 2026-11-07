@@ -240,6 +240,8 @@ export function createStage(canvas) {
     return ch.head.getWorldPosition(new THREE.Vector3());
   }
   const portrait = () => innerWidth / innerHeight < 0.8;
+  // Telegram fullscreen draws its own Back / menu buttons over the top of the page
+  const safeTop = () => { const s = getComputedStyle(document.documentElement); return (parseFloat(s.getPropertyValue('--tg-safe-area-inset-top')) || 0) + (parseFloat(s.getPropertyValue('--tg-content-safe-area-inset-top')) || 0); };
   // face shot for any character: from the side given by the spot (side: +1 camera to their right), framed lower on phones
   function faceShot(L, id, close = false) {
     const h = head(L, id), sp = L.spots[id] || {}, p = portrait();
@@ -427,5 +429,30 @@ export function createStage(canvas) {
     get info() { return { calls: renderer.info.render.calls, tris: renderer.info.render.triangles, dpr: renderer.getPixelRatio(), loc: loc?.key }; },
     get loc() { return loc; },
     fx: (name, v) => loc?.fx[name]?.(v),
+    // markers that are off screen, under Telegram's own buttons (fullscreen) or under the dialogue box
+    hidden: keys => {
+      if (!loc) return [];
+      makeMarkers();
+      const cam = camera.clone(); cam.position.copy(goal.pos); cam.position.x += panGoal; cam.fov = fovGoal; cam.updateProjectionMatrix();
+      cam.lookAt(goal.at.x + panGoal, goal.at.y, goal.at.z); cam.updateMatrixWorld();
+      const top = safeTop() + 56, bottom = innerHeight * (portrait() ? 0.6 : 0.68);
+      return keys.filter(k => {
+        const m = loc.markers[k]; if (!m) return false;
+        const v = m.userData.mid.clone().project(cam);
+        const x = (v.x + 1) / 2 * innerWidth, y = (1 - v.y) / 2 * innerHeight;
+        return v.z > 1 || x < 24 || x > innerWidth - 24 || y < top || y > bottom;
+      });
+    },
+    // turn the camera so all these objects sit in the free part of the screen
+    frame: keys => {
+      const ms = keys.map(k => loc?.markers[k]).filter(Boolean); if (!ms.length) return;
+      const c = new THREE.Vector3(); for (const m of ms) c.add(m.userData.mid); c.divideScalar(ms.length);
+      const ys = ms.map(m => m.userData.mid.y);
+      // a bit above the middle: the dialogue box covers the bottom of the screen
+      goal.at.set(c.x, c.y - (Math.max(...ys) - Math.min(...ys)) * 0.15 - 0.15, c.z); panGoal = 0;
+      fovGoal = Math.max(fovGoal, portrait() ? 74 : 56);
+    },
+    // look straight at one object (hint)
+    peek: k => { const m = loc?.markers[k]; if (!m) return; goal.at.copy(m.userData.mid); goal.at.y -= 0.12; panGoal = 0; },
   };
 }

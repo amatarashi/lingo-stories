@@ -245,7 +245,8 @@ async function exploreBeat(b) {
   };
   world.onTap(async k => { if (busy) return; busy = true; world.setExplore([], R.found); await openClue(k); busy = false; world.shot('wide'); paint(); });
   const line = { who: 'narr', text: b.hint, ru: b.hintRu, noCount: true };
-  if (innerWidth / innerHeight < 0.8) setTimeout(() => toast('👆 Свайпай сцену влево-вправо', 2400), 900);
+  // some things may be off screen (phones, very wide windows): tell the player the scene moves
+  setTimeout(() => { if (world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
   const p = present(line, (box, done) => {
     const c = document.createElement('div'); c.className = 'btn'; c.style.flex = 'none'; c.innerHTML = `🔎 ${b.countLabel || 'Улики'}: <b id="ex-count">0/${b.need.length}</b>`;
     const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
@@ -268,7 +269,8 @@ async function taskBeat(b) {
     let wrong = 0;
     world.shot(b.shot);
     world.setExplore(b.targets, done, 'dot');
-    const showHint = () => { world.setExplore([st.do], done, 'dot'); toast('Вот это 👀'); setTimeout(() => world.setExplore(b.targets, done, 'dot'), 2200); };
+    if (world.hidden(b.targets).length) world.frame(b.targets);
+    const showHint = () => { world.peek(st.do); world.setExplore([st.do], done, 'dot'); toast('Вот это 👀'); setTimeout(() => world.setExplore(b.targets, done, 'dot'), 2200); };
     await present({ who: b.who, shot: b.shot, text: st.text, ru: st.ru }, (box, fin) => {
       const info = document.createElement('div'); info.className = 'stmt';
       info.innerHTML = `Шаг ${si + 1}/${b.steps.length} · <span class="ok">нажми в сцене</span>`;
