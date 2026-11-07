@@ -412,7 +412,8 @@ export function createStage(canvas) {
     const sh = shakeT * 0.12;
     camera.position.set(cur.pos.x + panCur + Math.sin(t * 0.31) * 0.03 + (Math.random() - 0.5) * sh, cur.pos.y + Math.sin(t * 0.23) * 0.02 + (Math.random() - 0.5) * sh, cur.pos.z);
     camera.lookAt(cur.at.x + panCur, cur.at.y, cur.at.z);
-    for (const sp of Object.values(loc.markers)) if (sp.visible) sp.scale.setScalar((sp.userData.small ? 0.2 : 0.4) + Math.sin(t * 4) * (sp.userData.small ? 0.02 : 0.04));
+    // far markers grow, so a '?' across the room is still as easy to see and tap as a near one
+    for (const sp of Object.values(loc.markers)) if (sp.visible) { const d = Math.max(1, camera.position.distanceTo(sp.position) / 3.2); sp.scale.setScalar(((sp.userData.small ? 0.2 : 0.4) + Math.sin(t * 4) * (sp.userData.small ? 0.02 : 0.04)) * d); }
     renderer.render(loc.scene, camera);
   });
 

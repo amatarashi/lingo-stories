@@ -9,7 +9,7 @@ import { LEVEL_NAME } from './engine/text.js';
 import * as player from './play/player.js';
 
 const tg = window.Telegram?.WebApp;
-if (tg?.initData) { tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); tg.setHeaderColor?.('#0b1020'); tg.setBackgroundColor?.('#0b1020'); }
+if (tg?.initData) { document.body.classList.add('tg'); tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); tg.setHeaderColor?.('#0b1020'); tg.setBackgroundColor?.('#0b1020'); }
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
@@ -35,7 +35,8 @@ function show(name, arg) {
   tg?.BackButton?.[name === 'story' ? 'show' : 'hide']?.();
 }
 $('nav').onclick = e => { const b = e.target.closest('[data-go]'); if (b) { sfx('tap'); haptic(); show(b.dataset.go); } };
-tg?.BackButton?.onClick?.(() => { if (current === 'story') show('home'); });
+// Telegram's own Back: inside an episode it asks to leave (same as the in-game exit), on a story it goes home
+tg?.BackButton?.onClick?.(() => { if (document.body.classList.contains('playing')) $('b-home').click(); else if (current === 'story') show('home'); });
 document.addEventListener('pointerdown', () => unlock(), { once: true });
 
 // ---------------------------------------------------------------- home

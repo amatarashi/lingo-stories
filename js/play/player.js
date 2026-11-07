@@ -461,14 +461,16 @@ export function ask(html, yes, no) {
   });
 }
 async function maybeAdjust() {
-  if (R.asked || S.placing || R.al < 6) return;
+  if (R.asked || S.placing || R.al < 12) return;
   const ratio = R.ac / R.al, i = LEVELS.indexOf(level());
-  if (ratio >= 0.85 && i < 2) {
+  if (ratio >= 0.85 && i < 2 && S.keepUp !== level()) {
     R.asked = true;
     if (S.auto || await ask(`<h2>Тебе легко 💪</h2><p>Ты понял(а) ${Math.round(ratio * 100)}% реплик без перевода. Сделать текст сложнее (${LEVEL_NAME[LEVELS[i + 1]]})?</p>`, 'Да, сложнее', 'Оставить')) { S.level = LEVELS[i + 1]; save(); paintLevel(); toast(`Уровень текста: <b>${LEVEL_NAME[level()]}</b>`); }
-  } else if (ratio < 0.4 && i > 0) {
+    else if (!S.auto) { S.keepUp = level(); save(); }   // said no: don't ask again at this level
+  } else if (ratio < 0.4 && i > 0 && S.keepDown !== level()) {
     R.asked = true;
     if (S.auto || await ask(`<h2>Сделать попроще?</h2><p>Ты часто открываешь перевод — это нормально! Можно упростить текст (${LEVEL_NAME[LEVELS[i - 1]]}), история не изменится.</p>`, 'Да, проще', 'Оставить')) { S.level = LEVELS[i - 1]; save(); paintLevel(); toast(`Уровень текста: <b>${LEVEL_NAME[level()]}</b>`); }
+    else if (!S.auto) { S.keepDown = level(); save(); }
   }
 }
 
