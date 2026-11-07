@@ -89,5 +89,6 @@
 
 ## Ассеты и лицензии
 - `assets/models/` — сжатые модели (glTF-Transform + meshopt), около 2 МБ. `assets/src/` — исходники, их не нужно выкладывать.
-- Персонажи, анимации и мебель — Quaternius, CC0. Голоса — Kokoro (Apache 2.0). Шрифты — Google Fonts.
+- Персонажи, мебель и уличные модели — Quaternius (Ultimate Modular Men/Women, Ultimate House Interior, Modular Streets), анимации — Quaternius Universal Animation Library 1 и 2; всё CC0. Голоса сгенерированы моделью Kokoro-82M (Apache 2.0). Движок three.js и meshoptimizer — MIT. Шрифты — Google Fonts (OFL / Apache 2.0).
+- Полный список с источниками и текстами лицензий — в [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Добавляя сторонний ассет, сразу дописывай его туда.
 - `tools/viewer.html` и `tools/anim.html` — страницы для проверки моделей и анимаций.
