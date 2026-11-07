@@ -9,7 +9,7 @@ import { LEVEL_NAME } from './engine/text.js';
 import * as player from './play/player.js';
 
 const tg = window.Telegram?.WebApp;
-if (tg?.initData) { document.body.classList.add('tg'); tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); tg.setHeaderColor?.('#0b1020'); tg.setBackgroundColor?.('#0b1020'); }
+if (tg?.initData) { document.body.classList.add('in-tg'); tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); tg.setHeaderColor?.('#0b1020'); tg.setBackgroundColor?.('#0b1020'); }
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
