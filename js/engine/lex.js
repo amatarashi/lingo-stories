@@ -1,5 +1,30 @@
 // Tap-to-translate dictionary: base forms + a tiny lemmatizer. Tracked words come from episodes.
 const G = {
+  // ---- Fresh Start, chapter 1 (Scottish words come with a note)
+  actually: 'вообще-то, на самом деле', advance: 'продвижение (in advance — заранее)', along: 'вдоль; с кем-то (sing along — подпевать)', apology: 'извинение',
+  art: 'искусство', august: 'август', awkward: 'неловкий', backpack: 'рюкзак', bag: 'сумка', band: 'музыкальная группа', battered: 'потрёпанный',
+  believe: 'верить', beneath: 'под', biology: 'биология (marine biology — морская биология)', bit: 'кусочек (in a bit — скоро)', blue: 'синий',
+  board: 'доска', breakfast: 'завтрак', brilliant: 'блестяще, отлично', cake: 'пирог, торт, выпечка', chapter: 'глава', chocolate: 'шоколад', choice: 'выбор',
+  cinnamon: 'корица', cling: 'цепляться', college: 'колледж', concert: 'концерт', cool: 'круто; прохладный', corner: 'угол (round the corner — за углом)',
+  cosy: 'уютный', count: 'считать (count me in — я в деле)', creak: 'скрипеть', cream: 'сливки', crowd: 'толпа, публика (tough crowd — строгая публика)',
+  cup: 'чашка', daytime: 'дневное время', downstairs: 'внизу (на первом этаже)', drink: 'напиток; пить', earlier: 'раньше, недавно', edge: 'край',
+  eh: 'а? да? (в конце фразы)', english: 'английский', fair: 'честный (fair warning — честно предупреждаю)', fan: 'фанат, поклонник', far: 'далеко',
+  fiona: 'Фиона (имя)', floorboard: 'половица', fresh: 'свежий', full: 'полный', fun: 'весело, веселье', further: 'дальше', glance: 'взглянуть, покоситься',
+  goodness: 'батюшки! (удивление)', guitar: 'гитара', ha: 'ха!', hair: 'волосы', happy: 'счастливый, рад', harbour: 'гавань', haul: 'тащить с трудом',
+  heard: 'слышал(а) (hear)', heavy: 'тяжёлый', hence: 'отсюда, поэтому', hiya: 'привет! (разг., Шотландия и север Англии)', impression: 'впечатление',
+  insist: 'настаивать', joke: 'шутить', journey: 'поездка, путь', kai: 'Кай (имя)', kazakhstan: 'Казахстан', kind: 'добрый (that\'s kind of you — очень мило)',
+  kinloch: 'Кинлох (городок)', landlady: 'хозяйка (сдаёт жильё)', let: 'позволять (let me — дай мне)', live: 'жить', lodge: 'снимать комнату', lodger: 'жилец, квартирант',
+  loose: 'шатающийся, незакреплённый', marine: 'морской', million: 'миллион (thanks a million — огромное спасибо)', mind: 'разум (never mind — ничего, неважно)',
+  mix: 'смесь', music: 'музыка', nae: 'нет, не (шотл.: nae bother — не беда)', none: 'ничего, никакой', notebook: 'тетрадь, блокнот',
+  och: 'ох (шотл.)', oi: 'эй!', old: 'старый, прежний', option: 'вариант', page: 'страница', party: 'вечеринка', perfect: 'отлично, идеально',
+  pet: 'дорогая(ой), милая(ый) (ласковое обращение в Шотландии)', play: 'играть', polite: 'вежливый', quiz: 'викторина', reply: 'ответ; отвечать',
+  round: 'вокруг (round the corner — за углом)', russia: 'Россия', salt: 'соль', sam: 'Сэм (имя)', scone: 'скон (британская булочка к чаю)',
+  shaky: 'дрожащий', shift: 'сдвигаться; смена', silence: 'тишина', sin: 'грех (for my sins — за грехи мои, шутл.)', smell: 'пахнуть',
+  sometimes: 'иногда', somewhere: 'где-то', story: 'история', strange: 'странный', strong: 'крепкий, сильный', student: 'студент(ка)',
+  study: 'учиться, изучать', suddenly: 'вдруг', taste: 'иметь вкус', teapot: 'заварочный чайник', than: 'чем', tired: 'уставший',
+  tongue: 'язык (hold your tongue — промолчать)', tough: 'трудный, строгий', train: 'поезд', trek: 'долгий путь', trip: 'поездка',
+  u: 'ты (you, в переписке)', unpack: 'распаковать вещи', upstairs: 'наверху, наверх', warning: 'предупреждение', wee: 'маленький (шотл.: a wee while — чуть-чуть)',
+  wild: 'дикий, буйный', windy: 'ветреный', woman: 'женщина', worry: 'беспокойство (no worries — не волнуйся)', wow: 'ого!', write: 'писать',
   // ---- Last Signal, episode 1
   across: 'через, по (across the sky — по небу)', ago: 'назад (three days ago — три дня назад)', air: 'воздух', alive: 'живой', alone: 'один, в одиночестве',
   anybody: 'кто-нибудь', aria: 'ARIA (имя компьютера станции)', asleep: 'спящий (be asleep — спать)', aurora: 'северное сияние; Аврора (название станции)',
@@ -106,6 +131,10 @@ const G = {
 
 // irregular and contracted forms
 const FORMS = {
+  "breakfast's": 'завтрак (breakfast is)', "train's": 'поезд (train is)', "sam's": 'Сэма (его)', apologies: 'apology', bags: 'bag', concerts: 'concert',
+  clinging: 'cling', creaks: 'creak', floorboards: 'floorboard', glances: 'glance', impressions: 'impression', joking: 'joke', lived: 'live', lives: 'live',
+  lodged: 'lodge', parties: 'party', scones: 'scone', shifts: 'shift', smells: 'smell', studying: 'study', tastes: 'taste', unpacked: 'unpack', women: 'woman',
+  worries: 'worry', wrote: 'write',
   "they've": 'они (they have)', "you've": 'ты (you have)', slept: 'sleep', warmer: 'warm', lights: 'light', eyes: 'eye', channels: 'channel', controls: 'control',
   begins: 'begin', dancing: 'dance', flashing: 'flash', grinning: 'grin', howling: 'howl', howls: 'howl', hums: 'hum', includes: 'include', instructions: 'instruction',
   matters: 'matter', pulsing: 'pulse', rippling: 'ripple', rolling: 'roll', running: 'run', switches: 'switch', crackles: 'crackle',

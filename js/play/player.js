@@ -14,12 +14,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
 
-let ep = null, world = null, hooks = {};
+let ep = null, world = null, hooks = {}, storyId = null;
 // ONE 3D stage for all series (phones dislike several WebGL contexts); each series brings its locations
 let stageP = null;
 const getStage = () => stageP ||= import('../stories/stage.js').then(m => m.createStage($('c')));
 const STORY = {
   a: { mood: 'arctic', locs: { radio: async () => (await import('../stories/a/loc-radio.js')).buildRadio } },
+  c: { mood: 'coast', locs: {
+    platform: async () => (await import('../stories/c/loc-platform.js')).buildPlatform,
+    puffin: async () => (await import('../stories/c/loc-puffin.js')).buildPuffin,
+    room: async () => (await import('../stories/c/loc-puffin.js')).buildRoom,
+  } },
   b: { mood: 'noir', locs: { cafe: async () => (await import('../stories/b/loc-cafe.js')).buildCafe, office: async () => (await import('../stories/b/loc-office.js')).buildOffice } },
 };
 const sceneKey = sc => sc.loc + (sc.mood ? ':' + sc.mood : '');
@@ -209,7 +214,7 @@ function openClue(k) {
     const card = $('card'), el = card.firstElementChild;
     el.innerHTML = `<div class="icon">${c.icon}</div><h2>${esc(c.title)}</h2>${c.doc ? `<div class="doc">${esc(c.doc)}</div>` : ''}
       <div class="txt"></div><div class="ru hide"></div>
-      <div class="row"><button class="btn" id="cl-ru" style="flex:none">RU</button><button class="btn" id="cl-say" style="flex:none">🔊</button><button class="btn pri" id="cl-ok">${R.found.has(k) ? 'Закрыть' : 'В досье ✓'}</button></div>`;
+      <div class="row"><button class="btn" id="cl-ru" style="flex:none">RU</button><button class="btn" id="cl-say" style="flex:none">🔊</button><button class="btn pri" id="cl-ok">${R.found.has(k) ? 'Закрыть' : ep.clueOk || 'В досье ✓'}</button></div>`;
     const line = { who: 'narr', text: c.text, ru: c.ru };
     R.line = line; R.helped = false; R.ruUsed = false; R.tapped = new Set();
     renderTokens(el.querySelector('.txt'), L(c.text), { onTap: lineHelped });
@@ -303,10 +308,60 @@ async function decodeBeat(b) {
   await present({ who: b.who, shot: b.shot, text: decodeFull(b.text), ru: b.ru });
 }
 
+// ---------------------------------------------------------------- relationships (Fresh Start): each choice can warm or cool a character
+// kept per episode, so replaying a chapter doesn't count twice
+function relOf(id) { let n = 0; for (const e of Object.values(S.stories[storyId]?.relEp || {})) n += e[id] || 0; return n; }
+function applyRel(rel) {
+  const st = S.stories[storyId] ||= {}; st.relEp ||= {}; const e = st.relEp[ep.id] ||= {};
+  for (const [id, v] of Object.entries(rel)) {
+    e[id] = (e[id] || 0) + v;
+    setTimeout(() => toast(v > 0 ? `❤️ ${esc(ep.chars[id].name)} это запомнит` : `💔 ${esc(ep.chars[id].name)}: не лучший ответ`, 1800), 350);
+  }
+  save();
+}
+
+// ---------------------------------------------------------------- the hero's phone: a chat with short messages (reading, slang, emoji)
+async function chatBeat(b) {
+  dlg.classList.add('hidden'); hidePop();
+  const ph = $('phone'), c = ep.chars[b.with], img = world.portraits[b.with];
+  ph.innerHTML = `<div class="ph"><div class="ph-top"><span class="av" style="background-image:url(${img || ''});--c:${c.color}"></span><span><b>${esc(c.name)}</b><small>${esc(L(b.title) || 'online')}</small></span></div><div class="ph-msgs"></div><div class="ph-foot"></div></div>`;
+  ph.classList.remove('hide');
+  const msgs = ph.querySelector('.ph-msgs'), foot = ph.querySelector('.ph-foot');
+  const scroll = () => { msgs.scrollTop = msgs.scrollHeight; };
+  for (const m of b.msgs) {
+    if (m.from) {
+      const typing = document.createElement('div'); typing.className = 'bub in typing'; typing.innerHTML = '<i></i><i></i><i></i>';
+      msgs.appendChild(typing); scroll(); await sleep(850); typing.remove();
+      R.line = { who: m.from, text: m.text, ru: m.ru }; R.helped = false; R.ruUsed = false; R.tapped = new Set();
+      const d = document.createElement('div'); d.className = 'bub in';
+      const t = document.createElement('div'); renderTokens(t, L(m.text), { onTap: lineHelped });
+      const ru = document.createElement('div'); ru.className = 'bru hide'; ru.textContent = L(m.ru) || '';
+      const rb = document.createElement('button'); rb.className = 'rb'; rb.textContent = 'RU';
+      rb.onclick = e => { e.stopPropagation(); ru.classList.toggle('hide'); if (R.line && R.line.text === m.text) { R.helped = true; R.ruUsed = true; } };
+      d.append(t, ru, rb); msgs.appendChild(d); scroll(); sfx('beep'); haptic();
+      await new Promise(res => { foot.innerHTML = '<button class="btn pri">Дальше ▸</button>'; foot.firstChild.onclick = () => { sfx('next'); res(); }; });
+      finishLine();
+    } else if (m.reply) {
+      const pick = await new Promise(res => {
+        foot.innerHTML = '';
+        m.reply.forEach((o, i) => { const btn = document.createElement('button'); btn.className = 'btn choice'; btn.innerHTML = `<span class="n">${i + 1}</span><span>${esc(plain(L(o.text)))}<small class="opt-ru">${esc(L(o.ru))}</small></span>`; btn.onclick = () => { sfx('next'); haptic(); res(o); }; foot.appendChild(btn); });
+      });
+      foot.innerHTML = '';
+      const d = document.createElement('div'); d.className = 'bub out'; d.textContent = plain(L(pick.text)); msgs.appendChild(d); scroll();
+      if (pick.rel) applyRel(pick.rel);
+      if (pick.flag) { const st = S.stories[storyId] ||= {}; (st.flags ||= {})[pick.flag] = true; save(); }
+      await sleep(500);
+    }
+  }
+  await sleep(500);
+  ph.classList.add('hide');
+}
+
 // ---------------------------------------------------------------- screen and room effects
 async function fxBeat(b) {
   const veil = $('veil');
   if (b.fx === 'black') { veil.className = 'black'; return; }
+  if (b.fx === 'clear') { veil.className = ''; return; }
   if (b.fx === 'eyes') { dlg.classList.add('hidden'); veil.className = 'eyes'; await sleep(2600); veil.className = ''; return; }
   if (b.fx === 'static') { sfx('static'); veil.className = ''; void veil.offsetWidth; veil.className = 'static'; setTimeout(() => { if (veil.className === 'static') veil.className = ''; }, 900); return; }
   if (b.fx === 'shake') { world.shake(0.4); haptic('heavy'); return; }
@@ -538,6 +593,7 @@ function finish() {
   el.innerHTML = `<h2>${esc(ep.part)} closed</h2>
     <div class="big"><div><b>${pct}%</b><small>понял(а) без перевода</small></div><div><b>${Object.keys(ep.words).length}</b><small>новых слов и фраз</small></div><div><b>🔥 ${days}</b><small>${days === 1 ? 'день' : 'дней'} подряд</small></div></div>
     ${Object.keys(ep.words).map(k => { const w = S.words[k], info = ep.words[k]; return `<div class="wd"><div><b>${esc(info.form)}</b><div class="ex">${esc(info.ru)}</div></div><div class="m">${MASTERY[mastery(w)]}<small>${w ? (daysUntil(w) ? `повтор через ${daysUntil(w)} дн.` : 'пора повторить') : 'не встретилось'}</small></div></div>`; }).join('')}
+    ${ep.rel ? `<div class="rel">${ep.rel.map(id => { const n = relOf(id); return `<span style="--c:${ep.chars[id].color}"><b>${esc(ep.chars[id].name)}</b>${'❤️'.repeat(Math.max(0, Math.min(3, n)))}${n <= 0 ? '🤍' : ''}<small>${n > 1 ? 'тепло' : n === 1 ? 'симпатия' : n === 0 ? 'нейтрально' : 'прохладно'}</small></span>`; }).join('')}</div>` : ''}
     <div class="teaser">${ep.icon || '🕵'} ${esc(L(ep.teaser))}<div style="font-family:Inter,sans-serif;font-size:13px;color:#d9a7c0;margin-top:4px">${esc(ep.teaserRu)}</div></div>
     <div class="row"><button class="btn" id="sm-nb" style="text-align:center;flex:none">📓</button><button class="btn pri" id="sm-home">Готово</button></div>
     <p style="color:var(--muted);font-size:12px;text-align:center;margin:10px 0 0">Слова вернутся в следующих эпизодах — когда придёт время повторить.</p>`;
@@ -549,7 +605,7 @@ function finish() {
 
 function exit(completed = false) {
   R.run++; stopLine(); duck(false); ambience(false); hidePop(); clearInterval(R.typing);
-  for (const id of ['card', 'sheet', 'sum', 'ask', 'flash', 'recap', 'caption', 'stamp']) $(id).classList.add('hide');
+  for (const id of ['card', 'sheet', 'sum', 'ask', 'flash', 'recap', 'caption', 'stamp', 'phone']) $(id).classList.add('hide');
   $('veil').className = '';
   document.body.classList.remove('flashback');
   dlg.classList.add('hidden'); document.body.classList.remove('cine', 'playing');
@@ -576,7 +632,8 @@ export async function prepare(entry, onProgress) {
 }
 
 export async function play(mod, story, h = {}) {
-  ep = mod; hooks = h; world = await getStage();
+  ep = mod; hooks = h; world = await getStage(); storyId = story;
+  if (ep.rel) { const st = S.stories[story]; if (st?.relEp) delete st.relEp[ep.id]; }
   document.body.dataset.story = story; setMood(STORY[story].mood); $('veil').className = '';
   // start in the first location (the one the first scene beat names, or the only one)
   const firstScene = mod.beats.find(b => b.type === 'scene');
@@ -595,7 +652,8 @@ export async function play(mod, story, h = {}) {
     const b = beats[i];
     let go = b.goto;
     if (b.type === 'line') await present(b);
-    else if (b.type === 'choice') { const k = await choiceBeat(b); const o = b.options[k]; go = o.goto; if (o.flag) { const st = S.stories[story] ||= {}; (st.flags ||= {})[o.flag] = true; save(); } }
+    else if (b.type === 'choice') { const k = await choiceBeat(b); const o = b.options[k]; go = o.goto; if (o.flag) { const st = S.stories[story] ||= {}; (st.flags ||= {})[o.flag] = true; save(); } if (o.rel) applyRel(o.rel); }
+    else if (b.type === 'chat') await chatBeat(b);
     else if (b.type === 'recap') await recapBeat(b);
     else if (b.type === 'scene') await sceneBeat(b);
     else if (b.type === 'clue') await openClue(b.id);

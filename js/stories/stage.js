@@ -148,7 +148,15 @@ export function createStage(canvas) {
     clipCache[def.model] ||= retarget(o, lib.src, lib.clips, lib.rest);
     const mixer = new THREE.AnimationMixer(o);
     const acts = {}; for (const c of clipCache[def.model]) acts[c.name] = mixer.clipAction(c);
-    let headBone = null; o.traverse(b => { if (b.name === 'Head') headBone = b; });
+    let headBone = null, neck = null; o.traverse(b => { if (b.name === 'Head') headBone = b; if (b.name === 'Neck') neck = b; });
+    // an accessory the story needs to be visible (Fiona's red scarf): a knitted ring round the neck + a hanging end
+    if (def.scarf && neck) {
+      const g = new THREE.Group(), m = new THREE.MeshToonMaterial({ color: def.scarf, gradientMap: GRAD });
+      const ws = neck.getWorldScale(new THREE.Vector3()).x || 1;
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.035, 8, 16), m); ring.rotation.x = Math.PI / 2; g.add(ring);
+      const tail = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.26, 0.03), m); tail.position.set(0.05, -0.13, 0.08); tail.rotation.z = 0.15; g.add(tail);
+      g.scale.setScalar(1 / ws); g.position.y = 0.02 / ws; neck.add(g);
+    }
     return { o, mixer, acts, head: headBone, def, cur: null, lookAt: null };
   }
 
@@ -185,6 +193,7 @@ export function createStage(canvas) {
       const ch = await makeChar(def);
       ch.o.position.set(...spot.pos); ch.o.rotation.y = spot.ry; ch.base = spot.base || 'idle';
       scene.add(ch.o); L.mixers.push(ch.mixer); L.chars[id] = ch;
+      if (L.charTargets?.includes(id)) L.clues[id] = ch.o; // people the player can tap ("find Fiona")
       play(id, ch.base, 0, L);
       add(new THREE.CircleGeometry(0.42, 20), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: 0.35, depthWrite: false }), spot.pos[0], 0.01, spot.pos[2], scene, { rot: [-Math.PI / 2, 0, 0] });
       tick();

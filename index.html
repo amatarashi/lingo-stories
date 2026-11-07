@@ -299,6 +299,26 @@ body.flashback #c{filter:sepia(.75) blur(3px) brightness(.55);transition:filter 
 @keyframes stat{0%{opacity:.7;background-position:0 0}50%{opacity:.45;background-position:40px 60px}100%{opacity:0;background-position:-30px 20px}}
 body[data-story=a]{--type:'Share Tech Mono','Courier New',monospace}
 body[data-story=c]{--type:'Caveat',cursive}
+#phone{position:fixed;inset:0;z-index:15;display:grid;place-items:center;background:rgba(10,8,14,.55);backdrop-filter:blur(3px)}
+#phone .ph{width:min(360px,calc(100vw - 32px));height:min(640px,calc(100vh - 120px));margin-top:40px;display:flex;flex-direction:column;background:#f4ede2;border-radius:34px;border:8px solid #1b1a20;box-shadow:0 30px 80px #000c;overflow:hidden;color:#1d1a14;animation:phin .35s cubic-bezier(.2,1.3,.5,1)}
+@keyframes phin{from{transform:translateY(40px) scale(.96);opacity:0}}
+#phone .ph-top{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;background:#fff;border-bottom:1px solid #e3d9c8}
+#phone .av{width:40px;height:40px;border-radius:50%;background:var(--c) center/cover;border:2px solid var(--c)}
+#phone .ph-top b{display:block;font-size:16px}#phone .ph-top small{color:#8a7f70;font-size:12px}
+#phone .ph-msgs{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+#phone .bub{max-width:82%;padding:9px 12px;border-radius:18px;font-size:15.5px;line-height:1.35;position:relative;animation:bin .25s ease-out}
+@keyframes bin{from{transform:translateY(8px);opacity:0}}
+#phone .bub.in{align-self:flex-start;background:#fff;border-bottom-left-radius:6px;box-shadow:0 1px 2px #0001;padding-right:40px}
+#phone .bub.out{align-self:flex-end;background:#ffc27a;border-bottom-right-radius:6px}
+#phone .bub .tk{color:#1d1a14}#phone .bub .tk.w{cursor:pointer}#phone .bub .tk.tr{color:#b5561d;font-weight:600;border-bottom:2px dotted #d98a2a}
+#phone .bub .rb{position:absolute;right:6px;bottom:6px;font-size:10px;font-weight:800;color:#8a7f70;background:#f1e9dc;border:0;border-radius:6px;padding:2px 5px}
+#phone .bub .bru{font-size:13px;color:#7a6f60;margin-top:4px}
+#phone .typing{display:flex;gap:4px;padding:12px 14px}#phone .typing i{width:7px;height:7px;border-radius:50%;background:#b8ab98;animation:dot 1s infinite}#phone .typing i:nth-child(2){animation-delay:.15s}#phone .typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{50%{transform:translateY(-4px);opacity:.5}}
+#phone .ph-foot{padding:10px;display:flex;flex-direction:column;gap:8px;background:#fff;border-top:1px solid #e3d9c8}
+#phone .ph-foot .btn{color:#1d1a14;background:#f1e9dc;border-color:#e3d9c8}#phone .ph-foot .btn.pri{background:#ffb35c;color:#2a1700;text-align:center}
+#phone .ph-foot .opt-ru{display:block;color:#8a7f70;font-size:12px}
+.rel{display:flex;gap:8px;margin:12px 0}.rel span{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--line);border-top:2px solid var(--c);border-radius:12px;padding:8px 10px;font-size:15px}.rel b{display:block;font-size:13px;color:var(--c)}.rel small{display:block;color:var(--muted);font-size:12px}
 #flash{position:fixed;inset:0;z-index:35;display:grid;place-items:center;pointer-events:none}
 #flash span{font-family:var(--type);font-size:min(15vw,96px);color:#fff;background:#d42150;padding:4px 24px;transform:rotate(-6deg);box-shadow:0 0 0 6px #fff,0 18px 60px #000a;animation:pow .9s ease-out forwards}
 #flash::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.35),transparent 60%);animation:fl .5s ease-out forwards}
@@ -364,6 +384,7 @@ body[data-story=c]{--type:'Caveat',cursive}
 
 <div id="pop" class="hide"></div>
 <div id="veil"></div>
+<div id="phone" class="hide"></div>
 <div id="flash" class="hide"><span>OBJECTION!</span></div>
 <div id="recap" class="hide"></div>
 <div id="caption" class="hide"></div>

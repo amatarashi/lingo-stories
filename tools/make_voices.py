@@ -16,7 +16,7 @@ kokoro = Kokoro(str(home / 'models' / 'kokoro-v1.0.onnx'), str(home / 'voices' /
 
 # a touch of character per voice: speed
 SPEED = {'bf_isabella': 0.95, 'am_adam': 1.05, 'af_nova': 1.1, 'bm_george': 0.92, 'bf_lily': 1.02, 'bm_lewis': 0.9,
-         'af_kore': 0.92, 'af_sarah': 1.05, 'am_puck': 1.0, 'bm_daniel': 0.92}
+         'af_kore': 0.92, 'af_sarah': 1.05, 'am_puck': 1.0, 'bm_daniel': 0.92, 'bf_emma': 0.95, 'bm_fable': 1.05, 'bf_alice': 0.95}
 # 'voice+fx' in a job: the same Kokoro voice through a filter (radio, the station computer)
 FX = {
     'radio': 'highpass=f=320,lowpass=f=3100,acompressor=threshold=-20dB:ratio=6,volume=1.6',

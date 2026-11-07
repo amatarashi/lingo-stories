@@ -30,7 +30,7 @@ export const STORIES = [
     hook: 'Life choices', hookRu: 'Твой тон в разговорах меняет отношения — и то, кто поможет с тайной',
     cast: [['☕', 'Fiona', 'хозяйка кафе и комнаты'], ['🎸', 'Kai', 'сосед, музыкант, шутник'], ['📚', 'Priya', 'однокурсница, умная и амбициозная'], ['🗼', 'Mr. Duncan', 'смотритель маяка']],
     episodes: [
-      ['C-01', 'Arrival', 'вокзал, Fiona и кафе The Puffin'],
+      ['C-01', 'Arrival', 'вокзал, Fiona и кафе The Puffin', () => import('./c01.js')],
     ],
   },
 ].map(s => ({ ...s, episodes: s.episodes.map(([id, title, about, load], i) => ({ id, title, about, load, n: i + 1, story: s.id })) }));
