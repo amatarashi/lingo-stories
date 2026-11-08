@@ -124,8 +124,8 @@ const ONESHOT = new Set(['yes', 'hit', 'point']);
 
 // ---------------------------------------------------------------- stage
 export function createStage(canvas) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !MOBILE, powerPreference: 'high-performance' });
-  const maxDpr = MOBILE ? 1.5 : 2;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  const maxDpr = 2;
   renderer.setPixelRatio(Math.min(devicePixelRatio, maxDpr));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -174,13 +174,23 @@ export function createStage(canvas) {
       o.updateMatrixWorld(true);
       const mount = (bone, g, at) => { bone.add(g); g.position.copy(bone.worldToLocal(at.clone())); g.quaternion.copy(bone.getWorldQuaternion(new THREE.Quaternion()).invert()); };
       const m = new THREE.MeshToonMaterial({ color: '#17181f', gradientMap: GRAD });
-      const eye = n => o.getObjectByName(n)?.getWorldPosition(new THREE.Vector3());
-      const eL = eye('J_Adj_L_FaceEye'), eR = eye('J_Adj_R_FaceEye');
-      if (def.glasses && eL && eR && headBone) {
-        const g = new THREE.Group(), half = Math.abs(eL.x - eR.x) * 0.88, r = half * 0.74; // the eye bones sit closer together than the painted eyes
-        for (const sx of [-1, 1]) { const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.0016, 6, 24), m); ring.position.x = sx * half; g.add(ring); }
-        const bridge = new THREE.Mesh(new THREE.BoxGeometry(half * 2 - r * 2, 0.002, 0.002), m); g.add(bridge);
-        mount(headBone, g, eL.clone().add(eR).multiplyScalar(0.5).add(new THREE.Vector3(0, 0, 0.085)));
+      if (def.glasses && headBone) {
+        // measure the eyes as they are painted: the eye bones sit much closer together than the irises
+        const points = re => { const out = []; o.traverse(x => { if (!x.isSkinnedMesh || !re.test(x.material.name)) return; const n = x.geometry.attributes.position.count; for (let i = 0; i < n; i++) out.push(x.getVertexPosition(i, new THREE.Vector3()).applyMatrix4(x.matrixWorld)); }); return out; };
+        const iris = points(/EyeIris/), white = points(/EyeWhite/), skin = points(/Face_00_SKIN/);
+        const right = iris.filter(p => p.x > 0);
+        const c = right.reduce((s, p) => s.add(p), new THREE.Vector3()).divideScalar(right.length);
+        const wb = new THREE.Box3().setFromPoints(white.filter(p => p.x > 0));
+        const r = Math.max(wb.max.x - wb.min.x, wb.max.y - wb.min.y) * 0.56, half = c.x;
+        // sit on the bridge of the nose, just in front of the skin at eye level, so the frames do not slide when the head turns
+        const front = skin.filter(p => Math.abs(p.y - c.y) < r && Math.abs(p.x) < half).reduce((z, p) => Math.max(z, p.z), c.z) + 0.003;
+        const g = new THREE.Group(), lensZ = 0;
+        for (const sx of [-1, 1]) {
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.0016, 8, 32), m); ring.position.set(sx * half, 0, lensZ); g.add(ring);
+          const arm = new THREE.Mesh(new THREE.BoxGeometry(0.0028, 0.0028, 0.11), m); arm.position.set(sx * (half + r), 0, -0.055); g.add(arm);
+        }
+        const bridge = new THREE.Mesh(new THREE.BoxGeometry(Math.max(0.004, half * 2 - r * 2), 0.0028, 0.0028), m); g.add(bridge);
+        mount(headBone, g, new THREE.Vector3(0, c.y, front));
       }
       if (def.headphones && neck) {
         const g = new THREE.Group();
@@ -426,11 +436,13 @@ export function createStage(canvas) {
   addEventListener('resize', resize); resize();
   let frames = 0, acc = 0, ratio = renderer.getPixelRatio();
   const topDpr = Math.min(devicePixelRatio, maxDpr);
+  const lowDpr = Math.min(topDpr, 1.25); // below this a phone screen looks like blocks; slow phones lose frames first
   function adapt(dt) {
     frames++; acc += dt; if (acc < 2) return;
     const fps = frames / acc; frames = 0; acc = 0;
-    if (fps < 45 && ratio > 0.75) { ratio = Math.max(0.75, ratio - 0.25); renderer.setPixelRatio(ratio); resize(); }
-    else if (fps > 58 && ratio < topDpr) { ratio = Math.min(topDpr, ratio + 0.25); renderer.setPixelRatio(ratio); resize(); }
+    // 28, not 45: a phone in low power mode is capped at 30 fps, and dropping resolution would not help it
+    if (fps < 28 && ratio > lowDpr) { ratio = Math.max(lowDpr, ratio - 0.25); renderer.setPixelRatio(ratio); resize(); }
+    else if (fps > 52 && ratio < topDpr) { ratio = Math.min(topDpr, ratio + 0.25); renderer.setPixelRatio(ratio); resize(); }
   }
   const clock = new THREE.Clock(); let t = 0, paused = false;
   renderer.setAnimationLoop(() => {

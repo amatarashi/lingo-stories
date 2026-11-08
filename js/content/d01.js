@@ -254,7 +254,7 @@ export default {
 
     // ------------------------------------------------ night, the flat
     { type: 'scene', to: 'night', shot: 'establish', caption: 'Camden · 1:15 am' },
-    { type: 'line', who: 'ava', shot: 'ava', anim: 'phone',
+    { type: 'line', who: 'ava', shot: 'ava', anim: 'talk',
       text: { a1: 'Look! It is you! With Kit Rowe!', a2: 'Oh my God. Look at this! It\'s you! With Kit Rowe!', b1: 'Oh. My. God. Is that YOU? Holding hands with Kit Rowe?!' },
       ru: { a1: 'Смотри! Это ты! С Китом Роу!', a2: 'Боже мой. Посмотри! Это ты! С Китом Роу!', b1: 'О. Боже. Мой. Это ТЫ? За руку с Китом Роу?!' } },
     { type: 'line', who: 'ava', shot: 'ava', anim: 'talk', mood: 'smile',

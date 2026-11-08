@@ -94,7 +94,7 @@ export function buildFlat(ctx) {
 
   // ------------------------------------------------ people and shots
   L.spots = {
-    ava: { pos: [0.55, 0, -0.5], ry: -0.55, base: night ? 'phone' : 'idle', side: -1 },
+    ava: { pos: [0.55, 0, -0.5], ry: -0.55, base: 'idle', side: -1 },
     me: { pos: [-0.75, 0, 0.0], ry: 0.6, base: 'idle', side: 1 },
   };
   L.pan = 1.2;

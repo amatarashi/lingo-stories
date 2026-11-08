@@ -65,13 +65,13 @@ export function buildLabel(ctx) {
   const doors = { dl1: [-1, -2.9], dl2: [-1, -5.6], dr1: [1, -2.4], dr2: [1, -5.0] };
   for (const [k, [side, z]] of Object.entries(doors)) {
     const d = new THREE.Group(); d.position.set(side * (CW / 2 - 0.02), 0, z); scene.add(d);
-    add(box(0.06, 2.1, 0.95), doorM, 0, 1.05, 0, d); add(box(0.08, 2.18, 1.05), toon('#1b1b22'), side * 0.01, 1.09, 0, d);
+    add(box(0.06, 2.1, 0.95), doorM, 0, 1.05, 0, d); add(box(0.08, 2.18, 1.05), toon('#1b1b22'), side * 0.03, 1.09, 0, d); // the frame sits 2 cm behind the door: flush faces flicker
     add(box(0.1, 0.04, 0.14), handleM, -side * 0.05, 1.0, 0.33, d);
     add(new THREE.PlaneGeometry(0.22, 0.22), basic({ color: '#2a2a33' }), -side * 0.04, 1.6, 0, d, { rot: [0, -side * Math.PI / 2, 0] });
     const lamp = glow('#7ad8ff', 0.35, 0.8); lamp.position.set(-side * 0.08, 2.35, 0); d.add(lamp);
     L.clues[k] = d;
   }
-  for (let z = -1.8; z > CEnd + 0.5; z -= 0.9) { if (Object.values(doors).some(([, dz]) => Math.abs(dz - z) < 0.7)) continue; for (const s of [-1, 1]) add(box(0.05, 0.8, 0.6), toon(z % 1.8 ? '#4a3a5a' : '#3a4a5a'), s * (CW / 2 - 0.03), 1.5, z); }
+  for (let z = -1.8; z > CEnd + 0.5; z -= 0.9) for (const s of [-1, 1]) { if (Object.values(doors).some(([ds, dz]) => ds === s && Math.abs(dz - z) < 1.0)) continue; add(box(0.05, 0.8, 0.6), toon(z % 1.8 ? '#4a3a5a' : '#3a4a5a'), s * (CW / 2 - 0.03), 1.5, z); }
   for (let z = -2; z > CEnd; z -= 2) { const l = new THREE.PointLight('#ffd0a0', 1.2, 3.5, 1.6); l.position.set(0, H - 0.3, z); scene.add(l); }
   const onair = add(new THREE.PlaneGeometry(0.7, 0.2), basic({ map: neonTex('ON AIR', '#ff3a3a', 'bold 72px sans-serif', 384, 112), transparent: true, depthWrite: false }), 0, 2.6, CEnd + 0.02);
 
@@ -133,15 +133,47 @@ export function buildStudio(ctx) {
   const lr = new THREE.PointLight('#ffb070', 2.0, 5, 1.5); lr.position.set(0, 2.2, LZ); scene.add(lr);
 
   // ------------------------------------------------ the mixing desk: faders, glowing meters, two monitors, a laptop
-  const deskTex = canvasTex(512, 128, (g, w, h) => {
-    g.fillStyle = '#1c1c24'; g.fillRect(0, 0, w, h);
-    for (let i = 0; i < 24; i++) { const x = 10 + i * 20.8; g.fillStyle = '#0c0c10'; g.fillRect(x + 7, 50, 4, 70); g.fillStyle = '#d8d8e0'; g.fillRect(x + 2, 60 + ((i * 37) % 50), 14, 8); for (let k = 0; k < 3; k++) { g.fillStyle = ['#7ad8ff', '#ff7ab8', '#f2c94c'][k]; g.beginPath(); g.arc(x + 9, 10 + k * 13, 4, 0, 7); g.fill(); } }
+  // the console face is drawn large enough for the close-up: channel strips (LED, three knobs, a fader) and a master section
+  const deskTex = canvasTex(2048, 688, (g, w, h) => {
+    const bg = g.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, '#2b2c35'); bg.addColorStop(1, '#1b1c23'); g.fillStyle = bg; g.fillRect(0, 0, w, h);
+    const rr = (x, y, a, b, r) => { g.beginPath(); g.roundRect(x, y, a, b, r); g.fill(); };
+    const knob = (x, y, col, turn) => {
+      g.strokeStyle = col; g.lineWidth = 4; g.beginPath(); g.arc(x, y, 21, Math.PI * 0.75, Math.PI * 0.75 + turn * Math.PI * 1.5); g.stroke();
+      const k = g.createRadialGradient(x - 5, y - 6, 2, x, y, 16); k.addColorStop(0, '#6a6c78'); k.addColorStop(1, '#25262e'); g.fillStyle = k; g.beginPath(); g.arc(x, y, 15, 0, 7); g.fill();
+      const a = Math.PI * 0.75 + turn * Math.PI * 1.5; g.strokeStyle = '#f4f4f8'; g.lineWidth = 3; g.beginPath(); g.moveTo(x + Math.cos(a) * 5, y + Math.sin(a) * 5); g.lineTo(x + Math.cos(a) * 14, y + Math.sin(a) * 14); g.stroke();
+    };
+    const fader = (x, top, bot, val, cap, cw = 54) => {
+      g.fillStyle = '#6a6c78'; for (let t = 0; t <= 10; t++) { const y = top + (bot - top) * t / 10; g.fillRect(x - 25, y - 1, t % 5 ? 8 : 13, 2); g.fillRect(x + (t % 5 ? 17 : 12), y - 1, t % 5 ? 8 : 13, 2); }
+      g.fillStyle = '#08080c'; rr(x - 4, top, 8, bot - top, 4);
+      const y = bot - (bot - top) * val; g.fillStyle = 'rgba(0,0,0,.45)'; rr(x - cw / 2 + 3, y - 15, cw, 38, 6);
+      const c = g.createLinearGradient(0, y - 19, 0, y + 19); c.addColorStop(0, cap[0]); c.addColorStop(0.5, cap[1]); c.addColorStop(1, cap[0]); g.fillStyle = c; rr(x - cw / 2, y - 19, cw, 38, 6);
+      g.fillStyle = '#17181f'; g.fillRect(x - cw / 2 + 5, y - 2, cw - 10, 4);
+    };
+    const CH = 16, M = 26, MASTER = 300, cw = (w - M * 2 - MASTER) / CH;
+    const cols = ['#7ad8ff', '#ff7ab8', '#f2c94c'];
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    for (let i = 0; i < CH; i++) {
+      const x = M + cw * (i + 0.5), s = (i * 37 + 11) % 100 / 100;
+      g.fillStyle = i % 2 ? 'rgba(255,255,255,.025)' : 'rgba(255,255,255,.06)'; rr(x - cw / 2 + 3, 12, cw - 6, h - 24, 8);
+      g.fillStyle = s > 0.35 ? '#4ae08a' : '#3a4048'; g.beginPath(); g.arc(x, 36, 7, 0, 7); g.fill();
+      cols.forEach((c, k) => knob(x, 90 + k * 66, c, ((i * 23 + k * 41) % 100) / 100));
+      fader(x, 300, 625, 0.35 + s * 0.5, ['#b9bbc6', '#f2f2f6']);
+      g.fillStyle = '#c9cad4'; g.font = 'bold 22px sans-serif'; g.fillText(String(i + 1), x, 656);
+    }
+    const mx = w - M - MASTER / 2;
+    g.fillStyle = 'rgba(255,255,255,.08)'; rr(w - M - MASTER + 8, 12, MASTER - 8, h - 24, 8);
+    g.fillStyle = '#c9cad4'; g.font = 'bold 26px sans-serif'; g.fillText('MASTER', mx, 46);
+    for (let b = 0; b < 2; b++) for (let i = 0; i < 16; i++) { g.fillStyle = i > 12 ? '#ff4a4a' : i > 9 ? '#f2c94c' : '#4ae08a'; g.globalAlpha = i < 11 + b ? 1 : 0.22; g.fillRect(mx - 34 + b * 40, 246 - i * 11, 28, 8); } g.globalAlpha = 1;
+    fader(mx - 58, 300, 625, 0.72, ['#a83a4a', '#ff6a7a'], 66); fader(mx + 58, 300, 625, 0.72, ['#a83a4a', '#ff6a7a'], 66);
   });
-  add(box(2.6, 0.8, 0.9), toon('#3a2e2a'), -0.3, 0.4, -1.1);
-  const top = add(new THREE.PlaneGeometry(2.5, 0.8), toonMap(deskTex, { emissive: '#ffffff', emissiveIntensity: 0.15 }), -0.3, 0.86, -1.1, statics, { rot: [-Math.PI / 2 + 0.25, 0, 0] });
+  deskTex.anisotropy = 8;
+  // the body is a wedge, so the sloped face lies flat on it instead of cutting into a box
+  const deskShape = new THREE.Shape(); deskShape.moveTo(-0.65, 0); deskShape.lineTo(-0.65, 0.795); deskShape.lineTo(-1.55, 1.0); deskShape.lineTo(-1.55, 0); deskShape.closePath();
+  add(new THREE.ExtrudeGeometry(deskShape, { depth: 2.6, bevelEnabled: false }), toon('#3a2e2a'), 1.0, 0, 0, statics, { rot: [0, -Math.PI / 2, 0] });
+  add(new THREE.PlaneGeometry(2.5, 0.84), basic({ map: deskTex }), -0.3, 0.9015, -1.1, statics, { rot: [-Math.PI / 2 + 0.2242, 0, 0] });
   for (const x of [-1.4, 0.8]) { add(box(0.28, 0.42, 0.28), toon('#1b1b22'), x, 1.06, -1.35); add(cyl(0.08, 0.08, 0.02, 14), toon('#c9a24a'), x, 1.0, -1.205, statics, { rot: [Math.PI / 2, 0, 0] }); }
   add(box(0.7, 0.42, 0.04), basic({ color: '#2a3a55' }), -0.3, 1.18, -1.45);
-  const meter = canvasTex(256, 128, (g, w, h) => { g.fillStyle = '#0c1020'; g.fillRect(0, 0, w, h); for (let i = 0; i < 30; i++) { const bh = 20 + Math.random() * 90; const gr = g.createLinearGradient(0, h, 0, h - bh); gr.addColorStop(0, '#4ae08a'); gr.addColorStop(0.7, '#f2c94c'); gr.addColorStop(1, '#ff4a4a'); g.fillStyle = gr; g.fillRect(6 + i * 8.2, h - bh, 6, bh); } });
+  const meter = canvasTex(1024, 512, (g) => { g.scale(4, 4); const w = 256, h = 128; g.fillStyle = '#0c1020'; g.fillRect(0, 0, w, h); for (let i = 0; i < 30; i++) { const bh = 20 + Math.random() * 90; const gr = g.createLinearGradient(0, h, 0, h - bh); gr.addColorStop(0, '#4ae08a'); gr.addColorStop(0.7, '#f2c94c'); gr.addColorStop(1, '#ff4a4a'); g.fillStyle = gr; g.fillRect(6 + i * 8.2, h - bh, 6, bh); } });
   add(new THREE.PlaneGeometry(0.66, 0.38), basic({ map: meter }), -0.3, 1.18, -1.425);
   place('Chair_4', 1.5, 0, -0.35, Math.PI, 0.5); place('Couch_Small1', 2.4, 0, 1.2, -Math.PI / 2, 0.55);
   // LED strip and a neon note
@@ -151,7 +183,7 @@ export function buildStudio(ctx) {
   scene.add(new THREE.HemisphereLight('#c8b8ff', '#201828', 1.0));
   const key = new THREE.PointLight('#ffd0a8', 3.2, 7, 1.4); key.position.set(0.5, 2.4, 1.2); scene.add(key);
   const purple = new THREE.PointLight('#b07aff', 2.0, 6, 1.5); purple.position.set(-2, 2.5, -1.8); scene.add(purple);
-  const deskGlow = glow('#7ad8ff', 1.4, 0.25); deskGlow.position.set(-0.3, 1.0, -1.0); scene.add(deskGlow);
+  const deskGlow = glow('#7ad8ff', 1.4, 0.25); deskGlow.material.depthTest = false; deskGlow.position.set(-0.3, 1.0, -1.0); scene.add(deskGlow); // no depth test: the sprite would cut a hard line across the sloped desk
 
   L.spots = {
     leo: { pos: [0.85, 0, -0.35], ry: -0.6, base: 'idle', side: -1 },
