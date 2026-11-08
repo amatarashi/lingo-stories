@@ -11,6 +11,19 @@ export const UAL_TO_MODULAR = Object.fromEntries([
   ...['index', 'middle', 'ring', 'pinky', 'thumb'].flatMap(f => [1, 2, 3].flatMap(i => side(`${f}_0${i}`, `${f[0].toUpperCase() + f.slice(1)}${i}`))),
 ]);
 
+// the same, for a VRM humanoid: `bones` is { hips: 'J_Bip_C_Hips', leftUpperArm: … } from scene.extras.vrm
+export function vrmMap(bones) {
+  const m = { pelvis: bones.hips, spine_01: bones.spine, spine_02: bones.chest, spine_03: bones.upperChest, neck_01: bones.neck, Head: bones.head };
+  for (const [s, v] of [['l', 'left'], ['r', 'right']]) {
+    Object.assign(m, { [`clavicle_${s}`]: bones[`${v}Shoulder`], [`upperarm_${s}`]: bones[`${v}UpperArm`], [`lowerarm_${s}`]: bones[`${v}LowerArm`], [`hand_${s}`]: bones[`${v}Hand`], [`thigh_${s}`]: bones[`${v}UpperLeg`], [`calf_${s}`]: bones[`${v}LowerLeg`], [`foot_${s}`]: bones[`${v}Foot`] });
+    for (const [f, F, a] of [['index', 'Index', 'Proximal'], ['middle', 'Middle', 'Proximal'], ['ring', 'Ring', 'Proximal'], ['pinky', 'Little', 'Proximal'], ['thumb', 'Thumb', 'Metacarpal']]) {
+      const joints = F === 'Thumb' ? [a, 'Proximal', 'Distal'] : [a, 'Intermediate', 'Distal'];
+      joints.forEach((j, i) => { m[`${f}_0${i + 1}_${s}`] = bones[`${v}${F}${j}`]; });
+    }
+  }
+  return Object.fromEntries(Object.entries(m).filter(([, t]) => t));
+}
+
 function bonesByName(root) { const m = {}; root.traverse(o => { if (o.name) m[o.name] = o; }); return m; }
 
 // pose the source skeleton at time t of clip
@@ -25,15 +38,15 @@ function sampler(srcRoot, clip) {
  * @param srcRoot UAL skeleton scene
  * @param clips   UAL clips; restClip = the T-pose clip used as the source rest pose
  */
-export function retarget(target, srcRoot, clips, restClip, { fps = 24, map = UAL_TO_MODULAR } = {}) {
+export function retarget(target, srcRoot, clips, restClip, { fps = 24, map = UAL_TO_MODULAR, mappedOnly = false } = {}) {
   const S = bonesByName(srcRoot), T = bonesByName(target);
   const pairs = Object.entries(map).filter(([s, t]) => S[s] && T[t]).map(([s, t]) => ({ s: S[s], t: T[t] }));
   const tName = new Map(pairs.map(p => [p.t, p.s]));
 
   // target bones in hierarchy order
-  const hips = T.Hips;
+  const hips = T[map.pelvis];
   const order = []; hips.parent.updateMatrixWorld(true);
-  hips.traverse(o => { if (o.isBone || o === hips || o.type === 'Bone' || o.type === 'Object3D') order.push(o); });
+  hips.traverse(o => { if (o === hips || (mappedOnly ? tName.has(o) : o.isBone || o.type === 'Bone' || o.type === 'Object3D')) order.push(o); }); // VRM: hair and skirt bones stay out
 
   // rest poses
   target.updateMatrixWorld(true);

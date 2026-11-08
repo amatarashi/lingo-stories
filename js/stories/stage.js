@@ -6,7 +6,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { retarget } from '../engine/retarget.js';
+import { retarget, vrmMap } from '../engine/retarget.js';
+import { makeFace } from '../engine/face.js';
 
 export const MOBILE = matchMedia('(pointer: coarse)').matches || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
 const M_URL = new URL('../../assets/models/', import.meta.url).href;
@@ -23,20 +24,26 @@ export function toon(color, o = {}) {
   if (!matCache.has(key)) matCache.set(key, new THREE.MeshToonMaterial({ color: c, gradientMap: GRAD, ...o }));
   return matCache.get(key);
 }
+// VRoid faces and hair are already painted with their shading: a high floor keeps the toon bands from cutting across them
+const GRAD_SOFT = (() => {
+  const d = new Uint8Array([178, 214, 240, 255]);
+  const t = new THREE.DataTexture(d, 4, 1, THREE.RedFormat); t.minFilter = t.magFilter = THREE.LinearFilter; t.needsUpdate = true; return t;
+})();
 export const toonMap = (map, o = {}) => new THREE.MeshToonMaterial({ map, gradientMap: GRAD, ...o });
 // a little colour grading so every model sits in the same palette (warm interior, slightly desaturated)
 function grade(c) {
   const hsl = {}; c.getHSL(hsl);
   return new THREE.Color().setHSL(hsl.h, hsl.s * 0.82, Math.min(0.92, hsl.l * 1.04 + 0.015)).lerp(new THREE.Color('#ffb070'), 0.06);
 }
-export function toonify(root, { skinned = false, tint = {}, dark = false } = {}) {
+export function toonify(root, { skinned = false, tint = {}, dark = false, painted = false } = {}) {
   root.traverse(o => {
     if (!o.isMesh) return;
     const conv = m => {
       let base = tint[m.name] ? new THREE.Color(tint[m.name]) : grade(m.color.clone());
       if (dark) base = new THREE.Color('#0c0e14');
       // textured characters (image-to-3D, Backstage): keep the painted texture, only toon-shade it
-      if (skinned && m.map && !dark) return new THREE.MeshToonMaterial({ map: m.map, color: new THREE.Color(tint[m.name] || '#ffffff'), gradientMap: GRAD, name: m.name });
+      // VRoid recolours (Shader Color) live in the material colour, not in the texture, so painted models keep it
+      if (skinned && m.map && !dark) return new THREE.MeshToonMaterial({ map: m.map, color: tint[m.name] ? new THREE.Color(tint[m.name]) : painted ? m.color.clone() : new THREE.Color('#ffffff'), gradientMap: painted ? GRAD_SOFT : GRAD, name: m.name, transparent: m.transparent, alphaTest: m.alphaTest, side: m.side, depthWrite: m.depthWrite });
       return skinned ? new THREE.MeshToonMaterial({ color: base, gradientMap: GRAD, name: m.name }) : toon(base);
     };
     o.material = Array.isArray(o.material) ? o.material.map(conv) : conv(o.material);
@@ -144,13 +151,16 @@ export function createStage(canvas) {
   const clipCache = {};
   async function makeChar(def) {
     const g = await loadOnce(`m_${def.model}.glb`);
-    const o = SkeletonUtils.clone(g.scene);
-    toonify(o, { skinned: true, tint: def.tint || {}, dark: def.silhouette });
+    let o = SkeletonUtils.clone(g.scene);
+    const vrm = o.userData.vrm;
+    toonify(o, { skinned: true, tint: def.tint || {}, dark: def.silhouette, painted: !!vrm });
     o.traverse(m => { if (m.isMesh) { m.castShadow = !MOBILE; m.frustumCulled = false; } });
-    clipCache[def.model] ||= retarget(o, lib.src, lib.clips, lib.rest);
+    if (vrm?.flip) { const w = new THREE.Group(); o.rotation.y = Math.PI; w.add(o); o = w; }
+    clipCache[def.model] ||= retarget(o, lib.src, lib.clips, lib.rest, vrm ? { map: vrmMap(vrm.bones), mappedOnly: true } : undefined);
     const mixer = new THREE.AnimationMixer(o);
     const acts = {}; for (const c of clipCache[def.model]) acts[c.name] = mixer.clipAction(c);
-    let headBone = null, neck = null; o.traverse(b => { if (b.name === 'Head') headBone = b; if (b.name === 'Neck') neck = b; });
+    let headBone = null, neck = null; const headName = vrm?.bones.head || 'Head', neckName = vrm?.bones.neck || 'Neck';
+    o.traverse(b => { if (b.name === headName) headBone = b; if (b.name === neckName) neck = b; });
     // an accessory the story needs to be visible (Fiona's red scarf): a knitted ring round the neck + a hanging end
     if (def.scarf && neck) {
       const g = new THREE.Group(), m = new THREE.MeshToonMaterial({ color: def.scarf, gradientMap: GRAD });
@@ -159,7 +169,10 @@ export function createStage(canvas) {
       const tail = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.26, 0.03), m); tail.position.set(0.05, -0.13, 0.08); tail.rotation.z = 0.15; g.add(tail);
       g.scale.setScalar(1 / ws); g.position.y = 0.02 / ws; neck.add(g);
     }
-    return { o, mixer, acts, head: headBone, def, cur: null, lookAt: null };
+    // a VRM head bone may have its own rest rotation: remember it so "look at" starts from the real forward direction
+    o.updateMatrixWorld(true);
+    const headRest = vrm ? headBone.getWorldQuaternion(new THREE.Quaternion()) : null;
+    return { o, mixer, acts, head: headBone, headRest, def, cur: null, lookAt: null, face: vrm && !def.silhouette ? makeFace(o, vrm.faces) : null };
   }
 
   // -------- locations
@@ -365,6 +378,7 @@ export function createStage(canvas) {
     const hp = ch.head.getWorldPosition(_v);
     _m.lookAt(ch.lookAt, hp, _up);
     const want = _q.setFromRotationMatrix(_m);
+    if (ch.headRest) want.multiply(ch.headRest);
     const parentQ = ch.head.parent.getWorldQuaternion(_p);
     const local = parentQ.clone().invert().multiply(want);
     ch.lookW = Math.min(1, (ch.lookW || 0) + k);
@@ -404,7 +418,7 @@ export function createStage(canvas) {
     const dt = Math.min(0.05, clock.getDelta()); t += dt;
     adapt(dt);
     for (const m of loc.mixers) m.update(dt);
-    for (const ch of Object.values(loc.chars)) applyLook(ch, dt * 1.5);
+    for (const ch of Object.values(loc.chars)) { applyLook(ch, dt * 1.5); ch.face?.update(dt, ch.talking); }
     for (const f of loc.anims) f(dt, t);
     const k = 1 - Math.pow(0.02, dt);
     cur.pos.lerp(goal.pos, k); cur.at.lerp(goal.at, k);
@@ -423,6 +437,7 @@ export function createStage(canvas) {
     MOBILE, load, enter,
     get location() { return loc?.key; },
     present: id => !!loc?.chars[id],
+    mood: (id, name) => loc?.chars[id]?.face?.setMood(name),
     shot, setSpeaker, talk, play: (id, n, f) => play(id, n, f), setBase, setExplore,
     onTap: f => { tapHandler = f; },
     tapClue: k => { if (loc?.exploring?.includes(k)) tapHandler?.(k); },

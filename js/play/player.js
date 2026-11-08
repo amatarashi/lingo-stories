@@ -184,6 +184,7 @@ function present(line, fill) {
     setWho(line.who);
     if (line.shot) world.shot(line.shot);
     if (line.anim && world.present(line.who)) world.play(line.who, line.anim);
+    if (world.present(line.who)) world.mood(line.who, line.mood);
     acts.innerHTML = ''; more.classList.add('hide');
     const dur = await voice(line);
     if (run !== R.run) return;
