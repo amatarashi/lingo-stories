@@ -85,7 +85,7 @@ export function buildLabel(ctx) {
   // ------------------------------------------------ people and shots; Kit stays out of sight until he walks out of Studio 2
   L.spots = {
     dana: { pos: [3.0, 0, -0.35], ry: -0.4, base: 'phone', side: -1 },
-    sienna: { pos: [-1.6, 0, 1.6], ry: 0.55, base: 'fold', side: 1 },
+    sienna: { pos: [-1.0, 0, 1.55], ry: 0.2, base: 'fold', side: 1 }, // clear of the low table; ry keeps "me" out of her close-up
     me: { pos: [-0.1, 0, 2.6], ry: Math.PI - 0.1, base: 'idle', side: 1 },
     kit: { pos: [-0.35, 0, -5.0], ry: 0.25, base: 'idle', side: 1 },
   };
@@ -143,7 +143,7 @@ export function buildStudio(ctx) {
   add(box(0.7, 0.42, 0.04), basic({ color: '#2a3a55' }), -0.3, 1.18, -1.45);
   const meter = canvasTex(256, 128, (g, w, h) => { g.fillStyle = '#0c1020'; g.fillRect(0, 0, w, h); for (let i = 0; i < 30; i++) { const bh = 20 + Math.random() * 90; const gr = g.createLinearGradient(0, h, 0, h - bh); gr.addColorStop(0, '#4ae08a'); gr.addColorStop(0.7, '#f2c94c'); gr.addColorStop(1, '#ff4a4a'); g.fillStyle = gr; g.fillRect(6 + i * 8.2, h - bh, 6, bh); } });
   add(new THREE.PlaneGeometry(0.66, 0.38), basic({ map: meter }), -0.3, 1.18, -1.425);
-  place('Chair_4', 0.6, 0, -0.2, Math.PI, 0.5); place('Couch_Small1', 2.4, 0, 1.2, -Math.PI / 2, 0.55);
+  place('Chair_4', 1.5, 0, -0.35, Math.PI, 0.5); place('Couch_Small1', 2.4, 0, 1.2, -Math.PI / 2, 0.55);
   // LED strip and a neon note
   add(box(W, 0.03, 0.03), basic({ color: '#b07aff' }), 0, H - 0.08, backZ + 0.15);
   add(new THREE.PlaneGeometry(0.6, 0.6), basic({ map: neonTex('♪', '#b07aff', 'bold 100px sans-serif', 128, 128), transparent: true, depthWrite: false }), 2.4, 1.9, backZ + 0.02);
