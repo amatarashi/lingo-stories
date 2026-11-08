@@ -19,7 +19,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { retarget } from '../js/engine/retarget.js';
+import { retarget, vrmMap } from '../js/engine/retarget.js';
+import { makeFace } from '../js/engine/face.js';
 import { toonify } from '../js/stories/stage.js';
 
 const CLIPS = ['Idle_Loop', 'Idle_Talking_Loop', 'Walk_Formal_Loop', 'Idle_FoldArms_Loop', 'Yes', 'Idle_No_Loop', 'Interact', 'Sitting_Idle_Loop', 'Idle_TalkingPhone_Loop'];
@@ -49,13 +50,14 @@ const chars = [];
 for (const [i, m] of models.entries()) {
   const g = await L(`m_${m}.glb`);
   const o = SkeletonUtils.clone(g.scene);
-  toonify(o, { skinned: true });
+  const vrm = o.userData.vrm;
+  toonify(o, { skinned: true, painted: !!vrm });
   o.traverse(x => { if (x.isMesh) x.frustumCulled = false; });
   o.position.x = (i - (models.length - 1) / 2) * 0.85;
   turn.add(o);
   const mixer = new THREE.AnimationMixer(o);
-  const acts = Object.fromEntries(retarget(o, a1.scene, clips, rest).map(cl => [cl.name, mixer.clipAction(cl)]));
-  chars.push({ mixer, acts });
+  const acts = Object.fromEntries(retarget(o, a1.scene, clips, rest, vrm ? { map: vrmMap(vrm.bones), mappedOnly: true } : undefined).map(cl => [cl.name, mixer.clipAction(cl)]));
+  chars.push({ mixer, acts, o, vrm, face: vrm ? makeFace(o, vrm.faces) : null });
 }
 const ui = document.getElementById('ui');
 let cur = null;
@@ -73,9 +75,10 @@ const clock = new THREE.Clock();
 function frame() {
   const w = innerWidth, h = innerHeight;
   if (c.width !== Math.round(w * renderer.getPixelRatio())) { renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
-  const dt = clock.getDelta(); for (const ch of chars) ch.mixer.update(dt);
+  const dt = clock.getDelta(); for (const ch of chars) { ch.mixer.update(dt); ch.face?.update(dt, !!window.TALK); }
   renderer.render(scene, cam); requestAnimationFrame(frame);
 }
+window.V = { chars, cam, THREE, renderer };
 frame();
 </script>
 </body></html>

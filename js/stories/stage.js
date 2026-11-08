@@ -169,6 +169,26 @@ export function createStage(canvas) {
       const tail = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.26, 0.03), m); tail.position.set(0.05, -0.13, 0.08); tail.rotation.z = 0.15; g.add(tail);
       g.scale.setScalar(1 / ws); g.position.y = 0.02 / ws; neck.add(g);
     }
+    // small things the VRoid catalogue has no preset for
+    if (vrm && (def.glasses || def.headphones)) {
+      o.updateMatrixWorld(true);
+      const mount = (bone, g, at) => { bone.add(g); g.position.copy(bone.worldToLocal(at.clone())); g.quaternion.copy(bone.getWorldQuaternion(new THREE.Quaternion()).invert()); };
+      const m = new THREE.MeshToonMaterial({ color: '#17181f', gradientMap: GRAD });
+      const eye = n => o.getObjectByName(n)?.getWorldPosition(new THREE.Vector3());
+      const eL = eye('J_Adj_L_FaceEye'), eR = eye('J_Adj_R_FaceEye');
+      if (def.glasses && eL && eR && headBone) {
+        const g = new THREE.Group(), half = Math.abs(eL.x - eR.x) * 0.88, r = half * 0.74; // the eye bones sit closer together than the painted eyes
+        for (const sx of [-1, 1]) { const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.0016, 6, 24), m); ring.position.x = sx * half; g.add(ring); }
+        const bridge = new THREE.Mesh(new THREE.BoxGeometry(half * 2 - r * 2, 0.002, 0.002), m); g.add(bridge);
+        mount(headBone, g, eL.clone().add(eR).multiplyScalar(0.5).add(new THREE.Vector3(0, 0, 0.085)));
+      }
+      if (def.headphones && neck) {
+        const g = new THREE.Group();
+        const band = new THREE.Mesh(new THREE.TorusGeometry(0.125, 0.008, 8, 28, Math.PI), m); band.rotation.x = Math.PI / 2 + 0.2; band.rotation.z = Math.PI; g.add(band);
+        for (const sx of [-1, 1]) { const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.032, 20), m); cup.scale.set(0.72, 1.2, 0.72); cup.rotation.set(Math.PI / 2 - 0.15, 0, sx * -0.75); cup.position.set(sx * 0.112, -0.012, 0.07); g.add(cup); }
+        mount(neck, g, neck.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, -0.005, 0.025)));
+      }
+    }
     // a VRM head bone may have its own rest rotation: remember it so "look at" starts from the real forward direction
     o.updateMatrixWorld(true);
     const headRest = vrm ? headBone.getWorldQuaternion(new THREE.Quaternion()) : null;
