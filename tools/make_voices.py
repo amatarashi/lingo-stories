@@ -8,11 +8,21 @@ import json, os, subprocess, sys, tempfile
 from pathlib import Path
 import soundfile as sf
 from kokoro_onnx import Kokoro
+from kokoro_onnx.config import EspeakConfig
+import espeakng_loader
+import shutil
 
 jobs = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
 out = Path(sys.argv[2]); out.mkdir(parents=True, exist_ok=True)
 home = Path.home() / '.cache' / 'hyperframes' / 'tts'
-kokoro = Kokoro(str(home / 'models' / 'kokoro-v1.0.onnx'), str(home / 'voices' / 'voices-v1.0.bin'))
+# eSpeak on Windows cannot read data through a Cyrillic project path.
+espeak_config = None
+if os.name == 'nt':
+    data = Path(tempfile.gettempdir()) / 'lingo-espeak-data' / 'espeak-ng-data'
+    shutil.copytree(espeakng_loader.get_data_path(), data, dirs_exist_ok=True)
+    os.environ['ESPEAK_DATA_PATH'] = str(data)
+    espeak_config = EspeakConfig(lib_path=espeakng_loader.get_library_path(), data_path=str(data))
+kokoro = Kokoro(str(home / 'models' / 'kokoro-v1.0.onnx'), str(home / 'voices' / 'voices-v1.0.bin'), espeak_config=espeak_config)
 
 # a touch of character per voice: speed
 SPEED = {'bf_isabella': 0.95, 'am_adam': 1.05, 'af_nova': 1.1, 'bm_george': 0.92, 'bf_lily': 1.02, 'bm_lewis': 0.9,

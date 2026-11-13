@@ -1,5 +1,7 @@
 // Tap-to-translate dictionary: base forms + a tiny lemmatizer. Tracked words come from episodes.
 const G = {
+  // Last Signal, Heat for Two
+  against:'о; против', beds:'кровати', beside:'рядом с', bird:'птица', both:'оба', bring:'принести', broke:'прорвался; сломал', brought:'принёс', catches:'схватывает; запускается', clock:'часы', confirmed:'подтверждённый', connect:'подключить', connected:'подключённый', crew:'команда', describe:'описать', description:'описание', during:'во время', earned:'заслужил', eli:'Илай (имя)', 'eli’s':'Илая', engine:'двигатель', faded:'выцветший', feeds:'питает', filling:'наполняя', fingers:'пальцы', footsteps:'шаги', forget:'забыть', generator:'генератор', glow:'свечение', heat:'тепло; обогревать', heating:'обогрев', heats:'обогревает', indicator:'индикатор', locker:'шкафчик', longer:'дольше', main:'основной', maintenance:'техническое обслуживание', matches:'совпадает', may:'может', melt:'таять', melting:'тает', occupants:'обитатели', onto:'на', paper:'бумажный; бумага', photograph:'фотография', piece:'кусочек', pipe:'труба', pipes:'трубы', portable:'переносной', presence:'присутствие', registered:'зарегистрированный', restored:'восстановлен', rumble:'гул', same:'тот же', seat:'место для сидения', section:'отсек', sensor:'датчик', separate:'отдельный', service:'служебный', settles:'становится ровным; оседает', shelter:'укрытие', stable:'стабильный', startup:'запуск', steady:'ровный', step:'шаг', stitched:'вышитый', stuck:'заклинивший', supplies:'подаёт', support:'поддерживать; выдерживать', 'there’ll':'будет (there will)', wake:'проснуться', 'we’ll':'мы будем (we will)', wore:'носил; был одет',
   // ---- Fresh Start, chapter 1 (Scottish words come with a note)
   goodbye: 'до свидания, прощание (no goodbye — не попрощавшись)',
   actually: 'вообще-то, на самом деле', advance: 'продвижение (in advance — заранее)', along: 'вдоль; с кем-то (sing along — подпевать)', apology: 'извинение',
@@ -164,6 +166,7 @@ const G = {
 
 // irregular and contracted forms
 const FORMS = {
+  "there'll": 'будет (there will)', "we'll": 'мы будем (we will)',
   "breakfast's": 'завтрак (breakfast is)', "train's": 'поезд (train is)', "sam's": 'Сэма (его)', apologies: 'apology', bags: 'bag', concerts: 'concert',
   clinging: 'cling', creaks: 'creak', floorboards: 'floorboard', glances: 'glance', impressions: 'impression', joking: 'joke', lived: 'live', lives: 'live',
   lodged: 'lodge', parties: 'party', scones: 'scone', shifts: 'shift', smells: 'smell', studying: 'study', tastes: 'taste', unpacked: 'unpack', women: 'woman',

@@ -209,6 +209,8 @@ export function buildRadio(ctx) {
     const cols = ['#d9822b', '#c43d3d', '#3c6fb0', '#2f8a5a', '#d9b23a', '#7a4fb0'];
     for (let i = 0; i < 6; i++) { const x = 24 + i * 29; g.fillStyle = cols[i]; g.fillRect(x - 10, 62, 20, 40); g.fillStyle = '#f0c9a0'; g.beginPath(); g.arc(x, 52, 9, 0, 7); g.fill(); }
     g.fillStyle = '#f2ede2'; g.beginPath(); g.arc(24 + 3 * 29, 52, 11, 0, 7); g.fill(); g.strokeStyle = '#999'; g.stroke();
+    // A-02 clue: a white bird stitched onto the faceless crew member's sleeve.
+    g.strokeStyle = '#fff'; g.lineWidth = 2; g.beginPath(); g.moveTo(114,72); g.lineTo(118,75); g.lineTo(122,71); g.stroke();
     g.fillStyle = '#333'; g.font = 'italic 12px Georgia'; g.fillText('Aurora-7 · winter team', 30, h - 12);
   });
   add(box(0.5, 0.39, 0.02), toon('#30353b'), 0, 0, -0.01, photo);

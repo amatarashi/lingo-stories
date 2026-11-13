@@ -2,3 +2,6 @@ assets/src/
 node_modules/
 *.log
 .DS_Store
+
+.runtime/
+jobs.json

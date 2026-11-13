@@ -19,7 +19,7 @@ let ep = null, world = null, hooks = {}, storyId = null;
 let stageP = null;
 const getStage = () => stageP ||= import('../stories/stage.js').then(m => m.createStage($('c')));
 const STORY = {
-  a: { mood: 'arctic', locs: { radio: async () => (await import('../stories/a/loc-radio.js')).buildRadio } },
+  a: { mood: 'arctic', locs: { radio: async () => (await import('../stories/a/loc-radio.js')).buildRadio, generator: async () => (await import('../stories/a/loc-generator.js')).buildGenerator } },
   c: { mood: 'coast', locs: {
     platform: async () => (await import('../stories/c/loc-platform.js')).buildPlatform,
     puffin: async () => (await import('../stories/c/loc-puffin.js')).buildPuffin,

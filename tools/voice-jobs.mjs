@@ -4,7 +4,7 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const imp = p => import(pathToFileURL(path.join(root, p)).href);
-export const EPISODES = ['js/content/a01.js', 'js/content/c01.js', 'js/content/b01.js', 'js/content/b02.js', 'js/content/d01.js'];
+export const EPISODES = ['js/content/a01.js', 'js/content/a02.js', 'js/content/c01.js', 'js/content/b01.js', 'js/content/b02.js', 'js/content/d01.js'];
 const eps = await Promise.all(EPISODES.map(async f => (await imp(f)).default));
 const common = await imp('js/content/common.js');
 const { voiceKey, spoken } = await imp('js/engine/voice.js');
