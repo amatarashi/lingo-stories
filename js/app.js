@@ -15,7 +15,7 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '
 const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
 const plural = (n, one, few, many) => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? few : many; };
 const SCREENS = ['home', 'story', 'notes', 'profile'];
-const STATUS = { done: '✓ пройден', open: '▶ играть', tomorrow: '🌙 завтра', locked: '🔒', soon: 'скоро' };
+const STATUS = { done: '✓ пройден', open: '▶ играть', soon: 'скоро' };
 const STORY_ICON = { a: '🛰', b: '🕵', c: '🏡', d: '🎧' };
 
 // all written episodes register their words, so the notebook can show every word the player has met
@@ -47,7 +47,6 @@ function streakChip() {
 function storyCard(s) {
   const next = storyNext(s), st = epStatus(next), done = storyDone(s), total = s.episodes.length;
   const badge = st === 'open' ? (done ? '<span class="badge">Новый эпизод</span>' : '<span class="badge">Начать</span>')
-    : st === 'tomorrow' ? '<span class="badge wait">🌙 Новый — завтра</span>'
     : st === 'soon' ? `<span class="badge soon">${done ? 'Продолжение скоро' : 'Скоро'}</span>`
     : st === 'done' && done === total ? '<span class="badge soon">Продолжение скоро</span>' : '';
   return `<button class="pc" data-story="${s.id}" style="--acc:${s.accent}">
@@ -63,7 +62,7 @@ function renderHome() {
   $('home').innerHTML = `<div class="wrap">
     <div class="hdr"><div class="logo2">Lingo <span>Stories</span></div>${streakChip()}<span class="chip">${LEVEL_NAME[S.level] || 'A?'}</span></div>
     <div class="today">
-      <div class="t ${today ? 'ok' : ''}"><i>${today ? '✅' : '🎬'}</i><span>${today ? '<b>Эпизод на сегодня пройден</b><br>серия не сгорит' : '<b>Сегодня: 0 из 1 эпизода</b><br>10–15 минут, и серия растёт'}</span></div>
+      <div class="t ${today ? 'ok' : ''}"><i>${today ? '✅' : '🎬'}</i><span>${today ? '<b>Сегодня ты уже играл(а)</b><br>можно продолжить' : '<b>Выбирай любой готовый эпизод</b><br>ограничений по дням пока нет'}</span></div>
       <div class="t"><i>🔁</i><span><b>${due ? `${due} ${plural(due, 'слово ждёт', 'слова ждут', 'слов ждут')}` : 'Повторять пока нечего'}</b><br>${due ? 'вернутся прямо в сюжете' : 'слова вернутся сами, когда придёт время'}</span></div>
     </div>
     <h3 class="sec">Твои сериалы</h3>
@@ -84,7 +83,7 @@ function renderStory() {
     return `<button class="er ${es}" data-ep="${e.id}"><span class="no">${es === 'done' ? '✓' : e.n}</span>
       <span class="tx"><b>${esc(e.title)}</b><small>${esc(e.about)}${r?.pct != null ? ` · без перевода ${r.pct}%` : ''}</small></span><span class="st">${STATUS[es]}</span></button>`;
   }).join('') + '<div class="er soon"><span class="no">…</span><span class="tx"><b>Новые эпизоды скоро</b><small>сериал продолжается</small></span></div>';
-  const label = st === 'open' ? `▶ Играть: ${s.unit.toLowerCase()} ${next.n}` : st === 'tomorrow' ? '🌙 Новый эпизод откроется завтра' : st === 'done' ? '↻ Пройти последний ещё раз' : 'Новые эпизоды скоро';
+  const label = st === 'open' ? `▶ Играть: ${s.unit.toLowerCase()} ${next.n}` : st === 'done' ? '↻ Пройти последний ещё раз' : 'Новые эпизоды скоро';
   $('story').innerHTML = `<div class="hero" style="--acc:${s.accent}"><img src="${s.poster}" alt=""><div class="sh"></div>
       <button class="ib back" id="st-back">←</button>
       <div class="in wrap"><div class="gen">${esc(s.genre)}</div><div class="nm2" style="font-family:${s.font}">${esc(s.title)}${s.sub ? `<small>${esc(s.sub.toUpperCase())}</small>` : ''}</div></div></div>
@@ -101,13 +100,13 @@ function renderStory() {
   $('story').querySelectorAll('[data-ep]').forEach(b => b.onclick = () => {
     const e = s.episodes.find(x => x.id === b.dataset.ep), es = epStatus(e);
     if (es === 'open' || (es === 'done' && e.load)) start(e);
-    else player.toast(es === 'tomorrow' ? '🌙 Один новый эпизод в день — этот откроется завтра' : es === 'locked' ? '🔒 Сначала пройди предыдущий' : '✍️ Этот эпизод ещё пишется', 2200);
+    else player.toast('✍️ Этот эпизод ещё пишется', 2200);
   });
   $('st-play').onclick = () => start(st === 'done' ? s.episodes.filter(e => e.load).pop() : next);
 }
 
 // ---------------------------------------------------------------- loading + playing
-const TIPS = ['🎧 Лучше в наушниках', '👆 Тапни по слову — увидишь перевод', '🔁 Слова вернутся в сюжете, когда придёт время их повторить', 'RU — перевод всей фразы, но попробуй сначала без него 😉', '🔥 Один эпизод в день держит серию'];
+const TIPS = ['🎧 Лучше в наушниках', '👆 Тапни по слову — увидишь перевод', '🔁 Слова вернутся в сюжете, когда придёт время их повторить', 'RU — перевод всей фразы, но попробуй сначала без него 😉', '🎬 Все готовые эпизоды сейчас доступны'];
 async function start(entry) {
   sfx('tap'); haptic('medium');
   const s = storyById(entry.story);

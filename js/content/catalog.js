@@ -1,6 +1,6 @@
 // The three series: what the home and story screens show, and how each playable episode loads.
 // Only written episodes are listed; the season plan lives in docs/05-design.md. After the last one the screen says "новые эпизоды скоро".
-import { S, dayNum } from '../engine/vocab.js';
+import { S } from '../engine/vocab.js';
 
 export const STORIES = [
   {
@@ -49,15 +49,11 @@ export const STORIES = [
 export const storyById = id => STORIES.find(s => s.id === id);
 export const episodeById = id => STORIES.flatMap(s => s.episodes).find(e => e.id === id);
 
-// done · open · tomorrow (one new episode per day) · locked (finish the previous one) · soon (not written yet)
+// During development, every written episode is playable at any time.
+// Restore progression gates here when the series is ready for release.
 export function epStatus(ep) {
   if (S.eps[ep.id]?.done) return 'done';
-  if (!ep.load) return 'soon';
-  const list = storyById(ep.story).episodes, prev = list[ep.n - 2];
-  if (!prev) return 'open';
-  const p = S.eps[prev.id];
-  if (!p?.done) return 'locked';
-  return p.day >= dayNum() ? 'tomorrow' : 'open';
+  return ep.load ? 'open' : 'soon';
 }
 // the episode a story card points at: the first not finished one
 export function storyNext(s) {
