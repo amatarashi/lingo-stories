@@ -10,5 +10,5 @@ for(const {file} of manifest.files)copy(file);
 const js=d=>{for(const e of readdirSync(path.join(root,d),{withFileTypes:true})){const p=d+'/'+e.name;if(e.isDirectory())js(p);else if(e.name.endsWith('.js'))copy(p);}};js('js');
 for(const file of ['index.html','rights.html','THIRD_PARTY_NOTICES.md','.nojekyll'])copy(file);
 for(const file of readdirSync(path.join(root,'docs/rights/licenses')).filter(f=>f.endsWith('.txt')))copy('docs/rights/licenses/'+file);
-copy('docs/rights/original-cast.json');
+copy('docs/rights/backstage-cast.json');
 console.log('Prepared release: '+out);

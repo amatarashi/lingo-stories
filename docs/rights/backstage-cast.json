@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "reviewed": "2026-11-19",
+  "editor": "VRoid Studio 2.16.0",
+  "publisher": "pixiv Inc.",
+  "guidelines": "https://vroid.com/en/studio/guidelines",
+  "stockArchiveSha256": "e73e3d855eb95633687845a6a9f97f5bb5ad2093d6b515fa479a5b874df08ef7",
+  "distinctStockPngMatches": 62,
+  "models": [
+    {
+      "character": "Kit",
+      "file": "assets/models/m_kit.glb",
+      "sha256": "ed6c6865fc7e1d3913cc8651a4ab3f47b934bb42b3635e76514f5a23c59161a5",
+      "projectSha256": "815b65c58bd7e65200c0c9a4f36df3b56c5128895b950d364bc3cc534aaca8d6",
+      "exportSha256": "95bbe1169f78289249c94a4960ce7b5448dc286b251f1a48a0a948d3e4e806c2",
+      "stockPngMatches": 35
+    },
+    {
+      "character": "Leo",
+      "file": "assets/models/m_leo.glb",
+      "sha256": "953d5fbcc3900c8f87c3b2233e287a8aa2c976495af8c5b43814c9910872f2b4",
+      "projectSha256": "24d348ba67e3c72719fb214b8f95fb05082d08a8b84364a3e78b62468d93977d",
+      "exportSha256": "cd1c173037b8d39c79c63914f391136bc4a75c3f7ae2cdf2ee054abaffe91b81",
+      "stockPngMatches": 27
+    },
+    {
+      "character": "Ava",
+      "file": "assets/models/m_ava.glb",
+      "sha256": "b1f6aaa59b6529b6f78cec3e8dfdf194b7fef1baa9b4b719c08e3a1ae5ae04af",
+      "projectSha256": "1a471324b79bab7a0a3ce94ac83e6b7aa304c67007f1410f8dc569e8f1be070e",
+      "exportSha256": "2a736d2c4ba953a63701e781e4f2e68c535cc75e0a4f99f894b8341def0d7bd7",
+      "stockPngMatches": 27
+    },
+    {
+      "character": "Dana",
+      "file": "assets/models/m_dana.glb",
+      "sha256": "e9f355658556946f3052be55f8de2e8768276574b644176ad80dac8832c2e149",
+      "projectSha256": "9d18e11fa4443acabf471104ad648a3672dfd3dba8e803025ecdbd24a835fba8",
+      "exportSha256": "9250c1c45ba182e85d5e8db3ab1cc949f22cab1715919047b9ce7bc3603561b7",
+      "stockPngMatches": 34
+    },
+    {
+      "character": "Sienna",
+      "file": "assets/models/m_sienna.glb",
+      "sha256": "4dd431bd1d96c288b4d645979535fa41e4017c2c6752e7606ebbde301942a32b",
+      "projectSha256": "e92ff27d55337d0d59bd32699238a3c2cc6be93c33b7b6e1f2d2801eb09908a4",
+      "exportSha256": "bce1105f3ac78d0ff3c5aa8af8b3a3afda653b3b765ee2865061704b096453d2",
+      "stockPngMatches": 28
+    },
+    {
+      "character": "You",
+      "file": "assets/models/m_heroine.glb",
+      "sha256": "82260da8d61c33dca759f5ce22dd8881921c3134f812573bc6583eb9e2a37960",
+      "projectSha256": "cbce62e766fb18f28e366e2578c0e413fc1bda346556dd8ec79f6f7e8d342d7c",
+      "exportSha256": "71c1a4370914c163a3b1b643ed09920a5e6029e2c7bb710216a5297baa6e81ec",
+      "stockPngMatches": 28
+    }
+  ]
+}

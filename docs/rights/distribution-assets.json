@@ -11,6 +11,26 @@
       "sha256": "1af2aac178f95e0e2402a9e66785bebf46b92e144cce92f03c48c9feb292c3bb"
     },
     {
+      "file": "assets/models/m_ava.glb",
+      "sha256": "b1f6aaa59b6529b6f78cec3e8dfdf194b7fef1baa9b4b719c08e3a1ae5ae04af"
+    },
+    {
+      "file": "assets/models/m_dana.glb",
+      "sha256": "e9f355658556946f3052be55f8de2e8768276574b644176ad80dac8832c2e149"
+    },
+    {
+      "file": "assets/models/m_heroine.glb",
+      "sha256": "82260da8d61c33dca759f5ce22dd8881921c3134f812573bc6583eb9e2a37960"
+    },
+    {
+      "file": "assets/models/m_kit.glb",
+      "sha256": "ed6c6865fc7e1d3913cc8651a4ab3f47b934bb42b3635e76514f5a23c59161a5"
+    },
+    {
+      "file": "assets/models/m_leo.glb",
+      "sha256": "953d5fbcc3900c8f87c3b2233e287a8aa2c976495af8c5b43814c9910872f2b4"
+    },
+    {
       "file": "assets/models/m_men_Casual.glb",
       "sha256": "0ef53ffe19f5b348e552e6002d3413ff257b6946bc1a791fb44f9fbd79208794"
     },
@@ -27,28 +47,8 @@
       "sha256": "8f3ebafe44f5244a616ae240517b4ef52aa6f913cb2a323d00d0845924769813"
     },
     {
-      "file": "assets/models/m_original_ava.glb",
-      "sha256": "628e9e9c45bc04173ba1e92591c83dec6d41120e597717139d82346f324dc2b7"
-    },
-    {
-      "file": "assets/models/m_original_dana.glb",
-      "sha256": "4cc903643add5236130dbcc060cdbd504d8d315d990545121a0f5aa5b3823a41"
-    },
-    {
-      "file": "assets/models/m_original_heroine.glb",
-      "sha256": "7853fa7d3740f45e0c21dfa2cdbd29b427d9513ffe06dadfeb2ba2d081ce19da"
-    },
-    {
-      "file": "assets/models/m_original_kit.glb",
-      "sha256": "28157b72237340024b752099dbe295c3554eecd4474cbc77bc6589ab482aa2a9"
-    },
-    {
-      "file": "assets/models/m_original_leo.glb",
-      "sha256": "f43e98470fadf72ecf8591f44657863c042ae4bb732a98d42aa111ab536758a9"
-    },
-    {
-      "file": "assets/models/m_original_sienna.glb",
-      "sha256": "d5252bf3d7af9d5f14fcdedccc5882b08bbaea58a5ce9d06083dd41e787a666f"
+      "file": "assets/models/m_sienna.glb",
+      "sha256": "4dd431bd1d96c288b4d645979535fa41e4017c2c6752e7606ebbde301942a32b"
     },
     {
       "file": "assets/models/m_women_Casual.glb",

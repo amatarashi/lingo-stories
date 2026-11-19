@@ -31,7 +31,7 @@
 
 ## Графика, голоса, производительность
 - **3D:** three.js r170 (в `vendor/`), toon-освещение в стиле стилизованного инди, без постобработки (виньетка и зерно сделаны в CSS, свечение — спрайтами).
-- **Персонажи:** модели Quaternius (Ultimate Modular Men/Women; страницы паков обозначают их как CC0) и шесть новых процедурных моделей Backstage из `tools/create_original_cast.py`. У новых моделей собственная иерархия суставов и встроенные движения; исходные VRoid-модели исключены из текущей поставки. Для остальных персонажей анимации Quaternius Universal Animation Library переносятся в `js/engine/retarget.js`.
+- **Персонажи:** модели Quaternius (Ultimate Modular Men/Women, CC0 по страницам паков) и шесть моделей Backstage, собранных в VRoid Studio с помощью Claude Code. Анимации Quaternius Universal Animation Library переносятся на их скелеты в `js/engine/retarget.js`.
 - **Озвучка:** все реплики заранее записаны Kokoro TTS (локально, бесплатно) в `assets/voice/*.mp3`. Имя файла — хэш голоса и текста.
 - **Музыка:** генерируется в WebAudio. Пока кто-то говорит, музыка и дождь приглушаются.
 - **Телефон:** около 80 draw calls и 31k треугольников, адаптивное разрешение, на мобильных простые тени и 2 точечных света.
@@ -98,6 +98,6 @@
 
 ## Ассеты и лицензии
 - `assets/models/` — сжатые модели (glTF-Transform + meshopt), около 2 МБ. `assets/src/` — исходники, их не нужно выкладывать.
-- Персонажи Case Files, Last Signal и Fresh Start, мебель и уличные модели — Quaternius (Ultimate Modular Men/Women, Ultimate House Interior, Modular Streets), анимации — Quaternius Universal Animation Library 1 и 2; страницы этих паков обозначают их как CC0. Шесть персонажей Backstage заменены процедурными моделями с собственной геометрией, материалами и анимацией; генератор и хеши сохранены в `tools/create_original_cast.py` и `docs/rights/original-cast.json`. Старые VRoid-файлы не входят в текущую поставку. Голоса сгенерированы моделью Kokoro-82M (Apache 2.0). Движок three.js и meshoptimizer — MIT. Шрифты — Google Fonts (OFL / Apache 2.0).
+- Персонажи Case Files, Last Signal и Fresh Start, мебель и уличные модели — Quaternius (Ultimate Modular Men/Women, Ultimate House Interior, Modular Streets), анимации — Quaternius Universal Animation Library 1 и 2; страницы этих паков обозначают их как CC0. Шесть персонажей Backstage собраны для игры на базе деталей VRoid Studio. Происхождение текстур и точные хеши игровых GLB записаны в `docs/rights/backstage-cast.json`. Голоса сгенерированы моделью Kokoro-82M (Apache 2.0). Движок three.js и meshoptimizer — MIT. Шрифты — Google Fonts (OFL / Apache 2.0).
 - Полный список с источниками и текстами лицензий — в [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Добавляя сторонний ассет, сразу дописывай его туда.
 - `tools/viewer.html` и `tools/anim.html` — страницы для проверки моделей и анимаций.
