@@ -1,8 +1,8 @@
 // Player state: words with hidden spaced repetition, streak with a weekly freeze, daily history, settings.
 // A word's next review: new → 1 day → 3 → 7 → 14 → 30 → 60. Understood without help when due → interval grows;
 // asked for translation → back to 1 day. Meeting the word again before it's due changes nothing (cramming doesn't count).
-// Saved to localStorage at once and to Telegram CloudStorage shortly after (see cloud.js), so progress follows the player.
 const KEY = 'lingo-stories-v1';
+const SAVE_MODE = 'lingo-stories-progress-mode';
 const DAY = 864e5;
 const INT = [1, 3, 7, 14, 30, 60];
 
@@ -22,20 +22,46 @@ function load() {
   try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) return upgrade(s); } catch {}
   return fresh();
 }
-export const S = load();
+function storedMode() {
+  try {
+    const mode = localStorage.getItem(SAVE_MODE);
+    if (mode === 'local' || mode === 'session') return mode;
+  } catch {}
+  return null;
+}
+export let progressMode = storedMode();
+export const S = progressMode === 'local' ? load() : fresh();
 
-const listeners = new Set();
-export const onSave = f => listeners.add(f);
 export function save() {
+  if (progressMode !== 'local' || storedMode() !== 'local') return;
   S.t = Date.now();
   try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {}
-  for (const f of listeners) f(S);
 }
-// replace the whole state (cloud copy was newer)
-export function replaceState(next) {
+function replaceState(next) {
   for (const k of Object.keys(S)) delete S[k];
   Object.assign(S, upgrade(next));
-  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {}
+}
+
+export function setProgressMode(mode) {
+  if (mode === 'local') {
+    const saved = load();
+    const next = saved.t ? saved : S;
+    try {
+      localStorage.setItem(SAVE_MODE, 'local');
+      localStorage.setItem(KEY, JSON.stringify({ ...next, t: Date.now() }));
+    } catch {
+      try {
+        if (progressMode) localStorage.setItem(SAVE_MODE, progressMode);
+        else localStorage.removeItem(SAVE_MODE);
+      } catch {}
+      return false;
+    }
+    if (next !== S) replaceState(next);
+  } else {
+    try { localStorage.setItem(SAVE_MODE, 'session'); } catch {}
+  }
+  progressMode = mode;
+  return true;
 }
 
 export const now = () => Date.now() + S.dayOffset * DAY;
@@ -113,5 +139,8 @@ export function weeklyClean() {
 }
 
 export function skipDay() { S.dayOffset++; save(); }
-// wipes progress; the caller reloads the page after the cloud copy is overwritten too
-export function resetAll() { replaceState(fresh()); save(); }
+export function resetAll() {
+  try { localStorage.removeItem(KEY); } catch { return false; }
+  replaceState(fresh());
+  return true;
+}

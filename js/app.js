@@ -1,10 +1,9 @@
 // App shell: first run, home ("series"), story screen with episodes, shared notebook, profile. Episodes run in play/player.js.
 import { STORIES, storyById, epStatus, storyNext, storyDone } from './content/catalog.js';
-import { S, save, dueWords, mastery, MASTERY, daysUntil, streakNow, freezeLeft, playedToday, wordStats, weeklyClean, skipDay, resetAll, dayNum } from './engine/vocab.js';
+import { S, save, dueWords, mastery, MASTERY, daysUntil, streakNow, freezeLeft, playedToday, wordStats, weeklyClean, skipDay, resetAll, dayNum, progressMode, setProgressMode } from './engine/vocab.js';
 import { registerWords, trackedInfo } from './engine/lex.js';
 import { unlock, sfx, speak } from './engine/sound.js';
 import { voiceState } from './engine/voice.js';
-import { pull, flush, cloudOn } from './engine/cloud.js';
 import { LEVEL_NAME } from './engine/text.js';
 import * as player from './play/player.js';
 
@@ -13,6 +12,7 @@ if (tg?.initData) { document.body.classList.add('in-tg'); tg.ready(); tg.expand(
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
+const legacyCloud = tg?.initData ? tg.CloudStorage : null;
 const plural = (n, one, few, many) => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? few : many; };
 const SCREENS = ['home', 'story', 'notes', 'profile'];
 const STATUS = { done: '✓ пройден', open: '▶ играть', soon: 'скоро' };
@@ -159,9 +159,8 @@ function renderProfile() {
   const ws = wordStats(), total = S.stats.lines ? Math.round(S.stats.clean / S.stats.lines * 100) : null;
   const wk = weeklyClean(), labels = ['−6', '−5', '−4', '−3', '−2', 'прош.', 'эта'];
   const lvOn = S.auto ? 'auto' : S.level;
-  const user = tg?.initDataUnsafe?.user;
   $('profile').innerHTML = `<div class="wrap">
-    <div class="ttl">👤 ${esc(user?.first_name || 'Профиль')}</div><p class="sub2">${cloudOn ? '☁️ Прогресс сохраняется в Telegram и не потеряется' : 'Прогресс сохраняется на этом устройстве'}</p>
+    <div class="ttl">👤 Профиль</div><p class="sub2">${progressMode === 'local' ? 'Прогресс сохраняется на этом устройстве' : 'Прогресс доступен до закрытия игры'}</p>
     <div class="panel"><h4>Серия</h4><div class="kpis">
       <div><b>🔥 ${streakNow()}</b><small>${plural(streakNow(), 'день', 'дня', 'дней')} подряд</small></div>
       <div><b>${S.streak.best || 0}</b><small>рекорд</small></div>
@@ -180,8 +179,11 @@ function renderProfile() {
       <button class="tg" data-set="music"><span>🎵 Музыка<small>фоновая музыка в эпизодах</small></span><i class="sw ${S.music ? 'on' : ''}"></i></button>
       <button class="tg" data-set="remind"><span>🔔 Напоминания от бота<small>раз в день вечером, не чаще</small></span><i class="sw ${S.remind ? 'on' : ''}"></i></button></div>
     <a class="ghost" href="rights.html">Материалы и лицензии игры</a>
+    <a class="ghost" href="privacy.html">Конфиденциальность и данные</a>
+    <button class="ghost" id="pf-storage">Настроить сохранение прогресса</button>
+    ${legacyCloud ? '<button class="ghost" id="pf-cloud-delete">Удалить старую копию из Telegram</button>' : ''}
     <button class="ghost" id="pf-day">⏩ Тест: перемотать на следующий день</button>
-    <button class="ghost danger" id="pf-reset">Сбросить весь прогресс</button>
+    <button class="ghost danger" id="pf-reset">Сбросить прогресс на устройстве</button>
   </div>`;
   const P = $('profile');
   P.querySelectorAll('[data-lv]').forEach(b => b.onclick = () => {
@@ -195,10 +197,41 @@ function renderProfile() {
     renderProfile();
   });
   $('pf-day').onclick = () => { skipDay(); player.toast(`⏩ Прошёл день. Пора повторить: <b>${dueWords().length}</b>`, 2000); renderProfile(); };
+  $('pf-storage').onclick = showProgressChoice;
+  $('pf-cloud-delete')?.addEventListener('click', deleteLegacyCloud);
   $('pf-reset').onclick = async () => {
-    if (!await player.ask('<h2>Сбросить всё?</h2><p>Слова, эпизоды, статистика и серия удалятся. Отменить нельзя.</p>', 'Сбросить', 'Отмена')) return;
-    resetAll(); await flush(); location.reload();
+    if (!await player.ask('<h2>Сбросить прогресс на устройстве?</h2><p>Слова, эпизоды, статистика и серия удалятся. Отменить нельзя.</p>', 'Сбросить', 'Отмена')) return;
+    if (resetAll()) location.reload();
+    else player.toast('Не удалось удалить прогресс. Попробуй ещё раз.');
   };
+}
+
+// The old account storage is only accessed when the player requests deletion.
+function cloudRequest(request) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Telegram timeout')), 8000);
+    request((error, value) => {
+      clearTimeout(timer);
+      if (error) reject(error);
+      else resolve(value);
+    });
+  });
+}
+
+async function deleteLegacyCloud() {
+  if (!await player.ask('<h2>Удалить старую копию?</h2><p>Telegram удалит игровой прогресс, который синхронизировался раньше.</p>', 'Удалить', 'Отмена')) return;
+  const button = $('pf-cloud-delete');
+  if (button) button.disabled = true;
+  try {
+    const keys = await cloudRequest(done => legacyCloud.getKeys(done));
+    const saved = keys.filter(key => /^ls_(n|\d+)$/.test(key));
+    if (saved.length && !await cloudRequest(done => legacyCloud.removeItems(saved, done))) throw new Error('Telegram did not remove the keys');
+    player.toast(saved.length ? 'Старая копия удалена.' : 'Старой копии в Telegram нет.');
+  } catch {
+    player.toast('Не удалось проверить или удалить копию. Попробуй ещё раз.');
+  } finally {
+    if (button) button.disabled = false;
+  }
 }
 
 // ---------------------------------------------------------------- first run
@@ -226,8 +259,31 @@ function intro() {
 
 // ---------------------------------------------------------------- boot
 function boot() { if (!S.seenIntro) intro(); else show('home'); }
-boot();
-pull().then(changed => { if (changed && !document.body.classList.contains('playing')) { voiceState.on = S.voice; if (S.seenIntro) { $('intro').classList.add('hide'); show(current === 'story' ? 'story' : current); } } });
+const progressDialog = $('progress-choice');
+function showProgressChoice() {
+  $('progress-status').textContent = '';
+  progressDialog.showModal();
+}
+progressDialog.addEventListener('cancel', event => {
+  if (!progressMode) event.preventDefault();
+});
+progressDialog.querySelectorAll('[data-progress]').forEach(button => button.onclick = () => {
+  const starting = !progressMode;
+  const mode = button.dataset.progress;
+  if (mode !== progressMode && !setProgressMode(mode)) {
+    $('progress-status').textContent = 'Устройство не разрешило сохранить прогресс. Можно играть без сохранения.';
+    return;
+  }
+  progressDialog.close();
+  voiceState.on = S.voice;
+  if (starting) boot();
+  else {
+    renderProfile();
+    $('pf-storage').focus();
+  }
+});
+if (progressMode) boot();
+else showProgressChoice();
 wordsReady.then(() => { if (current === 'notes') renderNotes(); });
 
 window.game = { S, player, show, skipDay, dayNum };

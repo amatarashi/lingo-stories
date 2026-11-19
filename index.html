@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Share+Tech+Mono&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/","./js/app.js":"./js/app.js?v=3f50300e","./js/content/a01.js":"./js/content/a01.js?v=685a46c3","./js/content/a02.js":"./js/content/a02.js?v=efc5a908","./js/content/b01.js":"./js/content/b01.js?v=fb63a858","./js/content/b02.js":"./js/content/b02.js?v=f7d8a266","./js/content/c01.js":"./js/content/c01.js?v=3e8fda45","./js/content/catalog.js":"./js/content/catalog.js?v=80f5fb63","./js/content/common.js":"./js/content/common.js?v=f8e5ad6f","./js/content/d01.js":"./js/content/d01.js?v=eed1b7b9","./js/engine/cloud.js":"./js/engine/cloud.js?v=6798d34f","./js/engine/face.js":"./js/engine/face.js?v=933ed70e","./js/engine/lex.js":"./js/engine/lex.js?v=40fc9399","./js/engine/retarget.js":"./js/engine/retarget.js?v=abeb099f","./js/engine/sound.js":"./js/engine/sound.js?v=7bcac17e","./js/engine/text.js":"./js/engine/text.js?v=805517ac","./js/engine/vocab.js":"./js/engine/vocab.js?v=0a174f50","./js/engine/voice.js":"./js/engine/voice.js?v=9be6f959","./js/play/player.js":"./js/play/player.js?v=0417179f","./js/stories/a/loc-generator.js":"./js/stories/a/loc-generator.js?v=64035777","./js/stories/a/loc-radio.js":"./js/stories/a/loc-radio.js?v=7b9b63b9","./js/stories/b/loc-cafe.js":"./js/stories/b/loc-cafe.js?v=baeafbe0","./js/stories/b/loc-office.js":"./js/stories/b/loc-office.js?v=62f31e82","./js/stories/c/loc-platform.js":"./js/stories/c/loc-platform.js?v=440a7e22","./js/stories/c/loc-puffin.js":"./js/stories/c/loc-puffin.js?v=cd2f2c7f","./js/stories/d/loc-flat.js":"./js/stories/d/loc-flat.js?v=676dcdb9","./js/stories/d/loc-label.js":"./js/stories/d/loc-label.js?v=bb151053","./js/stories/d/loc-street.js":"./js/stories/d/loc-street.js?v=f201e1c9","./js/stories/stage.js":"./js/stories/stage.js?v=249a78e1"}}</script>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/","./js/app.js":"./js/app.js?v=4184a508","./js/content/a01.js":"./js/content/a01.js?v=685a46c3","./js/content/a02.js":"./js/content/a02.js?v=efc5a908","./js/content/b01.js":"./js/content/b01.js?v=fb63a858","./js/content/b02.js":"./js/content/b02.js?v=f7d8a266","./js/content/c01.js":"./js/content/c01.js?v=3e8fda45","./js/content/catalog.js":"./js/content/catalog.js?v=80f5fb63","./js/content/common.js":"./js/content/common.js?v=f8e5ad6f","./js/content/d01.js":"./js/content/d01.js?v=eed1b7b9","./js/engine/face.js":"./js/engine/face.js?v=933ed70e","./js/engine/lex.js":"./js/engine/lex.js?v=40fc9399","./js/engine/retarget.js":"./js/engine/retarget.js?v=abeb099f","./js/engine/sound.js":"./js/engine/sound.js?v=7bcac17e","./js/engine/text.js":"./js/engine/text.js?v=805517ac","./js/engine/vocab.js":"./js/engine/vocab.js?v=57794af8","./js/engine/voice.js":"./js/engine/voice.js?v=9be6f959","./js/play/player.js":"./js/play/player.js?v=0417179f","./js/stories/a/loc-generator.js":"./js/stories/a/loc-generator.js?v=64035777","./js/stories/a/loc-radio.js":"./js/stories/a/loc-radio.js?v=7b9b63b9","./js/stories/b/loc-cafe.js":"./js/stories/b/loc-cafe.js?v=baeafbe0","./js/stories/b/loc-office.js":"./js/stories/b/loc-office.js?v=62f31e82","./js/stories/c/loc-platform.js":"./js/stories/c/loc-platform.js?v=440a7e22","./js/stories/c/loc-puffin.js":"./js/stories/c/loc-puffin.js?v=cd2f2c7f","./js/stories/d/loc-flat.js":"./js/stories/d/loc-flat.js?v=676dcdb9","./js/stories/d/loc-label.js":"./js/stories/d/loc-label.js?v=bb151053","./js/stories/d/loc-street.js":"./js/stories/d/loc-street.js?v=f201e1c9","./js/stories/stage.js":"./js/stories/stage.js?v=249a78e1"}}</script>
 <link rel="modulepreload" href="vendor/three.module.js">
 <style>
 :root{--st:calc(max(env(safe-area-inset-top),var(--tg-safe-area-inset-top,0px)) + var(--tg-content-safe-area-inset-top,0px));--sb:calc(max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,0px)) + var(--tg-content-safe-area-inset-bottom,0px));
@@ -226,6 +226,15 @@ body.in-tg .hero .back{display:none}
 .sp small{color:var(--muted);font-size:12px;width:44px;text-align:right}
 .ghost{width:100%;padding:12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cfd5e4;font-weight:600;margin-bottom:8px}
 .ghost.danger{color:#ff8a9a}
+#profile a.ghost{display:block;text-align:center;text-decoration:none}
+#progress-choice{width:min(420px,calc(100% - 32px));padding:24px;border:1px solid var(--line);border-radius:20px;background:#11192c;color:#edf0fa;max-height:calc(100% - 32px);overflow:auto}
+#progress-choice::backdrop{background:rgba(5,8,17,.85)}
+#progress-choice h2{font-size:24px;margin:0 0 10px}
+#progress-choice p{margin:0 0 14px;line-height:1.5;color:#cfd5e4}
+#progress-choice a{color:#b5d5ff}
+#progress-choice button{display:block;width:100%;margin-top:8px}
+#progress-choice #progress-status:empty{display:none}
+#progress-choice #progress-status{color:#ffd3dc}
 
 /* first run */
 #intro{position:fixed;inset:0;z-index:45;background:#05070e;display:flex;flex-direction:column;overflow:hidden}
@@ -401,6 +410,14 @@ body[data-story=c]{--type:'Caveat',cursive}
 </nav>
 <div id="intro" class="hide"></div>
 <div id="loading" class="hide"></div>
-<script type="module" src="js/app.js?v=3f50300e"></script>
+<dialog id="progress-choice" aria-labelledby="progress-title" aria-describedby="progress-summary">
+  <h2 id="progress-title">Сохранять прогресс?</h2>
+  <p id="progress-summary">Игра может запоминать пройденные эпизоды, слова и настройки на этом устройстве. Без сохранения новый прогресс пропадёт после закрытия игры.</p>
+  <p><a href="privacy.html" target="_blank" rel="noopener">Как игра обращается с данными</a></p>
+  <p id="progress-status" role="status"></p>
+  <button class="btn pri" type="button" data-progress="local">Сохранять на устройстве</button>
+  <button class="ghost" type="button" data-progress="session">Играть без сохранения</button>
+</dialog>
+<script type="module" src="js/app.js?v=4184a508"></script>
 </body>
 </html>
