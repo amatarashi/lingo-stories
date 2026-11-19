@@ -137,7 +137,13 @@ export function createStage(canvas) {
   // -------- assets shared by every location
   const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
   const cache = {};
-  const loadOnce = f => cache[f] ||= loader.loadAsync(M_URL + f);
+  const loadOnce = f => cache[f] ||= loader.loadAsync(M_URL + f + '?v=20261120').catch(error => {
+    delete cache[f];
+    throw error;
+  });
+  function checkContext() {
+    if (renderer.getContext().isContextLost()) throw new Error('The 3D rendering context was lost');
+  }
   let lib = null;
   async function base() {
     const [props, a1, a2] = await Promise.all([loadOnce('props_interior.glb'), loadOnce('anim_ual1.glb'), loadOnce('anim_ual2.glb')]);
@@ -150,7 +156,8 @@ export function createStage(canvas) {
   }
   const clipCache = {};
   async function makeChar(def) {
-    const g = await loadOnce(`m_${def.model}.glb`);
+    const directory = MOBILE && def.mobileModel ? 'mobile/' : '';
+    const g = await loadOnce(`${directory}m_${def.model}.glb`);
     let o = SkeletonUtils.clone(g.scene);
     const vrm = o.userData.vrm;
     toonify(o, { skinned: true, tint: def.tint || {}, dark: def.silhouette, painted: !!vrm });
@@ -210,6 +217,7 @@ export function createStage(canvas) {
   let loc = null; // active location
   // build(ctx) creates the room; ctx gives helpers and receives clues / shots / spots
   async function load(key, build, { chars = {}, cast = [], mood } = {}, onProgress) {
+    checkContext();
     if (locs[key]) { onProgress?.(1); return locs[key]; }
     let done = 0; const steps = 3 + cast.length;
     const tick = () => onProgress?.(Math.min(1, ++done / steps));
@@ -244,6 +252,7 @@ export function createStage(canvas) {
       tick();
     }
     mergeStatics(scene, statics);
+    checkContext();
     renderer.compile(scene, camera);
     locs[key] = L;
     return L;
@@ -369,13 +378,14 @@ export function createStage(canvas) {
     return c.toDataURL('image/jpeg', 0.85);
   }
   async function makePortraits(defs) {
+    checkContext();
     await base();
     const studio = new THREE.Scene();
     studio.add(new THREE.HemisphereLight('#ffe2c4', '#2a3550', 2.2));
     const kl = new THREE.DirectionalLight('#ffd2a0', 2.2); kl.position.set(1.5, 2, 2); studio.add(kl);
     const rim = new THREE.DirectionalLight('#7fb2ff', 2.0); rim.position.set(-2, 1.5, -1.5); studio.add(rim);
     const cam = new THREE.PerspectiveCamera(26, 1, 0.05, 10);
-    const rt = new THREE.WebGLRenderTarget(256, 256, { samples: 4 }); rt.texture.colorSpace = THREE.SRGBColorSpace;
+    const rt = new THREE.WebGLRenderTarget(256, 256, { samples: MOBILE ? 0 : 4 }); rt.texture.colorSpace = THREE.SRGBColorSpace;
     const px = new Uint8Array(256 * 256 * 4);
     for (const [id, def] of Object.entries(defs)) {
       if (portraits[id]) continue;
@@ -389,6 +399,7 @@ export function createStage(canvas) {
       studio.background = new THREE.Color(def.color || '#445').multiplyScalar(def.silhouette ? 0.6 : 0.35);
       rim.intensity = def.silhouette ? 5 : 2;
       renderer.setRenderTarget(rt); renderer.render(studio, cam); renderer.setRenderTarget(null);
+      if (renderer.getContext().isContextLost()) break;
       renderer.readRenderTargetPixels(rt, 0, 0, 256, 256, px);
       const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
       const img = g.createImageData(256, 256);
@@ -398,6 +409,7 @@ export function createStage(canvas) {
       studio.remove(ch.o);
     }
     rt.dispose();
+    checkContext();
     return portraits;
   }
 
@@ -466,7 +478,7 @@ export function createStage(canvas) {
   });
 
   return {
-    MOBILE, load, enter,
+    MOBILE, load, enter, checkContext,
     get location() { return loc?.key; },
     present: id => !!loc?.chars[id],
     mood: (id, name) => loc?.chars[id]?.face?.setMood(name),

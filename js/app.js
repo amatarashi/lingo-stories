@@ -107,6 +107,16 @@ function renderStory() {
 
 // ---------------------------------------------------------------- loading + playing
 const TIPS = ['🎧 Лучше в наушниках', '👆 Тапни по слову — увидишь перевод', '🔁 Слова вернутся в сюжете, когда придёт время их повторить', 'RU — перевод всей фразы, но попробуй сначала без него 😉', '🎬 Все готовые эпизоды сейчас доступны'];
+const renderRecovery = $('render-recovery');
+$('c').addEventListener('webglcontextlost', () => {
+  if (document.body.classList.contains('playing') && !renderRecovery.open) renderRecovery.showModal();
+});
+$('c').addEventListener('webglcontextrestored', () => {
+  if (renderRecovery.open) renderRecovery.close();
+});
+renderRecovery.addEventListener('cancel', event => event.preventDefault());
+$('render-reload').onclick = () => location.reload();
+
 async function start(entry) {
   sfx('tap'); haptic('medium');
   const s = storyById(entry.story);
@@ -117,16 +127,24 @@ async function start(entry) {
     <div class="pb"><i id="ld-bar"></i></div><div class="tip">${TIPS[Math.random() * TIPS.length | 0]}</div>
     <button class="btn pri hide" id="ld-go">▶ Начать</button></div>`;
   ld.classList.remove('hide');
+  const showError = error => {
+    console.error(error);
+    ld.querySelector('.tip').textContent = 'Не удалось открыть 3D-сцену. Попробуй загрузить эпизод ещё раз.';
+    $('ld-go').outerHTML = '<button class="btn pri" id="ld-retry">Попробовать снова</button><button class="ghost" id="ld-back">К эпизодам</button>';
+    $('ld-retry').onclick = () => start(entry);
+    $('ld-back').onclick = () => ld.classList.add('hide');
+    ld.classList.remove('hide');
+  };
   let mod;
   try { mod = await player.prepare(entry, p => { $('ld-bar').style.width = Math.round(p * 100) + '%'; }); }
-  catch (e) { console.error(e); ld.querySelector('.tip').textContent = 'Не получилось загрузить 😕 Проверь интернет и попробуй ещё раз.'; setTimeout(() => ld.classList.add('hide'), 2500); return; }
+  catch (error) { showError(error); return; }
   $('ld-bar').style.width = '100%';
   // a tap is needed anyway to start sound on phones
   const go = $('ld-go'); go.classList.remove('hide');
   go.onclick = () => {
     unlock(); ld.classList.add('hide');
     if (!S.placed && !S.level) S.placing = true;
-    player.play(mod, entry.story, { onExit: () => show(current === 'story' ? 'story' : 'home') });
+    player.play(mod, entry.story, { onExit: () => show(current === 'story' ? 'story' : 'home') }).catch(showError);
   };
 }
 

@@ -95,7 +95,7 @@ The listed pack pages currently identify the packs as CC0. Quaternius also publi
 
 Kit, Leo, Ava, Dana, Sienna and the player character were made for Lingo Stories with Claude Code in VRoid Studio 2.16.0. The models use base meshes, presets and texture layers provided by pixiv Inc. The game adapts Quaternius animations to their rigs and adds Dana’s glasses and Leo’s headphones through scene code. [VRoid Studio Guidelines](https://vroid.com/en/studio/guidelines).
 
-The six game-ready GLBs were reproduced byte for byte from the local VRoid exports. All PNG layers recovered from the six editor projects matched images built into the local VRoid Studio installation. The [asset record](docs/rights/backstage-cast.json) lists the checked files and hashes. Only game-ready GLBs are deployed. The original VRM files and their permission metadata remain in the local archive. The project uses the characters in the game according to the project owner’s request. No standalone avatar reuse license is granted by this notice.
+The six game-ready GLBs were reproduced byte for byte from the local VRoid exports. All PNG layers recovered from the six editor projects matched images built into the local VRoid Studio installation. The mobile GLBs use the same exports and geometry with textures reduced to a maximum dimension of 512 pixels. The [asset record](docs/rights/backstage-cast.json) lists the checked files and hashes for both variants. Only game-ready GLBs are deployed. The original VRM files and their permission metadata remain in the local archive. The project uses the characters in the game according to the project owner’s request. No standalone avatar reuse license is granted by this notice.
 
 ---
 

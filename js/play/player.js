@@ -17,7 +17,10 @@ const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
 let ep = null, world = null, hooks = {}, storyId = null;
 // ONE 3D stage for all series (phones dislike several WebGL contexts); each series brings its locations
 let stageP = null;
-const getStage = () => stageP ||= import('../stories/stage.js').then(m => m.createStage($('c')));
+const getStage = () => stageP ||= import('../stories/stage.js').then(m => m.createStage($('c'))).catch(error => {
+  stageP = null;
+  throw error;
+});
 const STORY = {
   a: { mood: 'arctic', locs: { radio: async () => (await import('../stories/a/loc-radio.js')).buildRadio, generator: async () => (await import('../stories/a/loc-generator.js')).buildGenerator } },
   c: { mood: 'coast', locs: {
@@ -628,6 +631,7 @@ export async function prepare(entry, onProgress) {
   registerWords(mod.words, mod.id);
   const st = STORY[entry.story];
   const w = await getStage(), scenes = Object.values(mod.scenes);
+  w.checkContext();
   // progress: each location is an equal share; portraits are the last bit
   for (let i = 0; i < scenes.length; i++) {
     const sc = scenes[i];
@@ -638,8 +642,9 @@ export async function prepare(entry, onProgress) {
   return mod;
 }
 
-export async function play(mod, story, h = {}) {
+async function runEpisode(mod, story, h) {
   ep = mod; hooks = h; world = await getStage(); storyId = story;
+  world.checkContext();
   if (ep.rel) { const st = S.stories[story]; if (st?.relEp) delete st.relEp[ep.id]; }
   document.body.dataset.story = story; setMood(STORY[story].mood); $('veil').className = '';
   // start in the first location (the one the first scene beat names, or the only one)
@@ -675,6 +680,15 @@ export async function play(mod, story, h = {}) {
     else if (b.type === 'end') return finish();
     await maybeAdjust();
     i = go ? beats.findIndex(x => x.label === go) : i + 1;
+  }
+}
+
+export async function play(mod, story, hooks = {}) {
+  try {
+    await runEpisode(mod, story, hooks);
+  } catch (error) {
+    exit();
+    throw error;
   }
 }
 

@@ -63,6 +63,30 @@
       "sha256": "642f053e2712fa236749d10fb92ebe73da88cd3dd171e95e96ad4c8edcfda3db"
     },
     {
+      "file": "assets/models/mobile/m_ava.glb",
+      "sha256": "0d75c558aa4245b82e7758c3345b9e5c1cd179139306900044d5f0258bb70d68"
+    },
+    {
+      "file": "assets/models/mobile/m_dana.glb",
+      "sha256": "c28bc8cbc75790c67c8cde31fb7c86d95b134b4815780ea2ae87fcdbc36a8d27"
+    },
+    {
+      "file": "assets/models/mobile/m_heroine.glb",
+      "sha256": "16ec6145da5111ffcc09f8144234655a155d7995eb12a092edb612b457d94ed3"
+    },
+    {
+      "file": "assets/models/mobile/m_kit.glb",
+      "sha256": "8a2d66d4f0bacf8f156392d4c79c90e114aa12921f6b046fdfb49f5a870e4f35"
+    },
+    {
+      "file": "assets/models/mobile/m_leo.glb",
+      "sha256": "94cf773607efe6dc55b2d2901142927f6c15030767c45633fba25764e35a4fda"
+    },
+    {
+      "file": "assets/models/mobile/m_sienna.glb",
+      "sha256": "59c9fa0cca6a5f0c4bce96029dd96105e48beb278a94e841e1ae877a072cf3cd"
+    },
+    {
       "file": "assets/models/props_interior.glb",
       "sha256": "8e76bec9bd4a86f21827d106f7a7aa40827552e687f82234a25ab3c6b1dcb505"
     },

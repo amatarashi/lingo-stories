@@ -25,12 +25,12 @@ export default {
   },
 
   chars: {
-    ava: { name: 'Ava', role: 'flatmate', color: '#e98ac8', model: 'ava', voice: 'bf_isabella' },
-    dana: { name: 'Dana', role: 'Tidewater Records', color: '#8fa8d9', model: 'dana', glasses: true, voice: 'bf_emma' },
-    sienna: { name: 'Sienna', role: 'singer', color: '#f2d27a', model: 'sienna', voice: 'bf_lily' },
-    kit: { name: 'Kit', role: 'Velvet Static', color: '#9aa3b5', model: 'kit', voice: 'bm_daniel' },
-    leo: { name: 'Leo', role: 'sound engineer', color: '#f0a35a', model: 'leo', headphones: true, voice: 'bm_fable' },
-    me: { name: 'You', color: '#8fb3ff', model: 'heroine' },
+    ava: { name: 'Ava', role: 'flatmate', color: '#e98ac8', model: 'ava', mobileModel: true, voice: 'bf_isabella' },
+    dana: { name: 'Dana', role: 'Tidewater Records', color: '#8fa8d9', model: 'dana', mobileModel: true, glasses: true, voice: 'bf_emma' },
+    sienna: { name: 'Sienna', role: 'singer', color: '#f2d27a', model: 'sienna', mobileModel: true, voice: 'bf_lily' },
+    kit: { name: 'Kit', role: 'Velvet Static', color: '#9aa3b5', model: 'kit', mobileModel: true, voice: 'bm_daniel' },
+    leo: { name: 'Leo', role: 'sound engineer', color: '#f0a35a', model: 'leo', mobileModel: true, headphones: true, voice: 'bm_fable' },
+    me: { name: 'You', color: '#8fb3ff', model: 'heroine', mobileModel: true },
     pap1: { name: '', color: '#666', model: 'men_Casual', silhouette: true },
     pap2: { name: '', color: '#666', model: 'women_Casual', silhouette: true },
     pap3: { name: '', color: '#666', model: 'men_Casual', silhouette: true },
