@@ -1,8 +1,8 @@
-// Backstage — Episode 1 "First Day". London, Tidewater Records. An internship, a prickly singer and a warm sound engineer.
+// The Camden Cover Story — Episode 1 "First Day". London, Tidewater Records. An internship, a prickly singer and a warm sound engineer.
 // Text: {a1, a2, b1}. [word] or [surface|key] marks a tracked word. Choice options carry rel: {who: ±n}.
 export default {
   id: 'D-01',
-  story: 'Backstage',
+  story: 'The Camden Cover Story',
   title: 'First Day',
   part: 'Episode 1',
   endTitle: 'That\'s a wrap!',

@@ -1,8 +1,8 @@
-// Case Files: Harbor City — Case 1 "Coffee & Lies", part 2 (the solution). Script: docs/06-case1-part2.md
+// The Harbor Alibi: Harbor City — Case 1 "Coffee & Lies", part 2 (the solution). Script: docs/06-case1-part2.md
 // Text: {a1, a2, b1}. [word] or [surface|key] marks a tracked word or phrase (goes to the notebook).
 export default {
   id: 'B-02',
-  story: 'Case Files',
+  story: 'The Harbor Alibi',
   title: 'Coffee & Lies',
   part: 'Case 1 · Part 2',
   teaser: { a1: 'A mole? Who is it? Case 2 is coming soon.', a2: 'Who is the mole? Find out in Case 2.', b1: 'A mole in Harbor City — and Oscar knows who. Case 2, coming soon.' },

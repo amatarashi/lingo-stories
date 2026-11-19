@@ -91,7 +91,7 @@ Attribution is not required by CC0; given here as a courtesy and as a record of 
 
 The listed pack pages currently identify the packs as CC0. Quaternius also publishes a general Asset License v1.0. All 57 local GLB inputs for the listed models, props and animations match Git blobs at the cited mirror revisions. See `docs/rights/source-mirror-check.json` in the workspace for the exact paths and hashes. This comparison establishes identity with the mirrors. The author's original download archives and the acquisition dates remain unverified. The prepared release contains the processed game files.
 
-### Backstage characters assembled in VRoid Studio
+### The Camden Cover Story characters assembled in VRoid Studio
 
 Kit, Leo, Ava, Dana, Sienna and the player character were made for Lingo Stories with Claude Code in VRoid Studio 2.16.0. The models use base meshes, presets and texture layers provided by pixiv Inc. The game adapts Quaternius animations to their rigs and adds Dana’s glasses and Leo’s headphones through scene code. [VRoid Studio Guidelines](https://vroid.com/en/studio/guidelines).
 

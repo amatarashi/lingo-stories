@@ -1,8 +1,8 @@
-// Fresh Start — Chapter 1 "Arrival". Kinloch, a small town on the Scottish coast, October.
+// Autumn in Kinloch — Chapter 1 "Arrival". Kinloch, a small town on the Scottish coast, October.
 // Text: {a1, a2, b1}. [word] or [surface|key] marks a tracked word. Choice options can carry rel: {who: ±1}.
 export default {
   id: 'C-01',
-  story: 'Fresh Start',
+  story: 'Autumn in Kinloch',
   title: 'Arrival',
   part: 'Chapter 1',
   icon: '📖',

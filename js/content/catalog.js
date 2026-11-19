@@ -4,7 +4,7 @@ import { S } from '../engine/vocab.js';
 
 export const STORIES = [
   {
-    id: 'a', title: 'Last Signal', genre: 'фантастика · выживание', font: "'Share Tech Mono',monospace", accent: '#5dffb0',
+    id: 'a', title: 'Channel Nine Is Alive', genre: 'фантастика · выживание', font: "'Share Tech Mono',monospace", accent: '#5dffb0',
     poster: 'assets/posters/a.svg', season: 'Сезон 1 · Aurora-7', unit: 'Эпизод',
     pitch: 'Ты приходишь в себя на полярной станции. Никого нет, метель, работает только старая рация.',
     hook: 'Do it by the instruction', hookRu: 'Чини, веди и расшифровывай по инструкциям на английском',
@@ -15,7 +15,7 @@ export const STORIES = [
     ],
   },
   {
-    id: 'b', title: 'Case Files', sub: 'Harbor City', genre: 'уютный нуар · детектив', font: "'Special Elite',monospace", accent: '#ff7cbb',
+    id: 'b', title: 'The Harbor Alibi', sub: 'Harbor City', genre: 'уютный нуар · детектив', font: "'Special Elite',monospace", accent: '#ff7cbb',
     poster: 'assets/posters/b.svg', season: 'Сезон 1 · The Harbor Mole', unit: 'Эпизод',
     pitch: 'Ты стажёр в детективном агентстве портового города. Дела небольшие — но все ведут к чему-то большему.',
     hook: 'Catch the contradiction', hookRu: 'Сопоставляй показания с уликами и записывай противоречия в досье',
@@ -25,8 +25,8 @@ export const STORIES = [
     ],
   },
   {
-    id: 'c', title: 'Fresh Start', genre: 'жизнь · дружба · тайна', font: "'Caveat',cursive", accent: '#ffc27a',
-    poster: 'assets/posters/c.svg', season: 'Сезон 1 · Autumn in Kinloch', unit: 'Глава',
+    id: 'c', title: 'Autumn in Kinloch', genre: 'жизнь · дружба · тайна', font: "'Caveat',cursive", accent: '#ffc27a',
+    poster: 'assets/posters/c.svg', season: 'Сезон 1', unit: 'Глава',
     pitch: 'Тебе 19, год учёбы в шотландском городке у моря. В твоей комнате — дневник парня, который исчез без слова.',
     hook: 'Life choices', hookRu: 'Твой тон в разговорах меняет отношения — и то, кто поможет с тайной',
     cast: [['☕', 'Fiona', 'хозяйка кафе и комнаты'], ['🎸', 'Kai', 'сосед, музыкант, шутник'], ['📚', 'Priya', 'однокурсница, умная и амбициозная'], ['🗼', 'Mr. Duncan', 'смотритель маяка']],
@@ -35,8 +35,8 @@ export const STORIES = [
     ],
   },
   {
-    id: 'd', title: 'Backstage', genre: 'романтика · музыка · Лондон', font: "'Caveat',cursive", accent: '#ff8fc8',
-    poster: 'assets/posters/d.svg', season: 'Сезон 1 · Tidewater Records', unit: 'Эпизод',
+    id: 'd', title: 'The Camden Cover Story', genre: 'романтика · музыка · Лондон', font: "'Caveat',cursive", accent: '#ff8fc8',
+    poster: 'assets/posters/d.svg?v=2', season: 'Сезон 1 · Tidewater Records', unit: 'Эпизод',
     pitch: 'Тебе 18, стажировка на лондонском музыкальном лейбле. Одна чашка кофе — и ты в фиктивных отношениях с самым колючим солистом Британии.',
     hook: 'Every word counts', hookRu: 'Твои ответы меняют отношения: читай подтекст, лови сарказм и не путай bored с boring',
     cast: [['🎤', 'Kit Rowe', 'солист Velvet Static, колючий'], ['🎧', 'Leo Hart', 'звукорежиссёр, тёплый'], ['💅', 'Ava', 'соседка по квартире'], ['📱', 'Dana', 'менеджер лейбла'], ['✨', 'Sienna', 'певица, соперница']],

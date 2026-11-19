@@ -4,7 +4,7 @@ const t = (a1, a2, b1) => ({ a1, a2, b1 });
 const line = (who, a1, a2, b1, ru, extra = {}) => ({ type: 'line', who, text: t(a1,a2,b1), ru, ...extra });
 const task = (steps) => ({ type:'task', who:'maya', shot:'wide', targets:['start','left','right','both'], wrong:{text:'Read the instruction again.',ru:'Прочитай инструкцию ещё раз.'}, steps:steps.map(([doKey,en,ru])=>({do:doKey,text:en,ru})) });
 export default {
- id:'A-02', story:'Last Signal', title:'Heat for Two', part:'Episode 2', icon:'📻', mood:'arctic',
+ id:'A-02', story:'Channel Nine Is Alive', title:'Heat for Two', part:'Episode 2', icon:'📻', mood:'arctic',
  teaser:t('Who carried you here?','Who brought you to the radio room?','Who carried you into the radio room — and why did they leave you behind?'),
  teaserRu:'Кто принёс тебя в радиорубку — и почему оставил? Продолжение следует.',
  chars:{...first.chars,eli:{...first.chars.eli,name:'Eli'}},

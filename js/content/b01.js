@@ -1,9 +1,9 @@
-// Case Files: Harbor City — Case 1 "Coffee & Lies", part 1.
+// The Harbor Alibi: Harbor City — Case 1 "Coffee & Lies", part 1.
 // Text: {a1, a2, b1}. [word] or [surface|key] marks a tracked word or phrase (goes to the notebook).
 // anim: what the speaker does (talk · fold · no · yes · hit · phone · think · point); mood: portrait accent.
 export default {
   id: 'B-01',
-  story: 'Case Files',
+  story: 'The Harbor Alibi',
   title: 'Coffee & Lies',
   part: 'Case 1 · Part 1',
   teaser: { a1: 'Who is O. Blackwood? Find out in Part 2.', a2: 'Why was Blackwood\'s umbrella in the café? Find out in Part 2.', b1: 'What was Reyes\'s own partner doing at The Gull that night? Find out in Part 2.' },

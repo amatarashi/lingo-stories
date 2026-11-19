@@ -1,8 +1,8 @@
-// Last Signal — Episode 1 "Wake Up". Polar station Aurora-7, the radio room, a blizzard night.
+// Channel Nine Is Alive — Episode 1 "Wake Up". Polar station Aurora-7, the radio room, a blizzard night.
 // Text: {a1, a2, b1}. [word] or [surface|key] marks a tracked word. {word} in a decode beat is the word lost in the static.
 export default {
   id: 'A-01',
-  story: 'Last Signal',
+  story: 'Channel Nine Is Alive',
   title: 'Wake Up',
   part: 'Episode 1',
   icon: '📻',
