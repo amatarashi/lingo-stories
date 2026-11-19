@@ -179,6 +179,7 @@ function renderProfile() {
       <button class="tg" data-set="voice"><span>🗣️ Голоса персонажей<small>озвучка реплик</small></span><i class="sw ${S.voice ? 'on' : ''}"></i></button>
       <button class="tg" data-set="music"><span>🎵 Музыка<small>фоновая музыка в эпизодах</small></span><i class="sw ${S.music ? 'on' : ''}"></i></button>
       <button class="tg" data-set="remind"><span>🔔 Напоминания от бота<small>раз в день вечером, не чаще</small></span><i class="sw ${S.remind ? 'on' : ''}"></i></button></div>
+    <a class="ghost" href="rights.html">Материалы и лицензии игры</a>
     <button class="ghost" id="pf-day">⏩ Тест: перемотать на следующий день</button>
     <button class="ghost danger" id="pf-reset">Сбросить весь прогресс</button>
   </div>`;

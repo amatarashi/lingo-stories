@@ -1,0 +1,103 @@
+{
+  "note": "Snapshot of current publication only; not proof of original download date or identity of mirrored meshes.",
+  "records": [
+    {
+      "file": "quaternius-men.html",
+      "url": "https://quaternius.com/packs/ultimatemodularcharacters.html",
+      "retrievedAt": "2026-11-19T16:16:55.013Z",
+      "sha256": "803529ae0669a3220436be17de5d842876d8cf5e959b1d6f664186dea4854a31",
+      "bytes": 15332
+    },
+    {
+      "file": "quaternius-women.html",
+      "url": "https://quaternius.com/packs/ultimatemodularwomen.html",
+      "retrievedAt": "2026-11-19T16:16:55.344Z",
+      "sha256": "9cc51f31cfe8386609706834acb6c854845a4f89e0122730136b2ae28f614483",
+      "bytes": 15444
+    },
+    {
+      "file": "quaternius-interior.html",
+      "url": "https://quaternius.com/packs/ultimatehomeinterior.html",
+      "retrievedAt": "2026-11-19T16:16:55.325Z",
+      "sha256": "237c18aee132708b761a4d8835092251af7eb007277a2dac2eaf95121fb62674",
+      "bytes": 15312
+    },
+    {
+      "file": "quaternius-streets.html",
+      "url": "https://quaternius.com/packs/modularstreets.html",
+      "retrievedAt": "2026-11-19T16:16:55.235Z",
+      "sha256": "c085ff88543d9ca6acada4e6db772722443126122426b9dd42dc16c673dff5b8",
+      "bytes": 15161
+    },
+    {
+      "file": "quaternius-ual1.html",
+      "url": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "retrievedAt": "2026-11-19T16:16:55.103Z",
+      "sha256": "9157d71e192638132706d6734bfb109b0647f150f305d4514b81a0cdfe9bf471",
+      "bytes": 19862
+    },
+    {
+      "file": "quaternius-ual2.html",
+      "url": "https://quaternius.com/packs/universalanimationlibrary2.html",
+      "retrievedAt": "2026-11-19T16:16:55.173Z",
+      "sha256": "c4c99e3c98fd4672e3f6e355885f94bc2578fe9e3b9646409ef0be92a44c50b2",
+      "bytes": 19528
+    },
+    {
+      "file": "quaternius-qal.html",
+      "url": "https://quaternius.com/license.html",
+      "retrievedAt": "2026-11-19T16:16:55.368Z",
+      "sha256": "d1b56be5228d372b049b45cc7447a823da7989a6cf7036f60cfac2284c8fcb0d",
+      "bytes": 10301
+    },
+    {
+      "file": "three-MIT.txt",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r170/LICENSE",
+      "retrievedAt": "2026-11-19T16:16:55.464Z",
+      "sha256": "4c40a1ef62450b857c3b2aaf294936304cd552d965fbcd9d32d4c5bcf4ba4454",
+      "bytes": 1081
+    },
+    {
+      "file": "meshoptimizer-MIT.txt",
+      "url": "https://raw.githubusercontent.com/zeux/meshoptimizer/master/LICENSE.md",
+      "retrievedAt": "2026-11-19T16:16:55.367Z",
+      "sha256": "f03037ca7bad1e3eb7f4a63fa6084a8baabd5ba30d3c239a9a7f35705d873e26",
+      "bytes": 1079
+    },
+    {
+      "file": "Inter-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/OFL.txt",
+      "retrievedAt": "2026-11-19T16:16:55.381Z",
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+      "bytes": 4377
+    },
+    {
+      "file": "Caveat-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/caveat/OFL.txt",
+      "retrievedAt": "2026-11-19T16:16:55.398Z",
+      "sha256": "1f9d81d094273d82f3898a1ee8b598a717d050ecbf5ff7bede105b704880157b",
+      "bytes": 4385
+    },
+    {
+      "file": "ShareTechMono-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/sharetechmono/OFL.txt",
+      "retrievedAt": "2026-11-19T16:16:55.376Z",
+      "sha256": "9d96f445b6e9c701428811d0177f894874f8d6f07ecc30d568c506542368f3ff",
+      "bytes": 4429
+    },
+    {
+      "file": "SpecialElite-Apache.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/apache/specialelite/LICENSE.txt",
+      "retrievedAt": "2026-11-19T16:16:55.372Z",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "bytes": 11358
+    },
+    {
+      "file": "Kokoro-model-card.md",
+      "url": "https://huggingface.co/hexgrad/Kokoro-82M/raw/main/README.md",
+      "retrievedAt": "2026-11-19T16:16:55.198Z",
+      "sha256": "91dcabced89db6f109b8786642f50402d3ee87450e8189589b6f85520e7f4d78",
+      "bytes": 6348
+    }
+  ]
+}

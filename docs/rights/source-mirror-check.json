@@ -1,0 +1,575 @@
+{
+  "scope": "Local inputs compared with cited mirrors. This does not verify original downloads from the author or reproduce the runtime conversion.",
+  "records": [
+    {
+      "file": "assets/src/chars/modular_men_Casual.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "a74f94183952267a874c24ac73c4d2382fd0187d",
+      "sha256": "dc2d86e50075e372df870bb60cee46c56033cc2ecb28722523caab93ab1d0111",
+      "paths": [
+        "public/glb/modular_men/Casual.glb"
+      ]
+    },
+    {
+      "file": "assets/src/chars/modular_men_Casual2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "8de02ab8cc15be5d4375373675f886d347bef11e",
+      "sha256": "19c23a1878366238926ddb81de036a7a628c7f6840a3082f4ba5b6488d5586d4",
+      "paths": [
+        "public/glb/modular_men/Casual2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/chars/modular_men_Suit.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "7de8d95b6ad1cab6119e4bea4e08ae6f258604ca",
+      "sha256": "a9896c1468fadbd24a89a2f86eecd8d47ae5ec6b3ef267b2194dc3b8bb9fb3d0",
+      "paths": [
+        "public/glb/modular_men/Suit.glb"
+      ]
+    },
+    {
+      "file": "assets/src/chars/modular_men_Worker.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "f9c8aa373fe950dded61eab9b4a895e71d58ddb0",
+      "sha256": "1c07d49d6ef060fb3d69897d91334093d389f0e729a874d7647fdb6b59f92127",
+      "paths": [
+        "public/glb/modular_men/Worker.glb"
+      ]
+    },
+    {
+      "file": "assets/src/chars/modular_women_Casual.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "f64c3d48148aef1e431abec40ae0cf33c1db93d5",
+      "sha256": "522cd442880c6769bdf079f1a2161a1aaffe78b32f1de64fb990644b2e327fea",
+      "paths": [
+        "public/glb/modular_women/Casual.glb"
+      ]
+    },
+    {
+      "file": "assets/src/chars/modular_women_Formal.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "b53a2e76450e5b7636a44b2780f52aede5de950f",
+      "sha256": "f1b635c27f9fc2b200eb188ba18c625e7d9b0e19d46e8e4d1695e6100fa3735d",
+      "paths": [
+        "public/glb/modular_women/Formal.glb"
+      ]
+    },
+    {
+      "file": "assets/src/chars/modular_women_Suit.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "3d58679ea18f45086111d406ee3d761384304076",
+      "sha256": "af53a5b6a7c3f1b790ba647934da87613020d141916c2e3f15b88eaad5aff32b",
+      "paths": [
+        "public/glb/modular_women/Suit.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Bookshelf.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "0384640afd282759752d1bfbec322f09157ef81f",
+      "sha256": "028317c5173f7e02106fa1c194fe78c3a054a2d9a9ec7a5ad3abb4e7bc8eeb9d",
+      "paths": [
+        "public/glb/house_interior_pack/Bookshelf.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Carpet_1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "26ccb39d08c41bba705890e8078e5d1df912d347",
+      "sha256": "cda873c6fd6769727687002e8f04c449d3002671a4d4587fd3f842e3f47b4ae6",
+      "paths": [
+        "public/glb/house_interior_pack/Carpet_1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Carpet_Round.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "cc41c821b1da736b21d71cf319a4d37b003458dd",
+      "sha256": "a2c224b045952506b60e17a62411028ed6140a57bc3416a48a339f8924b71af8",
+      "paths": [
+        "public/glb/house_interior_pack/Carpet_Round.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Chair_1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "05771eb5e5ef1161dda431f70993e8939916cb38",
+      "sha256": "bdc6aeeb64524bbdccba2f079e6485e2a372aed1c428d976d5da67aadcf18b7a",
+      "paths": [
+        "public/glb/house_interior_pack/Chair_1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Chair_2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "b8d4865e0d69ca43977d1aebed7ce4f5ae61bc14",
+      "sha256": "375d1668e4e470df8a82170b38b19abe65e7dd7e4c498ebe680ec6e58fcfcfa9",
+      "paths": [
+        "public/glb/house_interior_pack/Chair_2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Chair_3.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "b4c00e9d439616c886744aedd14ff8ecee8a2583",
+      "sha256": "c1a38c1e021a71caa824adf3420de21aef5d7d3baf8dfb15c72db36016a42f1f",
+      "paths": [
+        "public/glb/house_interior_pack/Chair_3.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Chair_4.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "dcb6cc5b2d7596a0da1594c6f61336d5088fe05a",
+      "sha256": "b14507763e3782b5311efd02c60881f4960d042f1f4aa860c0a4dc7d3cec5e2a",
+      "paths": [
+        "public/glb/house_interior_pack/Chair_4.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Couch_Medium1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "82ac4588b862cf2a53f3e8edc3224f8e2d03e5f8",
+      "sha256": "7003e8c52669c171090231f8589aa23090d53eb9a4bb8d4b3adecef93561c30d",
+      "paths": [
+        "public/glb/house_interior_pack/Couch_Medium1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Couch_Small1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "da7982f3a0fecf7dede41d6179dfff076fadb7d2",
+      "sha256": "93fab23f296820a653b5d091b3f9716bf1f3d01cbcdaf01b6d66396842f97401",
+      "paths": [
+        "public/glb/house_interior_pack/Couch_Small1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Door_1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "1c2c56cbc2841efb77799d69ac3498e15a3bf988",
+      "sha256": "1d5f1c2f478609a41cba26d6bb3a3e39aac61332e00c058a0f8aa1aed41fa03d",
+      "paths": [
+        "public/glb/house_interior_pack/Door_1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Door_4.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "4a4096a0c3823472678290cd1ad4b2441ed1b16d",
+      "sha256": "40857bb97ff7125a81cee9b29f5ed133d89215aa3b270178ef1c5d7742b2d0ec",
+      "paths": [
+        "public/glb/house_interior_pack/Door_4.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Drawer_1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "bc2729cc2d8ee9822db5ac5aadabd1dd44646a44",
+      "sha256": "908c4725488ff8191be605be7e3f927c257ec1f6830ab1c0edcd3ea885cc3bbe",
+      "paths": [
+        "public/glb/house_interior_pack/Drawer_1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Houseplant_1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "e625e17b6136bc2c583883fac5681ddcb3b1375d",
+      "sha256": "a2688ac584953f812d2de9b17cd39ac50010df6b9620a1aa4159ec393102b4e3",
+      "paths": [
+        "public/glb/house_interior_pack/Houseplant_1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Houseplant_3.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "fba0afaede43899bdedb71b767eb56c996e60284",
+      "sha256": "6dd60b388f4b47d5e9e051e05d108aca1f13282653f67be131f04b94294bd522",
+      "paths": [
+        "public/glb/house_interior_pack/Houseplant_3.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Houseplant_5.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "0f818dd4cdfc85ecc80f1297c1e0aeeabb2f0502",
+      "sha256": "261de33bd6d629c8c389f45283c0f43dbed0e2ad821cb5d2e06ac33e719d09e2",
+      "paths": [
+        "public/glb/house_interior_pack/Houseplant_5.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Houseplant_7.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "aa1ba7c51aee59e4a11eacf7f0f68874c4f0c4ce",
+      "sha256": "0de1daa8be12b908fb8d1bf6bd9261e2a50061783e2ebe204bfb434768ca7c53",
+      "paths": [
+        "public/glb/house_interior_pack/Houseplant_7.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Kitchen_1Drawers.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "d088f65315350a4170c9b1970e6a011b8cc819ad",
+      "sha256": "d43c0358bc6adfc97f3561e295b1bc96ad52750751e3b448265eb0141f4d83cd",
+      "paths": [
+        "public/glb/house_interior_pack/Kitchen_1Drawers.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Kitchen_2Drawers.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "968cd1e7f7469701aeecb835dcb8da992e8d7483",
+      "sha256": "4c45df1890ff02e0584b50613c1bf71946fb6d47ae444018a0de1026a0c21c75",
+      "paths": [
+        "public/glb/house_interior_pack/Kitchen_2Drawers.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Kitchen_3Drawers.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "d349c34afed2ac993b41b323e2f35dd445184b1d",
+      "sha256": "e400e4ae61ffb7b4174703d75f877b3838ea8d49f1c3760826dd10d74485929f",
+      "paths": [
+        "public/glb/house_interior_pack/Kitchen_3Drawers.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Kitchen_Cabinet1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "94e42538dea41dbca2014c1be8deec7186e65ad7",
+      "sha256": "2853039001b665130f0ef6354152ecbf171d8500f352cb1c26f9b1640be10c0d",
+      "paths": [
+        "public/glb/house_interior_pack/Kitchen_Cabinet1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Kitchen_CabinetSmall.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "767736f11b7b2d446c8320d64726643b5c5f412e",
+      "sha256": "64968a93f19bae04cdd727b721b662db4ab3563ae9674afda67854230768e16f",
+      "paths": [
+        "public/glb/house_interior_pack/Kitchen_CabinetSmall.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Kitchen_Fridge.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "b9fb5c84c574c12b307911ccac567a5369731560",
+      "sha256": "65437d539065381839fdfdff5ea10b7133d28e762e38ff1b6d7e3723f798e408",
+      "paths": [
+        "public/glb/house_interior_pack/Kitchen_Fridge.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Kitchen_Sink.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "7e8b86dc69eb7324de161d062c221877a2872207",
+      "sha256": "7111ce2dba2eb97d1fdd1c815b970d427b259bd41c73072bb9a2a73707adf8d3",
+      "paths": [
+        "public/glb/house_interior_pack/Kitchen_Sink.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_Ceiling1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "c7483ad7d92f8bd386cda4a43ccc873c7cf174ba",
+      "sha256": "6beb5d0886af85f41bb375176879b97f4b1032e2049fe3cabec319b105c0fb38",
+      "paths": [
+        "public/glb/house_interior_pack/Light_Ceiling1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_Ceiling2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "dbf59fa0fbe41a38514dc1fcdc529c901ff62002",
+      "sha256": "5a429947d77ab820605844864c4e4c3177407caacb373bc47359cafd45812dd4",
+      "paths": [
+        "public/glb/house_interior_pack/Light_Ceiling2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_Ceiling5.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "23da29fe76f6a485718c9e294400fff8b584af0c",
+      "sha256": "628f6fdc280dd8533b460eee5368332cb59676039a778841f341f542e698a32d",
+      "paths": [
+        "public/glb/house_interior_pack/Light_Ceiling5.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_CeilingSingle.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "acd81b9601ba7d18e3b4e7570315f1df736c2669",
+      "sha256": "4e307b591d68d8aff049f07b59e5aa75b81e8da211fd48b752bf847918eded1b",
+      "paths": [
+        "public/glb/house_interior_pack/Light_CeilingSingle.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_Cube.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "00f5b758e2b40650e9613ce1a7f48aff7898ddc4",
+      "sha256": "8d17888c03db16fd8ebf05b298a0643ff20c04c9b047fc67ea7a064c1a5cebb8",
+      "paths": [
+        "public/glb/house_interior_pack/Light_Cube.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_Desk.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "0fe724c7eca875db0e7907b1598c861325490eb0",
+      "sha256": "5ea86e46a2fc36f86500fa6a97dc529dc3464189dc34e586375bae3ee5f68075",
+      "paths": [
+        "public/glb/house_interior_pack/Light_Desk.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_Floor1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "961ed8d83b9183389a5ebd1cb42b13683ee5532f",
+      "sha256": "72d57153e3f1f57e9d920cba1b83fbcd3882cc81769d5ccac64010c04a95b5e8",
+      "paths": [
+        "public/glb/house_interior_pack/Light_Floor1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Light_Small.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "ad100e5f49898d2e4683133a6370114197fa0c83",
+      "sha256": "2076b6204dd2560f822250aee92ec4b2116b42093b32587935263e831aecac83",
+      "paths": [
+        "public/glb/house_interior_pack/Light_Small.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Plate_1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "794996afb400914e7b10de42a2bfd9a668686275",
+      "sha256": "8341f993c729d08e7c20091352921a60bf46d63278bd8e68778a87520c6b4bb7",
+      "paths": [
+        "public/glb/house_interior_pack/Plate_1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Plate_2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "e21d8c7f0eb7fa92575f749b7065fa73c7dfe9bc",
+      "sha256": "108dd8e850de936f3540d360cf4d3a5ba225a9311ad504a3877719413512ae1f",
+      "paths": [
+        "public/glb/house_interior_pack/Plate_2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Shelf_1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "defb4f3f6f4f9734bb2bd7fafe8a1af569327c37",
+      "sha256": "ec122d7410c56167a3cc0404ae18f77c178e8d5dadadc2a2bba818753eee692f",
+      "paths": [
+        "public/glb/house_interior_pack/Shelf_1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Shelf_2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "65fca7b712cc5606e596bfd3a98fec15a8234453",
+      "sha256": "6fed20eee420fa002ed8fa141af812e69b78aa7e9e41ababb9f2bec56c831d4b",
+      "paths": [
+        "public/glb/house_interior_pack/Shelf_2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Shelf_Large.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "df6737bc28933ace6ccaab7dc51facf30d285608",
+      "sha256": "9bf0585a55c907a2449d0d068abb801ee250ae625618f2b0da563432c2ad5145",
+      "paths": [
+        "public/glb/house_interior_pack/Shelf_Large.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Shelf_Small1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "82952492d89a7a0e77e12becc86338eb390a4690",
+      "sha256": "d4b22996ad1cbccaa811489c41c51f89670091ec8c01795e5a67364c1434facc",
+      "paths": [
+        "public/glb/house_interior_pack/Shelf_Small1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Shelf_Small2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "dc8d0cf55b87e804bf498835bea3a1d80406ca56",
+      "sha256": "785e674399bf18dd39567004660496e6e617a0a6053e57031a98eef2281f3d46",
+      "paths": [
+        "public/glb/house_interior_pack/Shelf_Small2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Sign_NoParking.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "6aa4bf6be40f71f802d5cb81ccfc69abc22bfc79",
+      "sha256": "5a3c38bbfc13c2b14af3bd1a837e315614a4f5472a66261ee877b3660c1c3972",
+      "paths": [
+        "public/glb/street_pack/Sign_NoParking.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Stool.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "f02412bd64a200f66525cbe5e5ac125de4c58cbd",
+      "sha256": "f17ca68ee52a5c5f8dcb2b919ac580483ecbb53da26c2d1dcde4f97c7c409c6d",
+      "paths": [
+        "public/glb/house_interior_pack/Stool.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Streetlight_Single.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "e4d712d8f72eb33f51351b138cee771dfde6486d",
+      "sha256": "4f1961684e00c8f3f653213a7cd04233d27a6e88805c940a9930e36469689842",
+      "paths": [
+        "public/glb/street_pack/Streetlight_Single.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Table_RoundLarge.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "8ea80009dae823281acd60773f85a4511cef0692",
+      "sha256": "863966591cae25d9b7afacd3b60ba999c0c097c2cdffddfa50d1bb176be50eed",
+      "paths": [
+        "public/glb/house_interior_pack/Table_RoundLarge.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Table_RoundSmall.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "87ea7fdee41296306baa73415ceeff05da02463b",
+      "sha256": "74de03a377f41939609a71c186db36742776ea99558d25f579fcc6cfe5bfc629",
+      "paths": [
+        "public/glb/house_interior_pack/Table_RoundSmall.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Table_RoundSmall2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "9c0ca030a0a3e12d3cbd3389caee56fd7f99cb20",
+      "sha256": "7f57ea17c9f54f761535d2e66bcd925de93546a42942b4bbf030aab93b0b4406",
+      "paths": [
+        "public/glb/house_interior_pack/Table_RoundSmall2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/TrafficLight.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "fa714f149bd26fee5c960af85436fa9aa78e7fd8",
+      "sha256": "8b363143dedb5b98b9e011bc12eaf489aa9f26d368d940ad1138df0493534078",
+      "paths": [
+        "public/glb/street_pack/TrafficLight.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Trashcan_Small1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "7605f5364177293400b9df1992ad6e5f4ab1a0b2",
+      "sha256": "6ca0c87eb00f4be690a235287f8469efa1f33200eb882efd3b2202545ccb9af4",
+      "paths": [
+        "public/glb/house_interior_pack/Trashcan_Small1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Window_Large1.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "8dc719e8ad21128432f814a522e04dd357f8d0b4",
+      "sha256": "17f4993acf15352634744720192ff4ef0b480b59dda69d6fd02f449e0a1c24c4",
+      "paths": [
+        "public/glb/house_interior_pack/Window_Large1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/props/Window_Large2.glb",
+      "repo": "trebeljahr/quaternius-showcase",
+      "revision": "335270d8d0e2744f39f6f417d4bfda29433cb348",
+      "gitBlob": "51dc4295db0e156d508adf9b4e7d84df50630a6d",
+      "sha256": "796f902305e94865c0b6f12b7a42274f9be9dae8a5ae64e7d3b3316ab02e101c",
+      "paths": [
+        "public/glb/house_interior_pack/Window_Large2.glb"
+      ]
+    },
+    {
+      "file": "assets/src/ual/UAL1.glb",
+      "repo": "Dallolz/moorfall-assets",
+      "revision": "43824dae24b04fea6254b96e9edb12157cfcde11",
+      "gitBlob": "473e59080288428d0b6da826ba19324d07b191f0",
+      "sha256": "69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997",
+      "paths": [
+        "animations/UAL1.glb"
+      ]
+    },
+    {
+      "file": "assets/src/ual/UAL2.glb",
+      "repo": "Dallolz/moorfall-assets",
+      "revision": "43824dae24b04fea6254b96e9edb12157cfcde11",
+      "gitBlob": "958ec21516f03421cad1c8fed8294f10312fad33",
+      "sha256": "0815dd05531cae9bc313fc9c0ba81330bc72f8e19ec45f73738e74ddc5796a43",
+      "paths": [
+        "animations/UAL2.glb"
+      ]
+    }
+  ]
+}

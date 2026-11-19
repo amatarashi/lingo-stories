@@ -392,12 +392,10 @@ function pickEvidence(sub = 'Какая улика опровергает эти
   });
 }
 
-async function objectionFx(who) {
-  sfx('objection'); haptic('heavy'); world.shake(0.6);
-  $('flash').classList.remove('hide');
-  setTimeout(() => world.play(who, 'hit'), 250);
-  await sleep(950);
-  $('flash').classList.add('hide');
+async function recordEvidence(message) {
+  sfx('clue'); haptic('light');
+  toast(message, 1400);
+  await sleep(400);
 }
 
 async function interrogateBeat(b) {
@@ -413,7 +411,7 @@ async function interrogateBeat(b) {
         info.innerHTML = `Statement ${i + 1}/${sts.length}<span class="dots">${sts.map((_, j) => `<i class="${solved.has(j) ? 'done' : j === i ? 'on' : ''}"></i>`).join('')}</span>${solved.has(i) ? ' · <span class="ok">✓ разоблачено</span>' : ''}`;
         const prev = document.createElement('button'); prev.className = 'btn nav'; prev.textContent = '◀';
         const next = document.createElement('button'); next.className = 'btn nav'; next.textContent = '▶';
-        const obj = document.createElement('button'); obj.className = 'btn obj'; obj.textContent = 'OBJECTION!';
+        const obj = document.createElement('button'); obj.className = 'btn obj'; obj.textContent = 'Compare';
         prev.onclick = e => { e.stopPropagation(); sfx('next'); done(-1); };
         next.onclick = e => { e.stopPropagation(); sfx('next'); done(1); };
         obj.onclick = e => { e.stopPropagation(); done('obj'); };
@@ -425,7 +423,7 @@ async function interrogateBeat(b) {
       const clue = await pickEvidence();
       if (!clue) continue;
       if (st.lie && st.lie === clue && !solved.has(i)) {
-        await objectionFx(b.who);
+        await recordEvidence('✓ Противоречие записано в досье');
         for (const a of st.after) await present({ ...a, shot: a.shot || (world.present(a.who) && a.who !== 'reyes' ? a.who : 'reyes') });
         solved.add(i); wrong = 0; i = (i + 1) % sts.length;
         world.shot(b.shot);
@@ -552,9 +550,7 @@ async function accuseBeat(b) {
       await present({ who: b.who, shot: b.shot, anim: 'no', ...b.wrongProof, noCount: true });
     }
   }
-  $('flash').querySelector('span').textContent = 'GOTCHA!';
-  await objectionFx(b.culprit);
-  $('flash').querySelector('span').textContent = 'OBJECTION!';
+  await recordEvidence('✓ Вывод подтверждён уликами');
   await present({ who: b.who, shot: b.shot, anim: 'point', ...b.ok });
 }
 
@@ -616,7 +612,7 @@ function finish() {
 
 function exit(completed = false) {
   R.run++; stopLine(); duck(false); ambience(false); hidePop(); clearInterval(R.typing);
-  for (const id of ['card', 'sheet', 'sum', 'ask', 'flash', 'recap', 'caption', 'stamp', 'phone']) $(id).classList.add('hide');
+  for (const id of ['card', 'sheet', 'sum', 'ask', 'recap', 'caption', 'stamp', 'phone']) $(id).classList.add('hide');
   $('veil').className = '';
   document.body.classList.remove('flashback');
   dlg.classList.add('hidden'); document.body.classList.remove('cine', 'playing');

@@ -18,7 +18,7 @@ export const STORIES = [
     id: 'b', title: 'Case Files', sub: 'Harbor City', genre: 'уютный нуар · детектив', font: "'Special Elite',monospace", accent: '#ff7cbb',
     poster: 'assets/posters/b.svg', season: 'Сезон 1 · The Harbor Mole', unit: 'Эпизод',
     pitch: 'Ты стажёр в детективном агентстве портового города. Дела небольшие — но все ведут к чему-то большему.',
-    hook: 'Catch the contradiction', hookRu: 'Лови свидетелей на лжи: «OBJECTION!» и нужная улика',
+    hook: 'Catch the contradiction', hookRu: 'Сопоставляй показания с уликами и записывай противоречия в досье',
     cast: [['🕵️‍♀️', 'Inspector Reyes', 'шефиня: строгая и честная'], ['💻', 'Jenna Park', 'архив и хакер, говорит сленгом'], ['🎩', 'Oscar Blackwood', 'партнёр, вечно «в отъезде»'], ['👮', 'Milo Grant', 'полицейский, недоговаривает']],
     episodes: [
       ['B-01', 'Coffee & Lies · 1', 'кража выручки в кафе', () => import('./b01.js')], ['B-02', 'Coffee & Lies · 2', 'развязка: кто взял деньги?', () => import('./b02.js')],

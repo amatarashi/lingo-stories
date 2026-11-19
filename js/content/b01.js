@@ -134,8 +134,8 @@ export default {
       ru: { a1: 'Ладно, ладно! Не кричите!', a2: 'Ладно, ладно! Не надо кричать!', b1: 'Ладно, ладно! Не надо орать!' } },
 
     { label: 'brief', type: 'line', who: 'reyes', shot: 'over-tom', anim: 'talk',
-      text: { a1: 'Listen to Tom. If he lies, press OBJECTION and show a clue!', a2: 'Listen carefully. If Tom lies, press OBJECTION and show a clue.', b1: 'Listen closely. The second he lies, hit OBJECTION and show him the evidence.' },
-      ru: { a1: 'Слушай Тома. Если он врёт — нажми OBJECTION и покажи улику!', a2: 'Слушай внимательно. Если Том врёт — жми OBJECTION и покажи улику.', b1: 'Слушай внимательно. Как только соврёт — жми OBJECTION и предъяви улику.' } },
+      text: { a1: 'Listen to Tom. If he lies, press Compare and show a clue.', a2: 'Listen carefully. If Tom lies, press Compare and pick the right clue.', b1: 'Listen closely. Use Compare to check what Tom says against the evidence.' },
+      ru: { a1: 'Слушай Тома. Если он врёт, нажми Compare и покажи улику.', a2: 'Слушай внимательно. Если Том врёт, нажми Compare и выбери нужную улику.', b1: 'Слушай внимательно. Нажми Compare, чтобы сверить слова Тома с уликами.' } },
 
     { type: 'interrogate', who: 'tom', shot: 'tom', rounds: [
       { statements: [

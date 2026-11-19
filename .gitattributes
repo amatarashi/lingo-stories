@@ -1,0 +1,2 @@
+tools/create_original_cast.py text eol=lf
+docs/rights/licenses/*.txt -text whitespace=-blank-at-eol

@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "generatorSha256": "af1fdafb1c2fae359fd0a9dfb7353618d92a4b3ce32ca5071d4f33fff252a1cf",
+  "models": [
+    {
+      "file": "assets/models/m_original_kit.glb",
+      "sha256": "28157b72237340024b752099dbe295c3554eecd4474cbc77bc6589ab482aa2a9",
+      "bytes": 555104,
+      "importedAssets": [],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Idle_FoldArms_Loop",
+        "Idle_No_Loop",
+        "Yes",
+        "Hit_Chest",
+        "Idle_TalkingPhone_Loop",
+        "Interact",
+        "Walk_Formal_Loop",
+        "Sitting_Idle_Loop"
+      ],
+      "source": "tools/create_original_cast.py",
+      "creation": "Procedural geometry and authored keyframes with AI assistance"
+    },
+    {
+      "file": "assets/models/m_original_leo.glb",
+      "sha256": "f43e98470fadf72ecf8591f44657863c042ae4bb732a98d42aa111ab536758a9",
+      "bytes": 613584,
+      "importedAssets": [],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Idle_FoldArms_Loop",
+        "Idle_No_Loop",
+        "Yes",
+        "Hit_Chest",
+        "Idle_TalkingPhone_Loop",
+        "Interact",
+        "Walk_Formal_Loop",
+        "Sitting_Idle_Loop"
+      ],
+      "source": "tools/create_original_cast.py",
+      "creation": "Procedural geometry and authored keyframes with AI assistance"
+    },
+    {
+      "file": "assets/models/m_original_ava.glb",
+      "sha256": "628e9e9c45bc04173ba1e92591c83dec6d41120e597717139d82346f324dc2b7",
+      "bytes": 673632,
+      "importedAssets": [],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Idle_FoldArms_Loop",
+        "Idle_No_Loop",
+        "Yes",
+        "Hit_Chest",
+        "Idle_TalkingPhone_Loop",
+        "Interact",
+        "Walk_Formal_Loop",
+        "Sitting_Idle_Loop"
+      ],
+      "source": "tools/create_original_cast.py",
+      "creation": "Procedural geometry and authored keyframes with AI assistance"
+    },
+    {
+      "file": "assets/models/m_original_dana.glb",
+      "sha256": "4cc903643add5236130dbcc060cdbd504d8d315d990545121a0f5aa5b3823a41",
+      "bytes": 607844,
+      "importedAssets": [],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Idle_FoldArms_Loop",
+        "Idle_No_Loop",
+        "Yes",
+        "Hit_Chest",
+        "Idle_TalkingPhone_Loop",
+        "Interact",
+        "Walk_Formal_Loop",
+        "Sitting_Idle_Loop"
+      ],
+      "source": "tools/create_original_cast.py",
+      "creation": "Procedural geometry and authored keyframes with AI assistance"
+    },
+    {
+      "file": "assets/models/m_original_sienna.glb",
+      "sha256": "d5252bf3d7af9d5f14fcdedccc5882b08bbaea58a5ce9d06083dd41e787a666f",
+      "bytes": 626476,
+      "importedAssets": [],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Idle_FoldArms_Loop",
+        "Idle_No_Loop",
+        "Yes",
+        "Hit_Chest",
+        "Idle_TalkingPhone_Loop",
+        "Interact",
+        "Walk_Formal_Loop",
+        "Sitting_Idle_Loop"
+      ],
+      "source": "tools/create_original_cast.py",
+      "creation": "Procedural geometry and authored keyframes with AI assistance"
+    },
+    {
+      "file": "assets/models/m_original_heroine.glb",
+      "sha256": "7853fa7d3740f45e0c21dfa2cdbd29b427d9513ffe06dadfeb2ba2d081ce19da",
+      "bytes": 650072,
+      "importedAssets": [],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Idle_FoldArms_Loop",
+        "Idle_No_Loop",
+        "Yes",
+        "Hit_Chest",
+        "Idle_TalkingPhone_Loop",
+        "Interact",
+        "Walk_Formal_Loop",
+        "Sitting_Idle_Loop"
+      ],
+      "source": "tools/create_original_cast.py",
+      "creation": "Procedural geometry and authored keyframes with AI assistance"
+    }
+  ]
+}

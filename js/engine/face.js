@@ -1,6 +1,21 @@
 // A living face for VRM-based characters: blinking, a mouth that moves while the line plays, and moods.
 // Works on the morph targets listed in scene.extras.vrm.faces (see tools/vrm2glb.mjs).
 const VISEMES = ['aa', 'oh', 'ee', 'ih', 'ou'];
+
+// Procedural faces use their own geometry, not VRoid expressions or imported morphs.
+export function makeOriginalFace(root, names) {
+  const eyes = root.getObjectByName(names.eyes), mouth = root.getObjectByName(names.mouth);
+  const eyeScale = eyes?.scale.y || 1, mouthScale = mouth?.scale.y || 1;
+  let time = 0, mood = 'neutral';
+  return {
+    setMood: name => { mood = name; },
+    update(dt, talking) {
+      time += dt;
+      if (eyes) eyes.scale.y = eyeScale * (time % 4.1 < 0.12 ? 0.08 : 1);
+      if (mouth) mouth.scale.y = mouthScale * (talking ? 1.4 + Math.abs(Math.sin(time * 19)) * 2.8 : mood === 'shock' ? 2.5 : 1);
+    },
+  };
+}
 // what a beat's `mood` looks like on the face (a full-strength "happy" closes the eyes: keep it subtle)
 const MOODS = {
   smile: { happy: 0.5 }, happy: { happy: 0.8 }, warm: { relaxed: 0.55 },

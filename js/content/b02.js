@@ -183,8 +183,8 @@ export default {
       hint: { a1: 'Find three clues. Tap the ? marks.', a2: 'Tap the ? marks to look at things. You need three clues.', b1: 'Look around the café. Three solid clues should do it.' },
       hintRu: 'Нажимай на «?», чтобы осмотреть предметы. Нужно три улики.' },
     { type: 'line', who: 'reyes', shot: 'over-daisy', anim: 'talk',
-      text: { a1: 'Listen to Daisy. If she lies, press OBJECTION!', a2: 'Now listen to Daisy. If she lies — OBJECTION.', b1: "Now let's hear Daisy's side. You know the drill." },
-      ru: { a1: 'Слушай Дейзи. Если она врёт — жми OBJECTION!', a2: 'Теперь слушай Дейзи. Если соврёт — OBJECTION.', b1: 'Послушаем версию Дейзи. Ты знаешь, что делать.' } },
+      text: { a1: 'Listen to Daisy. If she lies, press Compare.', a2: 'Now listen to Daisy. Use Compare to check what she says.', b1: "Now let's hear Daisy's side. You know the drill." },
+      ru: { a1: 'Слушай Дейзи. Если она врёт, нажми Compare.', a2: 'Теперь слушай Дейзи. Нажми Compare, чтобы сверить её слова с уликами.', b1: 'Послушаем версию Дейзи. Ты знаешь, что делать.' } },
 
     { type: 'interrogate', who: 'daisy', shot: 'daisy', hint: {
         text: { a1: 'Think: the time, the rain, the money.', a2: 'Think about the time, the rain and the money.', b1: 'Think: the till report, the rain, and why she might need cash.' },

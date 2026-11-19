@@ -146,9 +146,6 @@ export function sfx(name) {
     case 'clue': [660, 880, 1320].forEach((f, i) => tone(f, 0.35, { type: 'sine', vol: 0.08, at: i * 0.07 })); break;
     case 'ok': [523, 659, 784].forEach((f, i) => tone(f, 0.3, { type: 'triangle', vol: 0.08, at: i * 0.06 })); break;
     case 'bad': tone(300, 0.25, { type: 'triangle', vol: 0.07, slide: 0.8 }); break;
-    case 'objection':
-      [196, 247, 294, 392].forEach(f => tone(f, 0.7, { type: 'sawtooth', vol: 0.05 }));
-      tone(98, 0.5, { type: 'square', vol: 0.06 }); break;
     case 'static': { const len = ctx.sampleRate * 0.9, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (Math.random() < 0.97 ? 0.35 : 1) * (1 - i / len * 0.6); const s = ctx.createBufferSource(); s.buffer = b; const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2200; f.Q.value = 0.5; const g = ctx.createGain(); g.gain.value = 0.16; s.connect(f).connect(g).connect(master); s.start(); break; }
     case 'beep': tone(1046, 0.09, { type: 'square', vol: 0.03 }); tone(1568, 0.12, { type: 'square', vol: 0.025, at: 0.1 }); break;
     case 'click': tone(1800, 0.03, { type: 'square', vol: 0.06 }); tone(240, 0.06, { type: 'triangle', vol: 0.08 }); break;
