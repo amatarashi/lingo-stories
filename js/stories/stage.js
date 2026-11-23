@@ -345,7 +345,7 @@ export function createStage(canvas) {
     const gr = g.createRadialGradient(64, 64, 6, 64, 64, 62); gr.addColorStop(0, 'rgba(120,255,200,0)'); gr.addColorStop(0.3, 'rgba(120,255,200,0)'); gr.addColorStop(0.42, 'rgba(120,255,200,.55)'); gr.addColorStop(1, 'rgba(120,255,200,0)');
     g.fillStyle = gr; g.fillRect(0, 0, 128, 128); g.strokeStyle = 'rgba(220,255,240,.95)'; g.lineWidth = 6; g.beginPath(); g.arc(64, 64, 22, 0, 7); g.stroke();
   });
-  let tapHandler = null;
+  let tapHandler = null, turnHandler = null;
   function makeMarkers() {
     for (const [k, o] of Object.entries(loc.clues)) {
       if (loc.markers[k]) continue;
@@ -367,11 +367,18 @@ export function createStage(canvas) {
   canvas.addEventListener('pointerdown', e => {
     down = [e.clientX, e.clientY]; dragX = e.clientX; canvas.setPointerCapture(e.pointerId);
   });
-  canvas.addEventListener('pointermove', e => { if (dragX == null || !loc?.exploring || shotName !== loc.wide) return; panGoal = Math.max(-loc.pan, Math.min(loc.pan, panGoal - (e.clientX - dragX) * 0.012)); dragX = e.clientX; });
+  canvas.addEventListener('pointermove', e => { if (dragX == null || turnHandler || !loc?.exploring || shotName !== loc.wide) return; panGoal = Math.max(-loc.pan, Math.min(loc.pan, panGoal - (e.clientX - dragX) * 0.012)); dragX = e.clientX; });
   addEventListener('pointerup', () => { dragX = null; });
   canvas.addEventListener('pointercancel', () => { down = null; dragX = null; });
   canvas.addEventListener('pointerup', e => {
-    if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 12 || !loc?.exploring || !tapHandler) return;
+    if (!down || !loc?.exploring?.length || !tapHandler) return;
+    const dx = e.clientX - down[0], dy = e.clientY - down[1];
+    down = null;
+    if (turnHandler && Math.abs(dx) >= 28 && Math.abs(dx) > Math.abs(dy)) {
+      turnHandler(dx > 0 ? -1 : 1);
+      return;
+    }
+    if (Math.hypot(dx, dy) > 12) return;
     ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
     ray.setFromCamera(ptr, camera);
     let best = null, bestD = 1e9;
@@ -495,7 +502,7 @@ export function createStage(canvas) {
     present: id => !!loc?.chars[id],
     mood: (id, name) => loc?.chars[id]?.face?.setMood(name),
     shot, setSpeaker, talk, play: (id, n, f) => play(id, n, f), setBase, setExplore,
-    onTap: f => { tapHandler = f; },
+    onTap: (tap, turn = null) => { tapHandler = tap; turnHandler = turn; },
     tapClue: k => { if (loc?.exploring?.includes(k)) tapHandler?.(k); },
     shake: (s = 0.5) => { shakeT = s; },
     makePortraits, portraits,

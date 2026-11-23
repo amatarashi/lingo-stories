@@ -315,6 +315,8 @@ export function buildRadio(ctx) {
     ceiling: () => ({ pos: [leftX + 0.55, 0.75, 1.95], at: [-0.6, 2.4, -0.4], fixed: true }),
     establish: () => ({ pos: [0.9, 1.7, 2.2], at: [-0.4, 1.1, -2.3], portrait: { pos: [0.4, 1.75, 2.3], at: [-0.3, 1.0, -2.3], fov: 75 } }),
     wide: () => ({ pos: [0.5, 1.8, 2.35], at: [0.1, 1.0, -2.3], portrait: { pos: [0.4, 1.8, 2.35], at: [-0.3, 1.18, -2.3], fov: 75 } }),
+    'search-room': () => ({ pos: [0.1, 1.78, 2.4], at: [-1.5, 1.12, -1.7], fov: 75, fixed: true }),
+    'search-wall': () => ({ pos: [-0.9, 1.7, 0.12], at: [leftX, 1.48, -0.45], fov: 65, fixed: true }),
     screen: () => ({ pos: [0.6, 1.3, -1.05], at: [0.55, 1.1, -2.3], fixed: true, portrait: { pos: [0.62, 1.35, -0.75], at: [0.55, 1.0, -2.3], fixed: true } }),
     console: () => ({ pos: [2.3, 1.6, -0.4], at: [2.38, 0.95, -2.15], fixed: true, portrait: { pos: [2.3, 1.75, 0.2], at: [2.38, 0.82, -2.15], fov: 70 } }),
     radio: () => ({ pos: [1.4, 1.4, -0.9], at: [2.1, 1.05, -2.2], fixed: true, portrait: { pos: [1.6, 1.5, -0.6], at: [2.15, 0.95, -2.2], fixed: true } }),

@@ -96,7 +96,7 @@ export default {
       text: { a1: 'You slept for three days. Look around.', a2: 'You\'ve been asleep for three days. Look around.', b1: 'You\'ve been out for three days. Have a look around.' },
       ru: { a1: 'Ты спал(а) три дня. Осмотрись.', a2: 'Ты спал(а) три дня. Осмотрись.', b1: 'Ты был(а) без сознания три дня. Осмотрись.' } },
 
-    { type: 'explore', clues: ['logbook', 'photo', 'mug', 'window'], need: ['logbook', 'photo', 'mug'], countLabel: 'Найдено', doneToast: '🔎 Комната осмотрена',
+    { type: 'explore', views: ['search-wall', 'search-room'], clues: ['logbook', 'photo', 'mug', 'window'], need: ['logbook', 'photo', 'mug'], countLabel: 'Найдено', doneToast: '🔎 Комната осмотрена',
       hint: { a1: 'Tap the ? marks. Find three things.', a2: 'Tap the ? marks to look at things. Find three.', b1: 'Tap anything that looks interesting. Three things should tell you enough.' },
       hintRu: 'Нажимай на «?», чтобы осмотреть предметы. Нужно три.' },
 

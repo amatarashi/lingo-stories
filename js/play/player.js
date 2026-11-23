@@ -244,15 +244,25 @@ function openClue(k) {
 
 async function exploreBeat(b) {
   const all = b.clues || Object.keys(ep.clues);
-  world.shot('wide'); world.setSpeaker(null);
+  const views = b.views;
+  let view = views ? views.length - 1 : 0;
+  const restoreView = () => world.shot(views ? views[view] : 'wide');
+  restoreView(); world.setSpeaker(null);
   const run = R.run;
-  let busy = false, finish, hintTimer;
+  let busy = false, finish, hintTimer, turnButton;
   const doneP = new Promise(r => { finish = r; });
   const paint = () => {
     world.setExplore(all, R.found);
     const n = b.need.filter(k => R.found.has(k)).length;
     const cnt = $('ex-count'); if (cnt) cnt.textContent = `${n}/${b.need.length}`;
     if (n >= b.need.length) finish();
+  };
+  const turn = direction => {
+    if (busy || run !== R.run) return;
+    clearTimeout(hintTimer);
+    view = Math.max(0, Math.min(views.length - 1, view + direction));
+    turnButton.textContent = view ? '← Осмотреть слева' : 'Осмотреть справа →';
+    restoreView();
   };
   world.onTap(async k => {
     if (busy) return;
@@ -262,12 +272,12 @@ async function exploreBeat(b) {
     await openClue(k);
     if (run !== R.run) return;
     busy = false;
-    world.shot('wide');
+    restoreView();
     paint();
-  });
+  }, views ? turn : null);
   const line = { who: 'narr', text: b.hint, ru: b.hintRu, noCount: true };
   // some things may be off screen (phones, very wide windows): tell the player the scene moves
-  setTimeout(() => { if (run === R.run && world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
+  if (!views) setTimeout(() => { if (run === R.run && world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
   const p = present(line, (box, done) => {
     const c = document.createElement('div'); c.className = 'btn'; c.style.flex = 'none'; c.innerHTML = `🔎 ${b.countLabel || 'Улики'}: <b id="ex-count">0/${b.need.length}</b>`;
     const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
@@ -278,9 +288,18 @@ async function exploreBeat(b) {
       if (!k) return;
       clearTimeout(hintTimer);
       world.shot(k); toast('Посмотри сюда 👀');
-      hintTimer = setTimeout(() => { if (run === R.run) world.shot('wide'); }, 2200);
+      hintTimer = setTimeout(() => { if (run === R.run) restoreView(); }, 2200);
     };
     box.append(c, h);
+    if (views) {
+      turnButton = document.createElement('button');
+      turnButton.type = 'button';
+      turnButton.className = 'btn';
+      turnButton.textContent = '← Осмотреть слева';
+      turnButton.style.flex = '1 0 100%';
+      turnButton.onclick = e => { e.stopPropagation(); turn(view ? -1 : 1); };
+      box.prepend(turnButton);
+    }
     doneP.then(() => done());
   });
   paint();
