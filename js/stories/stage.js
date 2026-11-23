@@ -248,12 +248,13 @@ export function createStage(canvas) {
       scene.add(ch.o); L.mixers.push(ch.mixer); L.chars[id] = ch;
       if (L.charTargets?.includes(id)) L.clues[id] = ch.o; // people the player can tap ("find Fiona")
       play(id, ch.base, 0, L);
-      add(new THREE.CircleGeometry(0.42, 20), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: 0.35, depthWrite: false }), spot.pos[0], 0.01, spot.pos[2], scene, { rot: [-Math.PI / 2, 0, 0] });
+      ch.shadow = add(new THREE.CircleGeometry(0.42, 20), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: 0.35, depthWrite: false }), spot.pos[0], 0.01, spot.pos[2], scene, { rot: [-Math.PI / 2, 0, 0] });
       tick();
     }
     mergeStatics(scene, statics);
     checkContext();
     renderer.compile(scene, camera);
+    checkContext();
     locs[key] = L;
     return L;
   }
@@ -477,7 +478,7 @@ export function createStage(canvas) {
   }
   const clock = new THREE.Clock(); let t = 0, paused = false;
   renderer.setAnimationLoop(() => {
-    if (document.hidden || paused || !loc) return;
+    if (document.hidden || paused || !loc || renderer.getContext().isContextLost()) return;
     const dt = Math.min(0.05, clock.getDelta()); t += dt;
     adapt(dt);
     for (const m of loc.mixers) m.update(dt);
@@ -493,7 +494,11 @@ export function createStage(canvas) {
     aimCamera(camera, cur.at, panCur);
     // far markers grow, so a '?' across the room is still as easy to see and tap as a near one
     for (const sp of Object.values(loc.markers)) if (sp.visible) { const d = Math.max(1, camera.position.distanceTo(sp.position) / 3.2); sp.scale.setScalar(((sp.userData.small ? 0.2 : 0.4) + Math.sin(t * 4) * (sp.userData.small ? 0.02 : 0.04)) * d); }
-    renderer.render(loc.scene, camera);
+    try {
+      renderer.render(loc.scene, camera);
+    } catch (error) {
+      if (!renderer.getContext().isContextLost()) throw error;
+    }
   });
 
   return {

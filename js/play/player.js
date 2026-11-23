@@ -340,7 +340,15 @@ async function taskBeat(b) {
       h.onclick = e => { e.stopPropagation(); R.helped = true; showHint(); };
       box.append(info, h);
       world.onTap(k => {
-        if (k === st.do) { clearTimeout(hintTimer); world.onTap(null); sfx('click'); haptic('medium'); world.fx('press', k); setTimeout(fin, 450); return; }
+        if (k === st.do) {
+          clearTimeout(hintTimer);
+          clearTimeout(toastT);
+          $('toast').classList.add('hide');
+          world.onTap(null);
+          sfx('click'); haptic('medium'); world.fx('press', k);
+          setTimeout(fin, 450);
+          return;
+        }
         sfx('bad'); haptic('rigid'); world.fx('wrongPress', k);
         toast(`✋ ${esc(L(b.wrong.text))}<br><small>${esc(L(b.wrong.ru))}</small>`, 2400);
         if (++wrong >= 2) { R.helped = true; showHint(); }

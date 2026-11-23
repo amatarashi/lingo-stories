@@ -51,15 +51,23 @@ export function buildStreet(ctx) {
     const s = glow('#ffffff', 0.9, 0); s.position.set(...pos); scene.add(s);
     return { l, s, t: 0 };
   });
-  let burst = 0;
-  L.fx.flash = () => { burst = 1.6; };
-  L.fx.reset = () => { burst = 0; };
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let nextFlash = 0, cooldown = 0;
+  L.fx.flash = () => {
+    if (reduceMotion.matches || cooldown > 0) return;
+    flashes[nextFlash].t = 1;
+    nextFlash = (nextFlash + 1) % flashes.length;
+    cooldown = 0.45;
+  };
+  L.fx.reset = () => {
+    nextFlash = cooldown = 0;
+    for (const f of flashes) { f.t = f.l.intensity = f.s.material.opacity = 0; }
+  };
   L.anims.push(dt => {
-    burst = Math.max(0, burst - dt);
+    cooldown = Math.max(0, cooldown - dt);
     for (const f of flashes) {
-      f.t = Math.max(0, f.t - dt * 7);
-      if (burst > 0 && f.t <= 0 && Math.random() < dt * 5) f.t = 1;
-      f.l.intensity = f.t * 30; f.s.material.opacity = f.t;
+      f.t = Math.max(0, f.t - dt * 5);
+      f.l.intensity = f.t * 6; f.s.material.opacity = f.t * 0.65;
     }
   });
 

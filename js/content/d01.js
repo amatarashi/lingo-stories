@@ -102,7 +102,7 @@ export default {
     ] },
 
     // ------------------------------------------------ the label: Dana's instructions, Sienna
-    { type: 'scene', to: 'label', shot: 'establish', caption: 'Tidewater Records · Soho' },
+    { type: 'scene', to: 'label', shot: 'establish', reset: true, caption: 'Tidewater Records · Soho' },
     { type: 'line', who: 'narr', shot: 'establish',
       text: { a1: 'Tidewater Records. Gold records on the walls. Music everywhere.', a2: 'Tidewater Records: gold records on the walls and music everywhere.', b1: 'Tidewater Records: gold discs on every wall, and a bassline humming through the floor.' },
       ru: { a1: 'Tidewater Records. Золотые пластинки на стенах. Везде музыка.', a2: 'Tidewater Records: золотые пластинки на стенах и музыка повсюду.', b1: 'Tidewater Records: золотые диски на каждой стене и басовая линия, гудящая сквозь пол.' } },
@@ -188,16 +188,16 @@ export default {
       ru: { a1: 'Он уходит. Он не оглядывается.', a2: 'Он уходит, не оглядываясь.', b1: 'Он уходит по коридору, ни разу не оглянувшись.' } },
 
     // ------------------------------------------------ Studio 2: Leo
-    { type: 'scene', to: 'studio', shot: 'establish', caption: 'Studio 2' },
+    { type: 'scene', to: 'studio', shot: 'establish', reset: true, caption: 'Studio 2' },
     { type: 'line', who: 'leo', shot: 'leo', anim: 'talk', mood: 'smile',
       text: { a1: 'Hi! You are the new intern? I am Leo. I am the sound engineer.', a2: 'Hey! You must be the new [intern]. I\'m Leo — sound engineer.', b1: 'Hey! You must be the new [intern]. Leo — I make the noise sound nice.' },
       ru: { a1: 'Привет! Ты новый стажёр? Я Лео. Я звукорежиссёр.', a2: 'Привет! Ты, должно быть, новый стажёр. Я Лео, звукорежиссёр.', b1: 'Привет! Ты, должно быть, новый стажёр. Лео — я делаю так, чтобы шум звучал красиво.' } },
     { type: 'line', who: 'leo', shot: 'leo', anim: 'yes', mood: 'smile',
       text: { a1: 'I saw Kit. Don\'t worry. It is only a shirt.', a2: 'I saw the coffee thing. Don\'t worry — he\'s got ten black shirts.', b1: 'I heard about the coffee incident. Relax — he owns about ten identical shirts.' },
       ru: { a1: 'Я видел Кита. Не переживай. Это просто рубашка.', a2: 'Я видел историю с кофе. Не переживай — у него десять чёрных рубашек.', b1: 'Я слышал про кофейный инцидент. Расслабься — у него штук десять одинаковых рубашек.' } },
-    { type: 'line', who: 'leo', shot: 'desk', anim: 'point',
+    { type: 'task', who: 'leo', shot: 'desk', targets: ['fader'], steps: [{ do: 'fader',
       text: { a1: 'This is the mixing desk. Do you want to try?', a2: 'This is the mixing desk. Want to try? Push this one up.', b1: 'This is the mixing desk. Go on, have a go — push that fader up.' },
-      ru: { a1: 'Это микшерный пульт. Хочешь попробовать?', a2: 'Это микшерный пульт. Хочешь попробовать? Подними вот этот.', b1: 'Это микшерный пульт. Давай, попробуй — подними вон тот фейдер.' } },
+      ru: { a1: 'Это микшерный пульт. Хочешь попробовать?', a2: 'Это микшерный пульт. Хочешь попробовать? Подними вот этот.', b1: 'Это микшерный пульт. Давай, попробуй — подними вон тот фейдер.' } }] },
     { type: 'line', who: 'leo', shot: 'leo', anim: 'talk',
       text: { a1: 'So, how is your first day?', a2: 'So, how\'s your first day going?', b1: 'So, how\'s day one treating you?' },
       ru: { a1: 'Ну, как твой первый день?', a2: 'Ну, как проходит твой первый день?', b1: 'Ну, как тебе первый день?' } },
@@ -221,7 +221,7 @@ export default {
     ] },
 
     // ------------------------------------------------ evening: the paparazzi
-    { type: 'scene', to: 'street', shot: 'establish', caption: 'Soho · 11:40 pm' },
+    { type: 'scene', to: 'street', shot: 'establish', reset: true, caption: 'Soho · 11:40 pm' },
     { type: 'line', who: 'narr', shot: 'establish',
       text: { a1: 'After the concert. A back door. Many cameras.', a2: 'After the gig you leave by the back door. There are cameras everywhere.', b1: 'After the gig, you slip out the back door — straight into a wall of cameras.' },
       ru: { a1: 'После концерта. Задняя дверь. Много камер.', a2: 'После концерта ты выходишь через заднюю дверь. Повсюду камеры.', b1: 'После концерта ты выскальзываешь через заднюю дверь — прямо в стену из камер.' } },
@@ -233,7 +233,7 @@ export default {
     { type: 'line', who: 'kit', shot: 'kit-close', anim: 'talk',
       text: { a1: 'Come on. Give me your hand. Quick!', a2: 'Come on. Take my hand — quick!', b1: 'Don\'t stand there. Take my hand — now!' },
       ru: { a1: 'Пойдём. Дай руку. Быстро!', a2: 'Пошли. Возьми меня за руку — быстро!', b1: 'Не стой. Возьми меня за руку — сейчас же!' } },
-    { type: 'choice', prompt: { a1: 'Kit takes your hand. What do you do?', a2: 'Kit holds out his hand. What do you do?', b1: 'His hand is right there. Your move.' }, options: [
+    { type: 'choice', prompt: { a1: 'Kit holds out his hand. What do you do?', a2: 'Kit holds out his hand. What do you do?', b1: 'His hand is right there. Your move.' }, options: [
       { text: { a1: '(Take his hand.)', a2: '(Take his hand and walk with him.)', b1: '(Take his hand. Keep your head down.)' }, ru: '(Взять его за руку и идти рядом.)', goto: 'h-take', rel: { kit: 2 }, flag: 'tookHand' },
       { text: { a1: 'No! I don\'t know you!', a2: 'No way. I don\'t even know you!', b1: 'Absolutely not. I don\'t even know you!' }, ru: 'Ни за что. Я тебя даже не знаю!', goto: 'h-no', rel: { kit: -1 } },
       { text: { a1: 'Only if you say sorry for "brilliant".', a2: 'Only if you say sorry about "brilliant".', b1: 'Fine — but you owe me an apology for "brilliant".' }, ru: 'Только если извинишься за «brilliant».', goto: 'h-joke', rel: { kit: 2 } },
@@ -255,8 +255,8 @@ export default {
     // ------------------------------------------------ night, the flat
     { type: 'scene', to: 'night', shot: 'establish', caption: 'Camden · 1:15 am' },
     { type: 'line', who: 'ava', shot: 'ava', anim: 'talk',
-      text: { a1: 'Look! It is you! With Kit Rowe!', a2: 'Oh my God. Look at this! It\'s you! With Kit Rowe!', b1: 'Oh. My. God. Is that YOU? Holding hands with Kit Rowe?!' },
-      ru: { a1: 'Смотри! Это ты! С Китом Роу!', a2: 'Боже мой. Посмотри! Это ты! С Китом Роу!', b1: 'О. Боже. Мой. Это ТЫ? За руку с Китом Роу?!' } },
+      text: { a1: 'Look! It is you! With Kit Rowe!', a2: 'Oh my God. Look at this! It\'s you! With Kit Rowe!', b1: 'Oh my God. Look at this! It\'s you! With Kit Rowe!' },
+      ru: { a1: 'Смотри! Это ты! С Китом Роу!', a2: 'Боже мой. Посмотри! Это ты! С Китом Роу!', b1: 'Боже мой. Посмотри! Это ты! С Китом Роу!' } },
     { type: 'line', who: 'ava', shot: 'ava', anim: 'talk', mood: 'smile',
       text: { a1: 'Everybody is talking about it. You are [trending]!', a2: 'Everybody\'s talking about it. You\'re literally [trending]!', b1: 'The whole internet\'s losing it. You\'re literally [trending], babe!' },
       ru: { a1: 'Все это обсуждают. Ты в трендах!', a2: 'Все это обсуждают. Ты буквально в трендах!', b1: 'Весь интернет сходит с ума. Ты буквально в трендах, детка!' } },

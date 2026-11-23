@@ -63,12 +63,22 @@ export function buildLabel(ctx) {
   add(box(CW + 0.4, H, 0.2), wall, 0, H / 2, CEnd - 0.1);
   add(box(CW + 0.4, 0.1, back - CEnd), toon('#1e1c24'), 0, H + 0.05, (back + CEnd) / 2);
   const doorM = toon('#5a3a2a'), handleM = toon('#c9a24a');
-  const doors = { dl1: [-1, -2.9], dl2: [-1, -5.6], dr1: [1, -2.4], dr2: [1, -5.0] };
-  for (const [k, [side, z]] of Object.entries(doors)) {
+  const doors = { dl1: [-1, -2.9, 1], dl2: [-1, -5.6, 2], dr1: [1, -2.4, 3], dr2: [1, -5.0, 4] };
+  let studioDoor;
+  for (const [k, [side, z, number]] of Object.entries(doors)) {
     const d = new THREE.Group(); d.position.set(side * (CW / 2 - 0.02), 0, z); scene.add(d);
-    add(box(0.06, 2.1, 0.95), doorM, 0, 1.05, 0, d); add(box(0.08, 2.18, 1.05), toon('#1b1b22'), side * 0.03, 1.09, 0, d); // the frame sits 2 cm behind the door: flush faces flicker
-    add(box(0.1, 0.04, 0.14), handleM, -side * 0.05, 1.0, 0.33, d);
-    add(new THREE.PlaneGeometry(0.22, 0.22), basic({ color: '#2a2a33' }), -side * 0.04, 1.6, 0, d, { rot: [0, -side * Math.PI / 2, 0] });
+    add(box(0.08, 2.18, 1.05), toon('#1b1b22'), side * 0.03, 1.09, 0, d);
+    const leaf = new THREE.Group();
+    leaf.position.z = -0.475; d.add(leaf);
+    if (k === 'dl2') studioDoor = leaf;
+    add(box(0.06, 2.1, 0.95), doorM, 0, 1.05, 0.475, leaf);
+    add(box(0.1, 0.04, 0.14), handleM, -side * 0.05, 1.0, 0.805, leaf);
+    const plate = canvasTex(128, 128, (g, w, h) => {
+      g.fillStyle = '#24242c'; g.fillRect(0, 0, w, h);
+      g.fillStyle = '#f5de9b'; g.font = 'bold 82px sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(number, w / 2, h / 2);
+    });
+    add(new THREE.PlaneGeometry(0.24, 0.24), basic({ map: plate }), -side * 0.04, 1.56, 0.475, leaf, { rot: [0, -side * Math.PI / 2, 0] });
     const lamp = glow('#7ad8ff', 0.35, 0.8); lamp.position.set(-side * 0.08, 2.35, 0); d.add(lamp);
     L.clues[k] = d;
   }
@@ -90,10 +100,14 @@ export function buildLabel(ctx) {
     me: { pos: [-0.1, 0, 2.6], ry: Math.PI - 0.1, base: 'idle', side: 1 },
     kit: { pos: [-0.35, 0, -5.0], ry: 0.25, base: 'idle', side: 1 },
   };
-  let kitShown = false;
-  L.anims.push(() => { if (!kitShown && L.chars.kit) L.chars.kit.o.visible = false; });
-  L.fx.kit = () => { kitShown = true; if (L.chars.kit) L.chars.kit.o.visible = true; };
-  L.fx.reset = () => { kitShown = false; };
+  let doorAngle = 0;
+  const showKit = visible => {
+    const kit = L.chars.kit;
+    if (kit) kit.o.visible = kit.shadow.visible = visible;
+  };
+  L.anims.push(dt => { studioDoor.rotation.y += (doorAngle - studioDoor.rotation.y) * Math.min(1, dt * 9); });
+  L.fx.kit = () => { doorAngle = 1.1; showKit(true); };
+  L.fx.reset = () => { doorAngle = studioDoor.rotation.y = 0; showKit(false); };
   L.pan = 1.4;
   L.shots = {
     establish: () => ({ pos: [-0.8, 2.0, 5.6], at: [0.8, 1.3, -0.8], portrait: { pos: [-0.3, 2.0, 6.0], at: [0.6, 1.1, -0.6], fov: 66 } }),
@@ -141,7 +155,10 @@ export function buildStudio(ctx) {
 
   // ------------------------------------------------ the mixing desk: faders, glowing meters, two monitors, a laptop
   // the console face is drawn large enough for the close-up: channel strips (LED, three knobs, a fader) and a master section
-  const deskTex = canvasTex(2048, 688, (g, w, h) => {
+  const deskWidth = 2048, deskHeight = 688;
+  const channels = 16, margin = 26, masterWidth = 300;
+  const channelWidth = (deskWidth - margin * 2 - masterWidth) / channels;
+  const deskTex = canvasTex(deskWidth, deskHeight, (g, w, h) => {
     const bg = g.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, '#2b2c35'); bg.addColorStop(1, '#1b1c23'); g.fillStyle = bg; g.fillRect(0, 0, w, h);
     const rr = (x, y, a, b, r) => { g.beginPath(); g.roundRect(x, y, a, b, r); g.fill(); };
     const knob = (x, y, col, turn) => {
@@ -152,23 +169,24 @@ export function buildStudio(ctx) {
     const fader = (x, top, bot, val, cap, cw = 54) => {
       g.fillStyle = '#6a6c78'; for (let t = 0; t <= 10; t++) { const y = top + (bot - top) * t / 10; g.fillRect(x - 25, y - 1, t % 5 ? 8 : 13, 2); g.fillRect(x + (t % 5 ? 17 : 12), y - 1, t % 5 ? 8 : 13, 2); }
       g.fillStyle = '#08080c'; rr(x - 4, top, 8, bot - top, 4);
+      if (!cap) return;
       const y = bot - (bot - top) * val; g.fillStyle = 'rgba(0,0,0,.45)'; rr(x - cw / 2 + 3, y - 15, cw, 38, 6);
       const c = g.createLinearGradient(0, y - 19, 0, y + 19); c.addColorStop(0, cap[0]); c.addColorStop(0.5, cap[1]); c.addColorStop(1, cap[0]); g.fillStyle = c; rr(x - cw / 2, y - 19, cw, 38, 6);
       g.fillStyle = '#17181f'; g.fillRect(x - cw / 2 + 5, y - 2, cw - 10, 4);
     };
-    const CH = 16, M = 26, MASTER = 300, cw = (w - M * 2 - MASTER) / CH;
+    const cw = channelWidth;
     const cols = ['#7ad8ff', '#ff7ab8', '#f2c94c'];
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    for (let i = 0; i < CH; i++) {
-      const x = M + cw * (i + 0.5), s = (i * 37 + 11) % 100 / 100;
+    for (let i = 0; i < channels; i++) {
+      const x = margin + cw * (i + 0.5), s = (i * 37 + 11) % 100 / 100;
       g.fillStyle = i % 2 ? 'rgba(255,255,255,.025)' : 'rgba(255,255,255,.06)'; rr(x - cw / 2 + 3, 12, cw - 6, h - 24, 8);
       g.fillStyle = s > 0.35 ? '#4ae08a' : '#3a4048'; g.beginPath(); g.arc(x, 36, 7, 0, 7); g.fill();
       cols.forEach((c, k) => knob(x, 90 + k * 66, c, ((i * 23 + k * 41) % 100) / 100));
-      fader(x, 300, 625, 0.35 + s * 0.5, ['#b9bbc6', '#f2f2f6']);
+      fader(x, 300, 625, 0.35 + s * 0.5, i ? ['#b9bbc6', '#f2f2f6'] : null);
       g.fillStyle = '#c9cad4'; g.font = 'bold 22px sans-serif'; g.fillText(String(i + 1), x, 656);
     }
-    const mx = w - M - MASTER / 2;
-    g.fillStyle = 'rgba(255,255,255,.08)'; rr(w - M - MASTER + 8, 12, MASTER - 8, h - 24, 8);
+    const mx = w - margin - masterWidth / 2;
+    g.fillStyle = 'rgba(255,255,255,.08)'; rr(w - margin - masterWidth + 8, 12, masterWidth - 8, h - 24, 8);
     g.fillStyle = '#c9cad4'; g.font = 'bold 26px sans-serif'; g.fillText('MASTER', mx, 46);
     for (let b = 0; b < 2; b++) for (let i = 0; i < 16; i++) { g.fillStyle = i > 12 ? '#ff4a4a' : i > 9 ? '#f2c94c' : '#4ae08a'; g.globalAlpha = i < 11 + b ? 1 : 0.22; g.fillRect(mx - 34 + b * 40, 246 - i * 11, 28, 8); } g.globalAlpha = 1;
     fader(mx - 58, 300, 625, 0.72, ['#a83a4a', '#ff6a7a'], 66); fader(mx + 58, 300, 625, 0.72, ['#a83a4a', '#ff6a7a'], 66);
@@ -177,7 +195,17 @@ export function buildStudio(ctx) {
   // the body is a wedge, so the sloped face lies flat on it instead of cutting into a box
   const deskShape = new THREE.Shape(); deskShape.moveTo(-0.65, 0); deskShape.lineTo(-0.65, 0.795); deskShape.lineTo(-1.55, 1.0); deskShape.lineTo(-1.55, 0); deskShape.closePath();
   add(new THREE.ExtrudeGeometry(deskShape, { depth: 2.6, bevelEnabled: false }), toon('#3a2e2a'), 1.0, 0, 0, statics, { rot: [0, -Math.PI / 2, 0] });
-  add(new THREE.PlaneGeometry(2.5, 0.84), basic({ map: deskTex }), -0.3, 0.9015, -1.1, statics, { rot: [-Math.PI / 2 + 0.2242, 0, 0] });
+  const panel = new THREE.Group();
+  panel.position.set(-0.3, 0.9015, -1.1);
+  panel.rotation.x = -Math.PI / 2 + 0.2242; scene.add(panel);
+  add(new THREE.PlaneGeometry(2.5, 0.84), basic({ map: deskTex }), 0, 0, 0, panel);
+  const fader = add(box(0.072, 0.057, 0.033), basic({ color: '#ffcf76' }),
+    ((margin + channelWidth / 2) / deskWidth - 0.5) * 2.5, -0.245, 0.019, panel);
+  L.clues.fader = fader;
+  let faderRaised = false;
+  L.fx.press = key => { if (key === 'fader') faderRaised = true; };
+  L.fx.reset = () => { faderRaised = false; fader.position.y = -0.245; };
+  L.anims.push(dt => { fader.position.y += ((faderRaised ? 0.015 : -0.245) - fader.position.y) * Math.min(1, dt * 10); });
   for (const x of [-1.4, 0.8]) { add(box(0.28, 0.42, 0.28), toon('#1b1b22'), x, 1.06, -1.35); add(cyl(0.08, 0.08, 0.02, 14), toon('#c9a24a'), x, 1.0, -1.205, statics, { rot: [Math.PI / 2, 0, 0] }); }
   add(box(0.7, 0.42, 0.04), basic({ color: '#2a3a55' }), -0.3, 1.18, -1.45);
   const meter = canvasTex(1024, 512, (g) => { g.scale(4, 4); const w = 256, h = 128; g.fillStyle = '#0c1020'; g.fillRect(0, 0, w, h); for (let i = 0; i < 30; i++) { const bh = 20 + Math.random() * 90; const gr = g.createLinearGradient(0, h, 0, h - bh); gr.addColorStop(0, '#4ae08a'); gr.addColorStop(0.7, '#f2c94c'); gr.addColorStop(1, '#ff4a4a'); g.fillStyle = gr; g.fillRect(6 + i * 8.2, h - bh, 6, bh); } });
@@ -200,6 +228,6 @@ export function buildStudio(ctx) {
   L.shots = {
     establish: () => ({ pos: [-0.4, 1.8, 3.4], at: [-0.2, 1.1, -1.8], portrait: { pos: [0.0, 1.9, 3.7], at: [0.0, 0.9, -1.6], fov: 70 } }),
     wide: () => ({ pos: [0.0, 1.7, 3.0], at: [0.0, 1.0, -0.6], portrait: { pos: [0.0, 1.8, 3.4], at: [0.0, 0.8, -0.6], fov: 72 } }),
-    desk: () => ({ pos: [-0.2, 1.75, 0.3], at: [-0.3, 0.85, -1.15], fixed: true }),
+    desk: () => ({ pos: [-1.15, 1.85, 0.38], at: [-1.4, 0.65, -1.0], fov: 55, fixed: true }),
   };
 }
