@@ -35,6 +35,7 @@ export const STORIES = [
     episodes: [
       ['C-01', 'Arrival', 'вокзал, Fiona и кафе The Puffin', () => import('./c01.js')],
       ['C-02', 'The Friday Question', 'вечер викторины и запись Сэма о маяке', () => import('./c02.js')],
+      ['C-03', 'The Road to the Light', 'дорога к маяку, книга посетителей и конверт Сэма', () => import('./c03.js')],
     ],
   },
   {
@@ -46,6 +47,7 @@ export const STORIES = [
     episodes: [
       ['D-01', 'First Day', 'квартира в Камдене, лейбл, кофе на Ките и папарацци', () => import('./d01.js')],
       ['D-02', 'The Deal', 'договорись с Китом об условиях и подготовься к интервью', () => import('./d02.js')],
+      ['D-03', 'The Unfinished Track', 'разберись в утечке и допиши строчку с Китом', () => import('./d03.js')],
     ],
   },
 ].map(s => ({ ...s, episodes: s.episodes.map(([id, title, about, load], i) => ({ id, title, about, load, n: i + 1, story: s.id })) }));

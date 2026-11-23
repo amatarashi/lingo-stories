@@ -137,6 +137,11 @@ export function duck(on) {
 export function sfx(name) {
   if (!ctx) return;
   switch (name) {
+    case 'demo': case 'second-take': {
+      const dates = name === 'demo' ? [0, .23, .48, .78] : [0, .23, .79, 1.09];
+      [57, 64, 60, 67].forEach((note, i) => epiano(mtof(note), ctx.currentTime + dates[i], .42, .075));
+      break;
+    }
     case 'ring': for (let r = 0; r < 2; r++) for (let i = 0; i < 8; i++) tone(i % 2 ? 1320 : 1100, 0.05, { type: 'square', vol: 0.025, at: r * 0.45 + i * 0.05 }); break;
     case 'paper': { const len = ctx.sampleRate * 0.25, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) * 0.5; const s = ctx.createBufferSource(); s.buffer = b; const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 2500; const g = ctx.createGain(); g.gain.value = 0.15; s.connect(f).connect(g).connect(master); s.start(); break; }
     case 'whoosh': { const len = ctx.sampleRate * 0.6, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * i / len); const s = ctx.createBufferSource(); s.buffer = b; const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.8; f.frequency.setValueAtTime(300, ctx.currentTime); f.frequency.exponentialRampToValueAtTime(2400, ctx.currentTime + 0.6); const g = ctx.createGain(); g.gain.value = 0.12; s.connect(f).connect(g).connect(master); s.start(); break; }

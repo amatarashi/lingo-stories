@@ -24,6 +24,16 @@
       "recordingsAdded": 312,
       "source": "Kokoro ONNX model and voice bundle listed above",
       "recordedWith": "Repository voice-jobs.mjs and make_voices.py pipeline (Kokoro ONNX on CPU, FFmpeg MP3)"
+    },
+    {
+      "episodes": [
+        "C-03",
+        "D-03"
+      ],
+      "scope": "Dialogue for A1–B1 and shared vocabulary reviews",
+      "recordingsAdded": 201,
+      "source": "Kokoro ONNX model and voice bundle listed above",
+      "recordedWith": "Repository voice-jobs.mjs and make_voices.py pipeline (Kokoro ONNX on CPU, FFmpeg MP3)"
     }
   ]
 }

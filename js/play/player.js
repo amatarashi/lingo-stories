@@ -27,6 +27,7 @@ const STORY = {
     platform: async () => (await import('../stories/c/loc-platform.js')).buildPlatform,
     puffin: async () => (await import('../stories/c/loc-puffin.js')).buildPuffin,
     room: async () => (await import('../stories/c/loc-puffin.js')).buildRoom,
+    lighthouse: async () => (await import('../stories/c/loc-lighthouse.js')).buildLighthouse,
   } },
   b: { mood: 'noir', locs: { cafe: async () => (await import('../stories/b/loc-cafe.js')).buildCafe, office: async () => (await import('../stories/b/loc-office.js')).buildOffice } },
   d: { mood: 'noir', locs: {
@@ -476,6 +477,7 @@ async function fxBeat(b) {
   if (b.fx === 'alarm' && b.v) sfx('alarm');
   if (b.fx === 'lights' && b.v === 'off') sfx('hum');
   if (b.fx === 'channel') sfx('click');
+  if (b.fx === 'demo' || b.fx === 'second-take') sfx(b.fx);
   world.fx(b.fx, b.v);
 }
 

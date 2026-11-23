@@ -128,7 +128,8 @@ export function buildLabel(ctx) {
 }
 
 export function buildStudio(ctx) {
-  const { THREE, L, scene, statics, add, place, box, cyl } = ctx;
+  const { THREE, L, scene, statics, add, place, box, cyl, mood } = ctx;
+  const draft = mood === 'draft';
   const basic = o => basicM(THREE, o);
   scene.background = new THREE.Color('#14121c');
   scene.fog = new THREE.Fog('#14121c', 9, 18);
@@ -219,24 +220,62 @@ export function buildStudio(ctx) {
   add(box(0.7, 0.42, 0.04), basic({ color: '#2a3a55' }), -0.3, 1.18, -1.45);
   const meter = canvasTex(1024, 512, (g) => { g.scale(4, 4); const w = 256, h = 128; g.fillStyle = '#0c1020'; g.fillRect(0, 0, w, h); for (let i = 0; i < 30; i++) { const bh = 20 + Math.random() * 90; const gr = g.createLinearGradient(0, h, 0, h - bh); gr.addColorStop(0, '#4ae08a'); gr.addColorStop(0.7, '#f2c94c'); gr.addColorStop(1, '#ff4a4a'); g.fillStyle = gr; g.fillRect(6 + i * 8.2, h - bh, 6, bh); } });
   add(new THREE.PlaneGeometry(0.66, 0.38), basic({ map: meter }), -0.3, 1.18, -1.425);
-  place('Chair_4', 1.5, 0, -0.35, Math.PI, 0.5); place('Couch_Small1', 2.4, 0, 1.2, -Math.PI / 2, 0.55);
+  place('Chair_4', 1.5, 0, -0.35, Math.PI, 0.5);
+  if (draft) place('Couch_Small1', -2.4, 0, 1.35, Math.PI / 2, 0.55);
+  else place('Couch_Small1', 2.4, 0, 1.2, -Math.PI / 2, 0.55);
   // LED strip and a neon note
   add(box(W, 0.03, 0.03), basic({ color: '#b07aff' }), 0, H - 0.08, backZ + 0.15);
   add(new THREE.PlaneGeometry(0.6, 0.6), basic({ map: neonTex('♪', '#b07aff', 'bold 100px sans-serif', 128, 128), transparent: true, depthWrite: false }), 2.4, 1.9, backZ + 0.02);
 
   scene.add(new THREE.HemisphereLight('#c8b8ff', '#201828', 1.0));
   const key = new THREE.PointLight('#ffd0a8', 3.2, 7, 1.4); key.position.set(0.5, 2.4, 1.2); scene.add(key);
-  const purple = new THREE.PointLight('#b07aff', 2.0, 6, 1.5); purple.position.set(-2, 2.5, -1.8); scene.add(purple);
+  const purple = new THREE.PointLight(draft ? '#7ab8ef' : '#b07aff', 2.0, 6, 1.5); purple.position.set(-2, 2.5, -1.8); scene.add(purple);
   const deskGlow = glow('#7ad8ff', 1.4, 0.25); deskGlow.material.depthTest = false; deskGlow.position.set(-0.3, 1.0, -1.0); scene.add(deskGlow); // no depth test: the sprite would cut a hard line across the sloped desk
+
+  if (draft) {
+    const sheet = (title, rows, paperColor, header) => canvasTex(512, 384, (g, w, h) => {
+      g.fillStyle = paperColor; g.fillRect(0, 0, w, h);
+      g.fillStyle = header; g.fillRect(0, 0, w, 78);
+      g.fillStyle = '#faf1dc'; g.font = 'bold 35px sans-serif'; g.fillText(title, 27, 50, w - 54);
+      g.fillStyle = '#33313c'; g.font = '26px monospace';
+      rows.forEach((row, i) => g.fillText(row, 27, 138 + i * 64, w - 54));
+    });
+    const notebook = new THREE.Group(); notebook.position.set(1.94, .831, .35); scene.add(notebook);
+    add(box(.54, .028, .4), toon('#713e5f'), 0, -.01, 0, notebook);
+    add(box(.61, .8, .52), toon('#473b49'), 1.94, .4, .35);
+    add(new THREE.PlaneGeometry(.51, .36), basic({ map: sheet('WINDOW LIGHT', ['LEAVE THE LIGHT ON', 'VERSE TWO', '_____________'], '#eacfae', '#57374f') }),
+      0, .007, 0, notebook, { rot: [-Math.PI / 2, 0, -.08] });
+    L.clues.lyricbook = notebook;
+    const session = add(new THREE.PlaneGeometry(.37, .29), basic({
+      map: sheet('TRACK 04', ['09:12 · TAKE 1', '09:18 · REVIEW COPY', 'STUDIO TABLET'], '#dbe5d1', '#394f54'),
+    }), .26, 1.11, -.85, scene, { rot: [-.22, 0, .05] });
+    add(box(.42, .32, .042), toon('#34434d'), .26, 1.11, -.88, scene, { rot: [-.22, 0, .05] });
+    L.clues.session = session;
+    const indicator = add(new THREE.SphereGeometry(.054, 12, 8), basic({ color: '#253731' }), .17, 1.47, -1.42);
+    let playing = 0;
+    const resetFader = L.fx.reset;
+    L.fx.reset = () => { resetFader(); playing = 0; indicator.material.color.set('#253731'); };
+    L.fx.demo = L.fx['second-take'] = () => { playing = 1.35; };
+    L.anims.push(dt => {
+      playing = Math.max(0, playing - dt);
+      indicator.material.color.set(playing > 0 ? '#8dffc7' : '#253731');
+    });
+  }
 
   L.spots = {
     leo: { pos: [0.85, 0, -0.35], ry: -0.6, base: 'idle', side: -1 },
     me: { pos: [-0.85, 0, 0.35], ry: 0.65, base: 'idle', side: 1 },
+    kit: { pos: [1.47, 0, 1.22], ry: -.22, base: 'idle' },
   };
   L.pan = 1.0;
   L.shots = {
     establish: () => ({ pos: [-0.4, 1.8, 3.4], at: [-0.2, 1.1, -1.8], portrait: { pos: [0.0, 1.9, 3.7], at: [0.0, 0.9, -1.6], fov: 70 } }),
     wide: () => ({ pos: [0.0, 1.7, 3.0], at: [0.0, 1.0, -0.6], portrait: { pos: [0.0, 1.8, 3.4], at: [0.0, 0.8, -0.6], fov: 72 } }),
     desk: () => ({ pos: [-1.15, 1.85, 0.38], at: [-1.4, 0.65, -1.0], fov: 55, fixed: true }),
+    'search-notebook': () => ({ pos: [2.35, 1.62, 1.71], at: [1.94, .66, .34], fov: 62, fixed: true }),
+    'search-session': () => ({ pos: [0.32, 1.63, 1.14], at: [.26, 1.04, -.85], fov: 62, fixed: true }),
+    lyricbook: () => ({ pos: [2.14, 1.62, 1], at: [1.94, .65, .33], fov: 53, fixed: true }),
+    session: () => ({ pos: [.26, 1.45, .11], at: [.26, .93, -.85], fov: 49, fixed: true }),
+    'kit-studio': () => ({ pos: [1.36, 1.7, 3.08], at: [1.47, 1.31, 1.22], fov: 52, fixed: true }),
   };
 }
