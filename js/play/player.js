@@ -49,7 +49,7 @@ voiceState.on = S.voice;
 
 // ---------------------------------------------------------------- run state
 const R = { run: 0, lines: 0, clean: 0, al: 0, ac: 0, found: new Set(), asked: false, line: null, ruShown: false, ruUsed: false, tapped: new Set(), helped: false, typing: null, onRu: null, place: 0, placeHelp: {} };
-function resetRun() { Object.assign(R, { lines: 0, clean: 0, al: 0, ac: 0, found: new Set(), asked: false, line: null, place: 0, placeHelp: {} }); }
+function resetRun() { Object.assign(R, { lines: 0, clean: 0, al: 0, ac: 0, found: new Set(), asked: false, line: null, place: 0, placeHelp: {}, relationships: {}, storyFlags: new Set() }); }
 
 // ---------------------------------------------------------------- HUD
 function paintLevel() { for (const b of $('lvl').children) b.classList.toggle('on', b.dataset.l === level()); }
@@ -70,6 +70,7 @@ document.addEventListener('pointerdown', e => { if (!e.target.closest('#pop') &&
 function showPop(el, tok) {
   const r = lookup(tok.s, tok.key);
   const p = $('pop'), w = tok.key && trackedInfo(tok.key);
+  p.classList.toggle('over-card', !!el.closest('#card'));
   const st = r.key && S.words[r.key];
   p.innerHTML = `<b>${esc(r.word)}</b><button data-say>🔊</button>
     <div class="ru2">${r.ru ? esc(r.ru) : '<i>нет в словаре — нажми RU для перевода фразы</i>'}</div>
@@ -371,20 +372,43 @@ async function decodeBeat(b) {
   await present({ who: b.who, shot: b.shot, text: decodeFull(b.text), ru: b.ru });
 }
 
-// ---------------------------------------------------------------- relationships (Fresh Start): each choice can warm or cool a character
-// kept per episode, so replaying a chapter doesn't count twice
-function relOf(id) { let n = 0; for (const e of Object.values(S.stories[storyId]?.relEp || {})) n += e[id] || 0; return n; }
-function applyRel(rel) {
-  const st = S.stories[storyId] ||= {}; st.relEp ||= {}; const e = st.relEp[ep.id] ||= {};
-  for (const [id, v] of Object.entries(rel)) {
-    e[id] = (e[id] || 0) + v;
-    setTimeout(() => toast(v > 0 ? `❤️ ${esc(ep.chars[id].name)} это запомнит` : `💔 ${esc(ep.chars[id].name)}: не лучший ответ`, 1800), 350);
+// Keep the last finished chapter intact until a replay reaches its own ending.
+function applyChoice(option) {
+  if (option.flag) {
+    if (ep.rel) R.storyFlags.add(option.flag);
+    else {
+      const story = S.stories[storyId] ||= {};
+      (story.flags ||= {})[option.flag] = true;
+      save();
+    }
   }
-  save();
+  const run = R.run;
+  for (const [id, delta] of Object.entries(option.rel || {})) {
+    R.relationships[id] = (R.relationships[id] || 0) + delta;
+    const name = esc(ep.chars[id].name);
+    const message = delta > 0 ? `❤️ ${name} это запомнит` : `💔 ${name}: не лучший ответ`;
+    setTimeout(() => { if (R.run === run) toast(message, 1800); }, 350);
+  }
+}
+
+function saveChapterChoices() {
+  const story = S.stories[storyId] ||= {};
+  (story.relEp ||= {})[ep.id] = R.relationships;
+  const flags = story.flags ||= {};
+  for (const beat of ep.beats) {
+    const options = beat.options || beat.msgs?.flatMap(msg => msg.reply || []) || [];
+    for (const { flag } of options) if (flag) delete flags[flag];
+  }
+  for (const flag of R.storyFlags) flags[flag] = true;
+}
+
+function relOf(id) {
+  return Object.values(S.stories[storyId]?.relEp || {}).reduce((total, values) => total + (values[id] || 0), 0);
 }
 
 // ---------------------------------------------------------------- the hero's phone: a chat with short messages (reading, slang, emoji)
 async function chatBeat(b) {
+  const run = R.run;
   dlg.classList.add('hidden'); hidePop();
   const ph = $('phone'), c = ep.chars[b.with], img = world.portraits[b.with];
   ph.innerHTML = `<div class="ph"><div class="ph-top"><span class="av" style="background-image:url(${img || ''});--c:${c.color}"></span><span><b>${esc(c.name)}</b><small>${esc(L(b.title) || 'online')}</small></span></div><div class="ph-msgs"></div><div class="ph-foot"></div></div>`;
@@ -394,7 +418,9 @@ async function chatBeat(b) {
   for (const m of b.msgs) {
     if (m.from) {
       const typing = document.createElement('div'); typing.className = 'bub in typing'; typing.innerHTML = '<i></i><i></i><i></i>';
-      msgs.appendChild(typing); scroll(); await sleep(850); typing.remove();
+      msgs.appendChild(typing); scroll(); await sleep(850);
+      if (run !== R.run) return;
+      typing.remove();
       R.line = { who: m.from, text: m.text, ru: m.ru }; R.helped = false; R.ruUsed = false; R.tapped = new Set();
       const d = document.createElement('div'); d.className = 'bub in';
       const t = document.createElement('div'); renderTokens(t, L(m.text), { onTap: lineHelped });
@@ -403,21 +429,23 @@ async function chatBeat(b) {
       rb.onclick = e => { e.stopPropagation(); ru.classList.toggle('hide'); if (R.line && R.line.text === m.text) { R.helped = true; R.ruUsed = true; } };
       d.append(t, ru, rb); msgs.appendChild(d); scroll(); sfx('beep'); haptic();
       await new Promise(res => { foot.innerHTML = '<button class="btn pri">Дальше ▸</button>'; foot.firstChild.onclick = () => { foot.replaceChildren(); sfx('next'); res(); }; });
+      if (run !== R.run) return;
       finishLine();
     } else if (m.reply) {
       const pick = await new Promise(res => {
         foot.innerHTML = '';
         m.reply.forEach((o, i) => { const btn = document.createElement('button'); btn.className = 'btn choice'; btn.innerHTML = `<span class="n">${i + 1}</span><span>${esc(plain(L(o.text)))}<small class="opt-ru">${esc(L(o.ru))}</small></span>`; btn.onclick = () => { sfx('next'); haptic(); res(o); }; foot.appendChild(btn); });
       });
+      if (run !== R.run) return;
       foot.innerHTML = '';
       const d = document.createElement('div'); d.className = 'bub out'; d.textContent = plain(L(pick.text)); msgs.appendChild(d); scroll();
-      if (pick.rel) applyRel(pick.rel);
-      if (pick.flag) { const st = S.stories[storyId] ||= {}; (st.flags ||= {})[pick.flag] = true; save(); }
+      applyChoice(pick);
       await sleep(500);
+      if (run !== R.run) return;
     }
   }
   await sleep(500);
-  ph.classList.add('hide');
+  if (run === R.run) ph.classList.add('hide');
 }
 
 // ---------------------------------------------------------------- screen and room effects
@@ -648,6 +676,7 @@ $('b-home').onclick = async () => {
 function finish() {
   dlg.classList.add('hidden'); document.body.classList.remove('cine');
   world.shot('wide'); world.setSpeaker(null); sfx('end');
+  if (ep.rel) saveChapterChoices();
   const days = markDay();
   const pct = R.lines ? Math.round(R.clean / R.lines * 100) : 0;
   finishEpisode(ep.id, pct);
@@ -697,7 +726,6 @@ export async function prepare(entry, onProgress) {
 async function runEpisode(mod, story, h) {
   ep = mod; hooks = h; world = await getStage(); storyId = story;
   world.checkContext();
-  if (ep.rel) { const st = S.stories[story]; if (st?.relEp) delete st.relEp[ep.id]; }
   document.body.dataset.story = story; setMood(STORY[story].mood); $('veil').className = '';
   // start in the first location (the one the first scene beat names, or the only one)
   const firstScene = mod.beats.find(b => b.type === 'scene');
@@ -716,7 +744,12 @@ async function runEpisode(mod, story, h) {
     const b = beats[i];
     let go = b.goto;
     if (b.type === 'line') await present(b);
-    else if (b.type === 'choice') { const k = await choiceBeat(b); const o = b.options[k]; go = o.goto; if (o.flag) { const st = S.stories[story] ||= {}; (st.flags ||= {})[o.flag] = true; save(); } if (o.rel) applyRel(o.rel); }
+    else if (b.type === 'choice') {
+      const option = b.options[await choiceBeat(b)];
+      if (run !== R.run) return;
+      applyChoice(option);
+      go = option.goto;
+    }
     else if (b.type === 'chat') await chatBeat(b);
     else if (b.type === 'recap') await recapBeat(b);
     else if (b.type === 'scene') await sceneBeat(b);
@@ -730,6 +763,7 @@ async function runEpisode(mod, story, h) {
     else if (b.type === 'decode') await decodeBeat(b);
     else if (b.type === 'fx') await fxBeat(b);
     else if (b.type === 'end') return finish();
+    if (run !== R.run) return;
     await maybeAdjust();
     i = go ? beats.findIndex(x => x.label === go) : i + 1;
   }

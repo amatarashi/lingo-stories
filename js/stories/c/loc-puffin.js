@@ -144,7 +144,7 @@ export function buildRoom(ctx) {
 
   L.spots = {}; L.pan = 0.6;
   L.shots = {
-    establish: () => ({ pos: [0.9, 1.7, 1.8], at: [-0.2, 0.8, -1.2], portrait: { pos: [0.7, 1.8, 1.9], at: [-0.2, 0.6, -1.2], fov: 72 } }),
+    establish: () => ({ pos: [0.9, 1.7, 1.8], at: [-0.2, 0.8, -1.2], portrait: { pos: [0.05, 1.8, 1.9], at: [0.05, 0.77, -1.35], fov: 82 } }),
     wide: () => L.shots.establish(),
     diary: () => ({ pos: [0.95, 1.45, 1.82], at: [0.15, -0.2, 0.75], fixed: true, portrait: { pos: [0.75, 1.55, 1.82], at: [0.15, -0.35, 0.6], fixed: true } }),
   };

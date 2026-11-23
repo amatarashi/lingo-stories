@@ -106,7 +106,7 @@ export function buildPlatform(ctx) {
   L.shots = {
     establish: () => ({ pos: [-2.5, 1.9, 5.2], at: [1.0, 1.6, -4], portrait: { pos: [-1.0, 1.8, 6.0], at: [0.4, 1.5, -4], fov: 64 } }),
     wide: () => ({ pos: [0.4, 1.75, 4.2], at: [0.4, 0.95, -1.6], portrait: { pos: [0.35, 1.95, 5.0], at: [0.35, 0.75, -1.4], fov: 74 } }),
-    luggage: () => ({ pos: [0.2, 1.4, 3.6], at: [1.0, 0.35, 2.2], fixed: true }),
+    luggage: () => ({ pos: [0.2, 1.4, 3.6], at: [1.0, 0.35, 2.2], fixed: true, portrait: { pos: [1.1, 1.85, 4.25], at: [1.1, 0, 2.2], fov: 64 } }),
     fiona: () => { const h = head('fiona'), p = ctx.portrait(); return { pos: [h.x + (p ? 0.15 : 0.5), h.y + 0.05, h.z + (p ? 2.4 : 2.0)], at: [h.x, h.y - (p ? 0.45 : 0.08), h.z], fixed: true }; },
   };
 }
