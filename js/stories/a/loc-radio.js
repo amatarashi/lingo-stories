@@ -258,13 +258,29 @@ export function buildRadio(ctx) {
   const initial = { ...state };
   L.fx = {
     // a replay starts from the same room: shutter up, heater off, radio dark
-    reset: () => { Object.assign(state, initial); chOn = false; chText = ''; drawCh(); C.green.userData.cap.material.color.set('#1f6b3c'); heatLed.material.color.set('#331a0a'); },
+    reset: ({ warmedRoom = false } = {}) => {
+      Object.assign(state, initial);
+      if (warmedRoom) {
+        state.shutter = state.shutterGoal = 1;
+        state.heat = state.heatGoal = 1;
+      }
+      slats.scale.y = state.shutter;
+      heatGlowM.opacity = state.heat * 0.55;
+      heatLight.intensity = state.heat * 3;
+      chOn = false; chText = ''; drawCh();
+      C.green.userData.cap.material.color.set('#1f6b3c');
+      heatLed.material.color.set(warmedRoom ? '#ff8a2a' : '#331a0a');
+    },
+    wrongPress: key => {
+      if (key !== 'red') return;
+      C.red.userData.cap.material.color.set('#ff4040');
+      setTimeout(() => C.red.userData.cap.material.color.set('#8a1c1c'), 400);
+    },
     alarm: on => { state.alarm = !!on; },
     lights: v => { state.lightsGoal = v === 'off' ? 0.03 : v === 'low' ? 0.35 : 1; },
     channel: n => { chOn = n != null; chText = n == null ? '' : 'CH ' + String(n).padStart(2, '0'); drawCh(); if (n != null) state.knobGoal = -n * 0.45; },
     press: k => {
       if (k === 'green') { C.green.userData.cap.material.color.set('#4dff8a'); chOn = true; chText = 'CH --'; drawCh(); }
-      if (k === 'red') { C.red.userData.cap.material.color.set('#ff4040'); setTimeout(() => C.red.userData.cap.material.color.set('#8a1c1c'), 400); }
       if (k === 'lever') state.stickGoal = 0.6;
       if (k === 'knob') L.fx.channel(3);
       if (k === 'shutter') state.shutterGoal = 1;
@@ -293,11 +309,12 @@ export function buildRadio(ctx) {
 
   // ------------------------------------------------ shots (no people in the room: you are the camera)
   L.spots = {};
-  L.pan = 1.2;
+  L.pan = 0.86;
+  L.turnToExplore = true;
   L.shots = {
     ceiling: () => ({ pos: [leftX + 0.55, 0.75, 1.95], at: [-0.6, 2.4, -0.4], fixed: true }),
     establish: () => ({ pos: [0.9, 1.7, 2.2], at: [-0.4, 1.1, -2.3], portrait: { pos: [0.4, 1.75, 2.3], at: [-0.3, 1.0, -2.3], fov: 75 } }),
-    wide: () => ({ pos: [0.5, 1.8, 2.35], at: [0.1, 1.0, -2.3], portrait: { pos: [0.4, 1.8, 2.35], at: [-0.3, 0.9, -2.3], fov: 75 } }),
+    wide: () => ({ pos: [0.5, 1.8, 2.35], at: [0.1, 1.0, -2.3], portrait: { pos: [0.4, 1.8, 2.35], at: [-0.3, 1.18, -2.3], fov: 75 } }),
     screen: () => ({ pos: [0.6, 1.3, -1.05], at: [0.55, 1.1, -2.3], fixed: true, portrait: { pos: [0.62, 1.35, -0.75], at: [0.55, 1.0, -2.3], fixed: true } }),
     console: () => ({ pos: [2.3, 1.6, -0.4], at: [2.38, 0.95, -2.15], fixed: true, portrait: { pos: [2.3, 1.75, 0.2], at: [2.38, 0.82, -2.15], fov: 70 } }),
     radio: () => ({ pos: [1.4, 1.4, -0.9], at: [2.1, 1.05, -2.2], fixed: true, portrait: { pos: [1.6, 1.5, -0.6], at: [2.15, 0.95, -2.2], fixed: true } }),

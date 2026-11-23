@@ -245,7 +245,8 @@ function openClue(k) {
 async function exploreBeat(b) {
   const all = b.clues || Object.keys(ep.clues);
   world.shot('wide'); world.setSpeaker(null);
-  let busy = false, finish;
+  const run = R.run;
+  let busy = false, finish, hintTimer;
   const doneP = new Promise(r => { finish = r; });
   const paint = () => {
     world.setExplore(all, R.found);
@@ -253,14 +254,32 @@ async function exploreBeat(b) {
     const cnt = $('ex-count'); if (cnt) cnt.textContent = `${n}/${b.need.length}`;
     if (n >= b.need.length) finish();
   };
-  world.onTap(async k => { if (busy) return; busy = true; world.setExplore([], R.found); await openClue(k); busy = false; world.shot('wide'); paint(); });
+  world.onTap(async k => {
+    if (busy) return;
+    clearTimeout(hintTimer);
+    busy = true;
+    world.setExplore([], R.found);
+    await openClue(k);
+    if (run !== R.run) return;
+    busy = false;
+    world.shot('wide');
+    paint();
+  });
   const line = { who: 'narr', text: b.hint, ru: b.hintRu, noCount: true };
   // some things may be off screen (phones, very wide windows): tell the player the scene moves
-  setTimeout(() => { if (world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
+  setTimeout(() => { if (run === R.run && world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
   const p = present(line, (box, done) => {
     const c = document.createElement('div'); c.className = 'btn'; c.style.flex = 'none'; c.innerHTML = `🔎 ${b.countLabel || 'Улики'}: <b id="ex-count">0/${b.need.length}</b>`;
     const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
-    h.onclick = e => { e.stopPropagation(); const k = b.need.find(x => !R.found.has(x)); if (k) { world.shot(k); toast('Посмотри сюда 👀'); setTimeout(() => world.shot('wide'), 2200); } };
+    h.onclick = e => {
+      e.stopPropagation();
+      if (busy) return;
+      const k = b.need.find(x => !R.found.has(x));
+      if (!k) return;
+      clearTimeout(hintTimer);
+      world.shot(k); toast('Посмотри сюда 👀');
+      hintTimer = setTimeout(() => { if (run === R.run) world.shot('wide'); }, 2200);
+    };
     box.append(c, h);
     doneP.then(() => done());
   });
@@ -272,24 +291,33 @@ async function exploreBeat(b) {
 
 // ---------------------------------------------------------------- "Do it by the instruction": tap the right thing in the scene
 async function taskBeat(b) {
+  const run = R.run;
   const done = new Set();
   world.setSpeaker(null);
   for (let si = 0; si < b.steps.length; si++) {
     const st = b.steps[si];
     let wrong = 0;
-    world.shot(b.shot);
-    world.setExplore(b.targets, done, 'dot');
-    if (world.hidden(b.targets).length) world.frame(b.targets);
-    const showHint = () => { world.peek(st.do); world.setExplore([st.do], done, 'dot'); toast('Вот это 👀'); setTimeout(() => world.setExplore(b.targets, done, 'dot'), 2200); };
-    await present({ who: b.who, shot: b.shot, text: st.text, ru: st.ru }, (box, fin) => {
+    const showTargets = () => {
+      world.shot(b.shot);
+      world.setExplore(b.targets, done, 'dot');
+      if (world.hidden(b.targets).length) world.frame(b.targets);
+    };
+    showTargets();
+    let hintTimer;
+    const showHint = () => {
+      clearTimeout(hintTimer);
+      world.peek(st.do); world.setExplore([st.do], done, 'dot'); toast('Вот это 👀');
+      hintTimer = setTimeout(() => { if (run === R.run) showTargets(); }, 2200);
+    };
+    await present({ who: b.who, text: st.text, ru: st.ru }, (box, fin) => {
       const info = document.createElement('div'); info.className = 'stmt';
       info.innerHTML = `Шаг ${si + 1}/${b.steps.length} · <span class="ok">нажми в сцене</span>`;
       const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
       h.onclick = e => { e.stopPropagation(); R.helped = true; showHint(); };
       box.append(info, h);
       world.onTap(k => {
-        if (k === st.do) { world.onTap(null); sfx('click'); haptic('medium'); world.fx('press', k); setTimeout(fin, 450); return; }
-        sfx('bad'); haptic('rigid'); world.fx('press', k);
+        if (k === st.do) { clearTimeout(hintTimer); world.onTap(null); sfx('click'); haptic('medium'); world.fx('press', k); setTimeout(fin, 450); return; }
+        sfx('bad'); haptic('rigid'); world.fx('wrongPress', k);
         toast(`✋ ${esc(L(b.wrong.text))}<br><small>${esc(L(b.wrong.ru))}</small>`, 2400);
         if (++wrong >= 2) { R.helped = true; showHint(); }
       });
@@ -513,6 +541,7 @@ async function sceneBeat(b) {
   const key = sceneKey(ep.scenes[b.to]);
   if (world.location !== key) { sfx('whoosh'); await world.enter(key, b.shot || 'establish'); lastWho = null; lastPhone = false; }
   else world.shot(b.shot || 'establish');
+  if (b.reset) world.fx('reset');
   if (b.caption) { caption(b.caption); await sleep(1700); }
 }
 
@@ -650,7 +679,7 @@ async function runEpisode(mod, story, h) {
   // start in the first location (the one the first scene beat names, or the only one)
   const firstScene = mod.beats.find(b => b.type === 'scene');
   await world.enter(sceneKey(mod.scenes[firstScene ? firstScene.to : Object.keys(mod.scenes)[0]]), firstScene?.shot || 'establish', true);
-  world.pause(false); world.fx('reset');
+  world.pause(false); world.fx('reset', mod.initialSceneState);
   unlock(); startRain(); startMusic(); setMusic(S.music); ambience(true);
   voiceState.on = S.voice; paintVoice();
   resetRun(); hidePop(); R.run++;

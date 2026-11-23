@@ -5,6 +5,7 @@ const line = (who, a1, a2, b1, ru, extra = {}) => ({ type: 'line', who, text: t(
 const task = (steps) => ({ type:'task', who:'maya', shot:'wide', targets:['start','left','right','both'], wrong:{text:'Read the instruction again.',ru:'Прочитай инструкцию ещё раз.'}, steps:steps.map(([doKey,en,ru])=>({do:doKey,text:en,ru})) });
 export default {
  id:'A-02', story:'Channel Nine Is Alive', title:'Heat for Two', part:'Episode 2', icon:'📻', mood:'arctic',
+ initialSceneState:{warmedRoom:true},
  teaser:t('Who carried you here?','Who brought you to the radio room?','Who carried you into the radio room — and why did they leave you behind?'),
  teaserRu:'Кто принёс тебя в радиорубку — и почему оставил? Продолжение следует.',
  chars:{...first.chars,eli:{...first.chars.eli,name:'Eli'}},
@@ -38,7 +39,7 @@ export default {
  line('maya','Take the small radio.','Take the small radio from the locker.','There’s a portable radio in the service locker. Take it so we can keep talking.','В служебном шкафчике есть переносная рация. Возьми её, чтобы мы оставались на связи.'),
  line('narr','You take the radio and a [key].','You take the radio and the generator room key.','Inside the locker, you find a portable radio and a key marked GENERATOR.','В шкафчике ты находишь переносную рацию и ключ с надписью GENERATOR.'),
  line('maya','Turn [left]. Open the grey door.','Turn left in the corridor. Use the key on the grey door.','At the end of the corridor, turn left. The key opens the grey maintenance door.','В конце коридора поверни налево. Ключ открывает серую служебную дверь.'),
- {type:'scene',to:'generator',caption:'Aurora-7 · Generator room'},
+ {type:'scene',to:'generator',caption:'Aurora-7 · Generator room',reset:true},
  line('narr','It is quiet here.','The generator is silent. A paper plan hangs beside it.','The generator stands silent beneath cold pipes. Beside it hangs a faded heating plan.','Под холодными трубами стоит безмолвный генератор. Рядом висит выцветшая схема отопления.'),
  {type:'explore',clues:['map'],need:['map'],countLabel:'Найдено',doneToast:'Схема найдена',hint:'Find the heating plan.',hintRu:'Найди схему отопления.'},
  line('maya','The [left] switch is for your room.','The left switch heats the radio room.','The left-hand switch supplies heat to the radio room — your shelter.','Левый переключатель подаёт тепло в радиорубку — твоё укрытие.'),
@@ -57,7 +58,8 @@ export default {
  line('eli','OK. I can [wait].','OK. You need to stay warm too. I can wait.','Right. You need to stay warm as well. Just… don’t forget me.','Ладно. Тебе тоже нужно согреться. Только… не забудь меня.'),
  line('maya','We will help you, Eli.','We’ll connect your room next, Eli. Stay with us.','Your line is next, Eli. Keep talking to us while the generator warms up.','Твоя линия следующая, Eli. Говори с нами, пока генератор прогревается.'),
  line('eli','There is a switch here too.','I can see a heater switch beside my bed.','There’s a heater switch beside the bed. I’ll turn it on and wait.','У кровати есть переключатель обогревателя. Я включу его и подожду.'),
- line('narr','The green light is on.','The green light is steady now.','The green indicator settles into a steady glow. The generator is ready.','Зелёный индикатор горит ровно. Генератор готов.',{label:'ready'}),
+ {type:'fx',fx:'ready',label:'ready'},
+ line('narr','The green light is on.','The green light is steady now.','The green indicator settles into a steady glow. The generator is ready.','Зелёный индикатор горит ровно. Генератор готов.'),
  line('maya','Now press BOTH.','There is enough power now. Press the BOTH switch.','We have enough power now. Press BOTH to connect the second heating line.','Теперь мощности хватает. Нажми BOTH, чтобы подключить вторую линию обогрева.'),
  task([['both','Press the BOTH switch.','Нажми переключатель BOTH.']]),
  line('eli','My light is on!','The light is back. And the room is getting warmer.','The light’s back. I can finally feel my fingers again.','Свет вернулся. Я наконец снова чувствую пальцы.'),

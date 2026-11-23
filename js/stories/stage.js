@@ -310,6 +310,15 @@ export function createStage(canvas) {
   let fovGoal = 42;
   const baseFov = () => portrait() ? 55 : 42;
   let shotName = 'wide', panGoal = 0, panCur = 0, savedPan = 0, shakeT = 0;
+  function aimCamera(cam, target, pan) {
+    if (loc.turnToExplore && shotName === loc.wide) {
+      _v.copy(target).sub(cam.position).applyAxisAngle(_up, -pan);
+      cam.lookAt(_v.add(cam.position));
+    } else {
+      cam.position.x += pan;
+      cam.lookAt(target.x + pan, target.y, target.z);
+    }
+  }
   function shot(name, instant = false) {
     if (!loc) return;
     let raw;
@@ -355,9 +364,12 @@ export function createStage(canvas) {
   }
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
   let down = null, dragX = null;
-  canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; dragX = e.clientX; });
+  canvas.addEventListener('pointerdown', e => {
+    down = [e.clientX, e.clientY]; dragX = e.clientX; canvas.setPointerCapture(e.pointerId);
+  });
   canvas.addEventListener('pointermove', e => { if (dragX == null || !loc?.exploring || shotName !== loc.wide) return; panGoal = Math.max(-loc.pan, Math.min(loc.pan, panGoal - (e.clientX - dragX) * 0.012)); dragX = e.clientX; });
   addEventListener('pointerup', () => { dragX = null; });
+  canvas.addEventListener('pointercancel', () => { down = null; dragX = null; });
   canvas.addEventListener('pointerup', e => {
     if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 12 || !loc?.exploring || !tapHandler) return;
     ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
@@ -470,8 +482,8 @@ export function createStage(canvas) {
     if (Math.abs(camera.fov - fovGoal) > 0.05) { camera.fov += (fovGoal - camera.fov) * k; camera.updateProjectionMatrix(); }
     shakeT = Math.max(0, shakeT - dt);
     const sh = shakeT * 0.12;
-    camera.position.set(cur.pos.x + panCur + Math.sin(t * 0.31) * 0.03 + (Math.random() - 0.5) * sh, cur.pos.y + Math.sin(t * 0.23) * 0.02 + (Math.random() - 0.5) * sh, cur.pos.z);
-    camera.lookAt(cur.at.x + panCur, cur.at.y, cur.at.z);
+    camera.position.set(cur.pos.x + Math.sin(t * 0.31) * 0.03 + (Math.random() - 0.5) * sh, cur.pos.y + Math.sin(t * 0.23) * 0.02 + (Math.random() - 0.5) * sh, cur.pos.z);
+    aimCamera(camera, cur.at, panCur);
     // far markers grow, so a '?' across the room is still as easy to see and tap as a near one
     for (const sp of Object.values(loc.markers)) if (sp.visible) { const d = Math.max(1, camera.position.distanceTo(sp.position) / 3.2); sp.scale.setScalar(((sp.userData.small ? 0.2 : 0.4) + Math.sin(t * 4) * (sp.userData.small ? 0.02 : 0.04)) * d); }
     renderer.render(loc.scene, camera);
@@ -495,8 +507,8 @@ export function createStage(canvas) {
     hidden: keys => {
       if (!loc) return [];
       makeMarkers();
-      const cam = camera.clone(); cam.position.copy(goal.pos); cam.position.x += panGoal; cam.fov = fovGoal; cam.updateProjectionMatrix();
-      cam.lookAt(goal.at.x + panGoal, goal.at.y, goal.at.z); cam.updateMatrixWorld();
+      const cam = camera.clone(); cam.position.copy(goal.pos); cam.fov = fovGoal; cam.updateProjectionMatrix();
+      aimCamera(cam, goal.at, panGoal); cam.updateMatrixWorld();
       const top = safeTop() + 56, bottom = innerHeight * (portrait() ? 0.6 : 0.68);
       return keys.filter(k => {
         const m = loc.markers[k]; if (!m) return false;
