@@ -25,13 +25,24 @@ export function playLine(voice, text, onEnd) {
   const a = new Audio(BASE + voiceKey(voice, text) + '.mp3');
   a.volume = voiceState.volume; current = a;
   return new Promise(res => {
-    let done = false;
-    const fin = d => { if (!done) { done = true; res(d); } };
-    a.addEventListener('loadedmetadata', () => fin(a.duration || 0), { once: true });
-    a.addEventListener('error', () => fin(0), { once: true });
-    a.addEventListener('ended', () => { if (current === a) current = null; onEnd?.(); }, { once: true });
-    a.play().catch(() => fin(0));
-    setTimeout(() => fin(0), 2500);
+    const finish = duration => {
+      clearTimeout(timeout);
+      res(duration);
+    };
+    const end = () => {
+      if (current !== a) return;
+      stopLine();
+      onEnd?.();
+    };
+    const fail = () => {
+      finish(0);
+      end();
+    };
+    const timeout = setTimeout(fail, 2500);
+    a.addEventListener('loadedmetadata', () => finish(a.duration || 0), { once: true });
+    a.addEventListener('error', fail, { once: true });
+    a.addEventListener('ended', end, { once: true });
+    a.play().catch(fail);
   });
 }
 export function stopLine() { if (current) { current.pause(); current = null; } }

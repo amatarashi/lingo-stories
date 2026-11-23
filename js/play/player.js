@@ -60,7 +60,15 @@ $('lvl').onclick = e => {
   toast(`Уровень текста: <b>${LEVEL_NAME[l]}</b>`);
 };
 function paintVoice() { $('b-voice').classList.toggle('off', !voiceState.on); $('b-voice').textContent = voiceState.on ? '🗣️' : '🔇'; }
-$('b-voice').onclick = () => { voiceState.on = S.voice = !S.voice; save(); paintVoice(); if (!voiceState.on) stopLine(); toast(voiceState.on ? '🗣️ Озвучка включена' : '🔇 Озвучка выключена'); };
+$('b-voice').onclick = () => {
+  voiceState.on = S.voice = !S.voice;
+  save(); paintVoice();
+  if (!voiceState.on) {
+    stopLine();
+    clearSpeaking(R.line?.who);
+  }
+  toast(voiceState.on ? '🗣️ Озвучка включена' : '🔇 Озвучка выключена');
+};
 
 let toastT;
 export function toast(html, ms = 1600) { const t = $('toast'); t.innerHTML = html; t.classList.remove('hide'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
@@ -151,11 +159,18 @@ $('b-ru').onclick = e => {
 };
 $('b-say').onclick = e => { e.stopPropagation(); if (R.line) voice(R.line); };
 
+function clearSpeaking(who) {
+  duck(false);
+  por.classList.remove('talk');
+  if (who) world.talk(who, false);
+}
+
 function voice(line) {
   const c = charOf(line.who);
+  if (!voiceState.on || !c.voice) return 0;
   duck(true);
   por.classList.add('talk'); world.talk(line.who, true);
-  return playLine(c.voice, L(line.text), () => { duck(false); por.classList.remove('talk'); world.talk(line.who, false); });
+  return playLine(c.voice, L(line.text), () => clearSpeaking(line.who));
 }
 
 function finishLine() {
@@ -195,7 +210,7 @@ function present(line, fill) {
     const n = parse(L(line.text)).length;
     renderLine(line, false, dur ? Math.max(18, Math.min(70, dur * 1000 * 0.8 / n)) : 26);
     let finished = false;
-    const done = v => { if (finished || run !== R.run) return; finished = true; boxEl.onclick = null; stopLine(); duck(false); por.classList.remove('talk'); world.talk(line.who, false); finishLine(); resolve(v); };
+    const done = v => { if (finished || run !== R.run) return; finished = true; boxEl.onclick = null; stopLine(); clearSpeaking(line.who); finishLine(); resolve(v); };
     if (fill) { fill(acts, done); boxEl.onclick = () => finishTyping(); }
     else {
       R.onTyped = () => more.classList.remove('hide');
@@ -280,8 +295,8 @@ async function exploreBeat(b) {
   // some things may be off screen (phones, very wide windows): tell the player the scene moves
   if (!views) setTimeout(() => { if (run === R.run && world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
   const p = present(line, (box, done) => {
-    const c = document.createElement('div'); c.className = 'btn'; c.style.flex = 'none'; c.innerHTML = `🔎 ${b.countLabel || 'Улики'}: <b id="ex-count">0/${b.need.length}</b>`;
-    const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
+    const c = document.createElement('div'); c.className = 'btn explore-count'; c.style.flex = 'none'; c.innerHTML = `🔎 ${b.countLabel || 'Улики'}: <b id="ex-count">0/${b.need.length}</b>`;
+    const h = document.createElement('button'); h.className = 'btn explore-hint'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
     h.onclick = e => {
       e.stopPropagation();
       if (busy) return;

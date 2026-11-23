@@ -158,7 +158,7 @@ export default {
       text: { a1: 'You must stay warm. Close the window. [Turn|turn] on the heater.', a2: 'You need to stay warm. Close the window and [turn] on the heater.', b1: 'Your job is to stay warm. Get that window shut and [turn] the heater on.' },
       ru: { a1: 'Тебе надо не замёрзнуть. Закрой окно. Включи обогреватель.', a2: 'Тебе нужно сохранить тепло. Закрой окно и включи обогреватель.', b1: 'Твоя задача — не замёрзнуть. Закрой окно и включи обогреватель.' } },
 
-    { type: 'task', who: 'maya', shot: 'room2', targets: ['shutter', 'heater', 'locker'],
+    { type: 'task', who: 'maya', shot: 'room-controls', targets: ['shutter', 'heater', 'locker'],
       wrong: { text: { a1: 'No, not that. Listen again.', a2: 'No, not that one. Listen again.', b1: 'Nope, not that. Listen again.' }, ru: { a1: 'Нет, не то. Послушай ещё раз.', a2: 'Нет, не это. Послушай ещё раз.', b1: 'Не-а, не то. Послушай ещё раз.' } },
       steps: [
         { do: 'shutter', text: { a1: 'Close the window. Pull the metal shutter down.', a2: 'First, pull the metal shutter down over the window.', b1: 'First things first — pull the shutter down over the window.' },

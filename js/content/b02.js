@@ -94,7 +94,7 @@ export default {
     ] },
 
     // ---------------------------------------------------------------- the office
-    { type: 'scene', to: 'office', shot: 'window', caption: 'Blackwood & Reyes Investigations · 7:30 am' },
+    { type: 'scene', to: 'office', shot: 'window', caption: 'Blackwood & Reyes Investigations · 5:50 am' },
     { type: 'line', who: 'narr', shot: 'window',
       text: { a1: 'The next morning. It is still raining.', a2: "The next morning. It's still raining.", b1: 'Next morning. Still raining. Of course it is.' },
       ru: { a1: 'Следующее утро. Всё ещё идёт дождь.', a2: 'Следующее утро. Всё ещё идёт дождь.', b1: 'Следующее утро. Дождь всё идёт. Ну конечно.' } },
