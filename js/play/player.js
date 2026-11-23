@@ -245,11 +245,11 @@ function openClue(k) {
 async function exploreBeat(b) {
   const all = b.clues || Object.keys(ep.clues);
   const views = b.views;
-  let view = views ? views.length - 1 : 0;
+  let view = views ? Math.floor(views.length / 2) : 0;
   const restoreView = () => world.shot(views ? views[view] : 'wide');
   restoreView(); world.setSpeaker(null);
   const run = R.run;
-  let busy = false, finish, hintTimer, turnButton;
+  let busy = false, finish, hintTimer, turnButtons = [];
   const doneP = new Promise(r => { finish = r; });
   const paint = () => {
     world.setExplore(all, R.found);
@@ -261,7 +261,7 @@ async function exploreBeat(b) {
     if (busy || run !== R.run) return;
     clearTimeout(hintTimer);
     view = Math.max(0, Math.min(views.length - 1, view + direction));
-    turnButton.textContent = view ? '← Осмотреть слева' : 'Осмотреть справа →';
+    turnButtons.forEach((button, i) => { button.disabled = i === 0 ? view === 0 : view === views.length - 1; });
     restoreView();
   };
   world.onTap(async k => {
@@ -274,7 +274,7 @@ async function exploreBeat(b) {
     busy = false;
     restoreView();
     paint();
-  }, views ? turn : null);
+  }, views?.length > 1 ? turn : null);
   const line = { who: 'narr', text: b.hint, ru: b.hintRu, noCount: true };
   // some things may be off screen (phones, very wide windows): tell the player the scene moves
   if (!views) setTimeout(() => { if (run === R.run && world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
@@ -291,14 +291,18 @@ async function exploreBeat(b) {
       hintTimer = setTimeout(() => { if (run === R.run) restoreView(); }, 2200);
     };
     box.append(c, h);
-    if (views) {
-      turnButton = document.createElement('button');
-      turnButton.type = 'button';
-      turnButton.className = 'btn';
-      turnButton.textContent = '← Осмотреть слева';
-      turnButton.style.flex = '1 0 100%';
-      turnButton.onclick = e => { e.stopPropagation(); turn(view ? -1 : 1); };
-      box.prepend(turnButton);
+    if (views?.length > 1) {
+      const nav = document.createElement('div');
+      nav.className = 'search-views';
+      turnButtons = ['← Осмотреть слева', 'Осмотреть справа →'].map((label, i) => {
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'btn'; button.textContent = label;
+        button.onclick = e => { e.stopPropagation(); turn(i === 0 ? -1 : 1); };
+        nav.append(button);
+        return button;
+      });
+      box.prepend(nav);
+      turn(0);
     }
     doneP.then(() => done());
   });
@@ -398,7 +402,7 @@ async function chatBeat(b) {
       const rb = document.createElement('button'); rb.className = 'rb'; rb.textContent = 'RU';
       rb.onclick = e => { e.stopPropagation(); ru.classList.toggle('hide'); if (R.line && R.line.text === m.text) { R.helped = true; R.ruUsed = true; } };
       d.append(t, ru, rb); msgs.appendChild(d); scroll(); sfx('beep'); haptic();
-      await new Promise(res => { foot.innerHTML = '<button class="btn pri">Дальше ▸</button>'; foot.firstChild.onclick = () => { sfx('next'); res(); }; });
+      await new Promise(res => { foot.innerHTML = '<button class="btn pri">Дальше ▸</button>'; foot.firstChild.onclick = () => { foot.replaceChildren(); sfx('next'); res(); }; });
       finishLine();
     } else if (m.reply) {
       const pick = await new Promise(res => {

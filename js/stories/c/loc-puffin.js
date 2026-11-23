@@ -36,6 +36,7 @@ export function buildPuffin(ctx) {
   piece(-W / 2, wx0, 0, H); piece(wx1, W / 2, 0, H); piece(wx0, wx1, 0, wy0); piece(wx0, wx1, wy1, H);
   add(box(0.2, H, D), wallMat, -W / 2 - 0.1, H / 2, 0); add(box(0.2, H, D), wallMat, W / 2 + 0.1, H / 2, 0);
   add(box(W, 0.9, 0.05), wainMat, 0, 0.45, backZ + 0.03); add(box(0.05, 0.9, D), wainMat, -W / 2 + 0.03, 0.45, 0); add(box(0.05, 0.9, D), wainMat, W / 2 - 0.03, 0.45, 0);
+  add(box(W + 0.2, H, 0.2), wallMat, 0, H / 2, D / 2 + 0.1);
   add(box(W + 0.4, 0.1, D + 0.4), toon('#f2ece0'), 0, H + 0.05, 0);
   for (let x = -3.5; x <= 3.5; x += 1.75) add(box(0.16, 0.16, D), toon('#8a6040'), x, H - 0.08, 0);
   add(new THREE.PlaneGeometry(wx1 - wx0, wy1 - wy0), basic({ map: harbourTex() }), (wx0 + wx1) / 2, (wy0 + wy1) / 2, backZ - 0.3);
@@ -96,7 +97,7 @@ export function buildPuffin(ctx) {
   };
   L.pan = 1.8;
   L.shots = {
-    establish: () => ({ pos: [-1.0, 1.9, 3.3], at: [0.6, 1.2, -2.0], portrait: { pos: [-0.2, 1.9, 3.4], at: [0.8, 1.0, -2.0], fov: 66 } }),
+    establish: () => ({ pos: [-1.0, 1.9, 3.2], at: [0.6, 1.2, -2.0], portrait: { pos: [-0.2, 1.9, 3.4], at: [0.8, 1.0, -2.0], fov: 66 } }),
     wide: () => ({ pos: [-0.4, 1.9, 3.2], at: [0.8, 1.0, -1.6], portrait: { pos: [0.2, 2.0, 3.4], at: [0.9, 0.8, -1.6], fov: 70 } }),
     window: () => ({ pos: [-1.6, 1.5, 0.4], at: [-2.0, 1.6, -5], fixed: true }),
     key: () => ({ pos: [2.0, 1.55, -0.9], at: [2.1, 1.05, -1.45], fixed: true, portrait: { pos: [2.0, 1.5, -0.6], at: [2.1, 0.7, -1.6], fixed: true } }),
@@ -116,6 +117,8 @@ export function buildRoom(ctx) {
   const paper = canvasTex(256, 256, (g, w, h) => { g.fillStyle = '#d9c9a8'; g.fillRect(0, 0, w, h); g.fillStyle = 'rgba(150,110,80,.35)'; for (let x = 0; x < w; x += 32) for (let y = 0; y < h; y += 32) { g.beginPath(); g.arc(x + 16, y + 16, 3, 0, 7); g.fill(); } }, { repeat: [3, 2] });
   const wm = toonMap(paper);
   add(box(W, H, 0.15), wm, 0, H / 2, -D / 2 - 0.07); add(box(0.15, H, D), wm, -W / 2 - 0.07, H / 2, 0); add(box(0.15, H, D), wm, W / 2 + 0.07, H / 2, 0);
+  add(box(W + 0.15, H, 0.15), wm, 0, H / 2, D / 2 + 0.07);
+  add(box(W + 0.15, 0.1, D + 0.15), wm, 0, H + 0.45, 0);
   const slope = add(box(W + 0.3, 0.12, 2.6), toon('#bfae8e'), 0, H + 0.4, -0.6); slope.rotation.x = 0.55;
   // round window with the evening harbour
   add(new THREE.CircleGeometry(0.45, 24), basic({ map: harbourTex(true) }), 0.6, 1.65, -D / 2 + 0.01);
@@ -143,6 +146,6 @@ export function buildRoom(ctx) {
   L.shots = {
     establish: () => ({ pos: [0.9, 1.7, 1.8], at: [-0.2, 0.8, -1.2], portrait: { pos: [0.7, 1.8, 1.9], at: [-0.2, 0.6, -1.2], fov: 72 } }),
     wide: () => L.shots.establish(),
-    diary: () => ({ pos: [0.95, 1.45, 2.05], at: [0.15, -0.2, 0.75], fixed: true, portrait: { pos: [0.75, 1.55, 2.2], at: [0.15, -0.35, 0.6], fixed: true } }),
+    diary: () => ({ pos: [0.95, 1.45, 1.82], at: [0.15, -0.2, 0.75], fixed: true, portrait: { pos: [0.75, 1.55, 1.82], at: [0.15, -0.35, 0.6], fixed: true } }),
   };
 }

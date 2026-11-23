@@ -34,6 +34,7 @@ export function buildCafe(ctx) {
   wallPiece(-4.55, -0.45, 0, 1.0); wallPiece(-4.55, -0.45, 2.75, H);
   add(box(0.2, H, D), wallMat, -W / 2, H / 2, 0);
   add(box(0.2, H, D), wallMat, W / 2, H / 2, 0);
+  wallPiece(-W / 2, W / 2, 0, H, D / 2 + 0.09);
   add(box(W, 1.0, 0.06), wainMat, 0, 0.5, backZ + 0.12);
   add(box(0.06, 1.0, D), wainMat, -W / 2 + 0.12, 0.5, 0);
   add(box(0.06, 1.0, D), wainMat, W / 2 - 0.12, 0.5, 0);
@@ -233,9 +234,17 @@ export function buildCafe(ctx) {
 
   // ------------------------------------------------ camera shots
   L.shots = {
-    title: () => ({ pos: [5.2, 2.6, 6.6], at: [0.4, 1.3, -1.6], portrait: { pos: [2.4, 2.0, 4.2], at: [1.2, 1.6, -2.5] } }),
-    establish: () => ({ pos: [-1.2, 2.2, 6.8], at: [-1.6, 1.8, -4.5] }),
-    wide: () => ({ pos: [4.4, 3.0, 5.4], at: [-0.2, 1.0, -0.9], portrait: { pos: [0.9, 2.95, 3.85], at: [0.6, 0.5, -1.3], fov: 72 } }),
+    title: () => ({ pos: [3.85, 2.35, 3.65], at: [0.4, 1.3, -1.6], fov: 60, fixed: true }),
+    establish: () => ({ pos: [-1.1, 2.05, 3.65], at: [-0.6, 1.35, -2.6], fov: 66, fixed: true }),
+    wide: () => ({ pos: [2.9, 2.35, 3.65], at: [0.1, 1.12, -1.6], fov: 64, fixed: true, portrait: { pos: [0.8, 2.05, 3.68], at: [0.55, 1.2, -1.45], fov: 68 } }),
+    'search-left': () => morning
+      ? { pos: [-1.85, 1.78, 2.33], at: [-4.61, 1.43, 2.22], fov: 66, fixed: true }
+      : { pos: [-0.8, 1.62, 3.58], at: [-1.85, 0.43, 2.1], fov: 65, fixed: true },
+    'search-center': () => morning
+      ? { pos: [-0.5, 1.75, 1.75], at: [-0.6, 0.49, -1.4], fov: 61, fixed: true }
+      : { pos: [-0.45, 2.55, 1.3], at: [-0.1, 2.65, -3.75], fov: 62, fixed: true },
+    'search-counter': () => ({ pos: [2.7, 2.05, 1.28], at: [morning ? 2.1 : 2.85, 0.83, -2.05], fov: 66, fixed: true }),
+    'search-entry': () => ({ pos: [2.25, 1.62, 1.31], at: [4.5, 0.62, 1.26], fov: 60, fixed: true }),
     // on portrait screens: face-on and a bit lower in frame so the dialogue box does not cover it
     reyes: () => { const h = head('reyes'), p = portrait(); return { pos: [h.x + (p ? 0.3 : 0.85), h.y + 0.05, h.z + (p ? 2.3 : 1.9)], at: [h.x + (p ? 0.05 : 0), h.y - (p ? 0.45 : 0.08), h.z], fixed: true }; },
     'reyes-close': () => { const h = head('reyes'), p = portrait(); return { pos: [h.x + (p ? 0.15 : 0.35), h.y + 0.02, h.z + (p ? 1.2 : 0.95)], at: [h.x, h.y - (p ? 0.25 : 0.02), h.z], fixed: true }; },
@@ -251,7 +260,7 @@ export function buildCafe(ctx) {
     'umbrella-close': () => ({ pos: [3.75, 1.15, 1.75], at: [4.45, 0.9, 1.2] }),
     apron: () => ({ pos: [-0.6, 1.55, 3.4], at: [-1.95, 0.75, 2.1] }),
     camera: () => ({ pos: [0.9, 2.1, -1.6], at: [-0.2, 2.9, backZ] }),
-    raincoat: () => ({ pos: [-2.9, 1.6, 2.9], at: [-4.7, 1.2, 2.15], fixed: true }),
+    raincoat: () => ({ pos: [-2.58, 1.65, 2.82], at: [-4.64, 1.31, 2.15], fov: 56, fixed: true }),
     letter: () => ({ pos: [2.3, 1.45, -0.55], at: [2.1, 0.9, -1.75], fixed: true }),
     video: () => ({ pos: [-0.1, 1.15, -0.55], at: [-0.66, 0.66, -1.5], fixed: true }),
   };

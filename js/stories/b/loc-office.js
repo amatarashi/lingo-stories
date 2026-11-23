@@ -34,6 +34,7 @@ export function buildOffice(ctx) {
   wallPiece(leftX, wx0, 0, H); wallPiece(wx1, rightX, 0, H); wallPiece(wx0, wx1, 0, wy0); wallPiece(wx0, wx1, wy1, H);
   add(box(0.2, H, D), wallMat, leftX, H / 2, 0);
   add(box(0.2, H, D), wallMat, rightX, H / 2, 0);
+  add(box(W, H, 0.2), wallMat, 0, H / 2, D / 2 + 0.09);
   add(box(W, 0.9, 0.06), wainMat, 0, 0.45, backZ + 0.12);
   add(box(0.06, 0.9, D), wainMat, leftX + 0.12, 0.45, 0);
   add(box(0.06, 0.9, D), wainMat, rightX - 0.12, 0.45, 0);
@@ -220,8 +221,9 @@ export function buildOffice(ctx) {
   };
   L.pan = 2.2;
   L.shots = {
-    establish: () => ({ pos: [3.6, 2.4, 3.4], at: [-0.6, 1.3, -1.6], portrait: { pos: [2.2, 2.2, 4.4], at: [0.0, 1.2, -1.4] } }),
-    wide: () => ({ pos: [0.6, 2.9, 4.6], at: [0.4, 0.9, -1.0], portrait: { pos: [0.5, 2.9, 3.3], at: [0.4, 0.5, -1.2], fov: 72 } }),
+    establish: () => ({ pos: [2.15, 2.19, 3.15], at: [0.0, 1.2, -1.4], fov: 68, fixed: true }),
+    wide: () => ({ pos: [0.55, 2.45, 3.12], at: [0.4, 1.0, -1.1], fov: 70, fixed: true }),
+    'search-desk': () => ({ pos: [1.72, 2.18, 1.53], at: [1.94, 0.79, -1.19], fov: 62, fixed: true }),
     window: () => ({ pos: [-1.0, 1.55, 0.5], at: [0.5, 1.75, -6], fixed: true }),
     desk: () => ({ pos: [2.1, 1.75, 0.45], at: [1.95, 0.85, -1.2], fixed: true }),
     'desk-empty': () => ({ pos: [0.6, 1.35, 1.2], at: [2.0, 0.95, -1.3] }),

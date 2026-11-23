@@ -33,11 +33,12 @@ export function buildFlat(ctx) {
   const basic = o => new THREE.MeshBasicMaterial({ toneMapped: false, ...o });
   scene.background = new THREE.Color(night ? '#1c1826' : '#efe3d6');
   scene.fog = new THREE.Fog(night ? '#1c1826' : '#efe3d6', 10, 22);
-  const W = 7, D = 5.5, H = 2.8, backZ = -D / 2;
+  const W = 7, H = 2.8, backZ = -2.75, frontZ = 4.1;
+  const D = frontZ - backZ, zMid = (frontZ + backZ) / 2;
 
   // ------------------------------------------------ shell: herringbone floor, blush walls, one exposed-brick wall
   const floor = canvasTex(256, 256, (g, w, h) => { g.fillStyle = night ? '#3a2a22' : '#8a6a4a'; g.fillRect(0, 0, w, h); for (let y = 0; y < h; y += 16) for (let x = 0; x < w; x += 64) { g.fillStyle = `hsl(30,${30 + Math.random() * 10}%,${night ? 30 : 58 + Math.random() * 6}%)`; g.fillRect(x + ((y / 16) % 2) * 32, y, 62, 14); } }, { repeat: [3, 3] });
-  add(new THREE.PlaneGeometry(W, D), toonMap(floor), 0, 0, 0, statics, { rot: [-Math.PI / 2, 0, 0] });
+  add(new THREE.PlaneGeometry(W, D), toonMap(floor), 0, 0, zMid, statics, { rot: [-Math.PI / 2, 0, 0] });
   const wall = toon(night ? '#6a5560' : '#f0cfc4');
   const brick = canvasTex(256, 256, (g, w, h) => { g.fillStyle = '#b8a69a'; g.fillRect(0, 0, w, h); for (let y = 0; y < h; y += 16) for (let x = (y / 16) % 2 ? -16 : 0; x < w; x += 32) { g.fillStyle = `hsl(12,${40 + Math.random() * 15}%,${38 + Math.random() * 10}%)`; g.fillRect(x + 1, y + 1, 30, 14); } }, { repeat: [3, 2] });
   // back wall with a big sash window
@@ -49,9 +50,10 @@ export function buildFlat(ctx) {
   for (const y of [wy0, (wy0 + wy1) / 2, wy1]) add(box(wx1 - wx0 + 0.12, 0.07, 0.18), fr, (wx0 + wx1) / 2, y, backZ);
   for (const x of [wx0, (wx0 + wx1) / 2, wx1]) add(box(0.07, wy1 - wy0, 0.16), fr, x, (wy0 + wy1) / 2, backZ);
   add(box(wx1 - wx0 + 0.2, 0.05, 0.3), fr, (wx0 + wx1) / 2, wy0 - 0.02, backZ + 0.12);
-  add(box(0.2, H, D), toonMap(brick), -W / 2 - 0.1, H / 2, 0);
-  add(box(0.2, H, D), wall, W / 2 + 0.1, H / 2, 0);
-  add(box(W + 0.4, 0.1, D + 0.4), toon(night ? '#3a3040' : '#fbf4ee'), 0, H + 0.05, 0);
+  add(box(0.2, H, D), toonMap(brick), -W / 2 - 0.1, H / 2, zMid);
+  add(box(0.2, H, D), wall, W / 2 + 0.1, H / 2, zMid);
+  add(box(W + 0.2, H, 0.2), wall, 0, H / 2, frontZ + 0.1);
+  add(box(W + 0.4, 0.1, D + 0.4), toon(night ? '#3a3040' : '#fbf4ee'), 0, H + 0.05, zMid);
 
   // ------------------------------------------------ kitchen corner (left), living corner (right)
   place('Kitchen_2Drawers', -2.9, 0, -2.3, 0, 0.5); place('Kitchen_Sink', -2.0, 0, -2.3, 0, 0.5); place('Kitchen_Fridge', -3.15, 0, -1.2, Math.PI / 2, 0.5);

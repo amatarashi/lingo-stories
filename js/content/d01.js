@@ -129,7 +129,7 @@ export default {
     { label: 'dana-job', type: 'line', who: 'dana', shot: 'dana', anim: 'point',
       text: { a1: 'Your first job: take the coffee to the band. The coffee is on the desk.', a2: 'Your first job: take the coffee to the band. The tray is on the desk.', b1: 'First job: get the band their coffee. The tray\'s on the front desk.' },
       ru: { a1: 'Твоё первое задание: отнеси кофе группе. Кофе на стойке.', a2: 'Твоё первое задание: отнеси кофе группе. Поднос на стойке.', b1: 'Первое задание: кофе для группы. Поднос на стойке ресепшена.' } },
-    { type: 'task', who: 'dana', shot: 'wide', targets: ['tray', 'plant', 'sofa'],
+    { type: 'task', who: 'dana', shot: 'reception', targets: ['tray', 'plant', 'sofa'],
       wrong: { text: { a1: 'No. The coffee is on the desk.', a2: 'No, no. The tray is on the desk.', b1: 'Not that. The tray — on the desk.' }, ru: { a1: 'Нет. Кофе на стойке.', a2: 'Нет-нет. Поднос на стойке.', b1: 'Не то. Поднос — на стойке.' } },
       steps: [
         { do: 'tray', text: { a1: 'Take the coffee. It is on the desk.', a2: 'Pick up the coffee tray. It\'s on the desk.', b1: 'Grab the tray off the desk.' },

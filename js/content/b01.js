@@ -110,7 +110,7 @@ export default {
       text: { a1: 'Thanks, Jenna. OK, intern. Look around. Find clues.', a2: 'Thanks, Jenna. Right, intern — look around and find me some clues.', b1: 'Cheers, Jenna. Right, intern — have a look around. Find me something I can use.' },
       ru: { a1: 'Спасибо, Дженна. Так, стажёр. Осмотрись. Найди улики.', a2: 'Спасибо, Дженна. Так, стажёр — осмотрись и найди мне улики.', b1: 'Спасибо, Дженна. Так, стажёр — осмотрись. Найди мне что-нибудь полезное.' } },
 
-    { type: 'explore', clues: ['till', 'receipt', 'umbrella', 'camera', 'apron'], need: ['receipt', 'apron', 'camera'],
+    { type: 'explore', views: ['search-left', 'search-center', 'search-counter', 'search-entry'], clues: ['till', 'receipt', 'umbrella', 'camera', 'apron'], need: ['receipt', 'apron', 'camera'],
       hint: { a1: 'Find three clues. Tap the ? marks.', a2: 'Tap the ? marks to examine things. You need three clues.', b1: 'Tap anything that looks suspicious. Three solid clues should do it.' },
       hintRu: 'Нажимай на «?», чтобы осмотреть предметы. Нужно три улики.' },
 

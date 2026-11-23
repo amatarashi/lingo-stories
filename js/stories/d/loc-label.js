@@ -18,7 +18,7 @@ export function buildLabel(ctx) {
   const basic = o => basicM(THREE, o);
   scene.background = new THREE.Color('#1a1820');
   scene.fog = new THREE.Fog('#1a1820', 12, 24);
-  const W = 8, H = 3.2, front = 4, back = -1.2;   // lobby spans z back..front
+  const W = 8, H = 3.2, front = 6.35, back = -1.2;   // lobby spans z back..front
   const CW = 2.4, CEnd = -8.5;                     // corridor: x ±CW/2, z back..CEnd
 
   // ------------------------------------------------ lobby: dark terrazzo, charcoal walls, warm wood slats
@@ -33,6 +33,7 @@ export function buildLabel(ctx) {
   add(box(CW, H - 2.5, 0.2), wall, 0, 2.5 + (H - 2.5) / 2, back - 0.1);
   add(box(0.2, H, front - back), wall, -W / 2 - 0.1, H / 2, (front + back) / 2);
   add(box(0.2, H, front - back), wall, W / 2 + 0.1, H / 2, (front + back) / 2);
+  add(box(W + 0.2, H, 0.2), wall, 0, H / 2, front + 0.1);
   add(box(W + 0.4, 0.1, front - back + 0.4), toon('#1e1c24'), 0, H + 0.05, (front + back) / 2);
   // wood slats behind reception
   for (let x = 1.2; x < 3.9; x += 0.16) add(box(0.08, H - 0.2, 0.06), slatM, x, H / 2, back + 0.02);
@@ -97,6 +98,7 @@ export function buildLabel(ctx) {
   L.shots = {
     establish: () => ({ pos: [-0.8, 2.0, 5.6], at: [0.8, 1.3, -0.8], portrait: { pos: [-0.3, 2.0, 6.0], at: [0.6, 1.1, -0.6], fov: 66 } }),
     wide: () => ({ pos: [-0.4, 2.2, 5.0], at: [0.2, 0.9, 0.4], portrait: { pos: [-0.2, 2.4, 5.6], at: [0.0, 0.8, 0.4], fov: 72 } }),
+    reception: () => ({ pos: [-0.68, 2.25, 5.9], at: [-0.68, 0.6, 0.2], fov: 65, fixed: true, portrait: { pos: [-0.72, 2.55, 5.95], at: [-0.72, 0.36, 0.2], fov: 105 } }),
     corridor: () => ({ pos: [0, 1.7, 1.6], at: [0, 1.2, -6.5], portrait: { pos: [0, 1.7, 1.2], at: [0, 1.0, -6.5], fov: 70 } }),
     tray: () => ({ pos: [1.5, 1.6, 1.2], at: [1.7, 1.1, 0.35], fixed: true }),
   };
@@ -107,11 +109,12 @@ export function buildStudio(ctx) {
   const basic = o => basicM(THREE, o);
   scene.background = new THREE.Color('#14121c');
   scene.fog = new THREE.Fog('#14121c', 9, 18);
-  const W = 6, D = 5, H = 2.8, backZ = -D / 2;
+  const W = 6, H = 2.8, backZ = -2.5, frontZ = 4.05;
+  const D = frontZ - backZ, zMid = (frontZ + backZ) / 2;
 
   // ------------------------------------------------ shell: carpet, fabric panels in plum and teal
   const carpet = canvasTex(128, 128, (g, w, h) => { g.fillStyle = '#2a2633'; g.fillRect(0, 0, w, h); for (let i = 0; i < 300; i++) { g.fillStyle = 'rgba(255,255,255,.04)'; g.fillRect(Math.random() * w, Math.random() * h, 2, 2); } }, { repeat: [4, 4] });
-  add(new THREE.PlaneGeometry(W, D), toonMap(carpet), 0, 0, 0, statics, { rot: [-Math.PI / 2, 0, 0] });
+  add(new THREE.PlaneGeometry(W, D), toonMap(carpet), 0, 0, zMid, statics, { rot: [-Math.PI / 2, 0, 0] });
   const wall = toon('#26222e');
   // back wall with the glass into the live room
   const gx0 = -2.2, gx1 = 1.6, gy0 = 1.05, gy1 = 2.3;
@@ -119,14 +122,18 @@ export function buildStudio(ctx) {
   piece(-W / 2, gx0, 0, H); piece(gx1, W / 2, 0, H); piece(gx0, gx1, 0, gy0); piece(gx0, gx1, gy1, H);
   add(new THREE.PlaneGeometry(gx1 - gx0, gy1 - gy0), new THREE.MeshBasicMaterial({ color: '#9ad8ff', transparent: true, opacity: 0.08, depthWrite: false }), (gx0 + gx1) / 2, (gy0 + gy1) / 2, backZ);
   for (const y of [gy0, gy1]) add(box(gx1 - gx0 + 0.1, 0.06, 0.3), toon('#1b1b22'), (gx0 + gx1) / 2, y, backZ);
-  add(box(0.2, H, D), wall, -W / 2 - 0.1, H / 2, 0); add(box(0.2, H, D), wall, W / 2 + 0.1, H / 2, 0);
-  add(box(W + 0.4, 0.1, D + 0.4), toon('#1a1820'), 0, H + 0.05, 0);
+  add(box(0.2, H, D), wall, -W / 2 - 0.1, H / 2, zMid); add(box(0.2, H, D), wall, W / 2 + 0.1, H / 2, zMid);
+  add(box(W + 0.2, H, 0.2), wall, 0, H / 2, frontZ + 0.1);
+  add(box(W + 0.4, 0.1, D + 0.4), toon('#1a1820'), 0, H + 0.05, zMid);
   const panelCols = ['#5a2e4a', '#2e4a5a', '#4a2e5a'];
   for (let i = 0; i < 6; i++) { add(box(0.06, 0.9, 0.7), toon(panelCols[i % 3]), -W / 2 + 0.03, 1.5, -1.9 + i * 0.8); add(box(0.06, 0.9, 0.7), toon(panelCols[(i + 1) % 3]), W / 2 - 0.03, 1.5, -1.9 + i * 0.8); }
   // the live room behind the glass: a drum kit, a mic stand, a warm lamp
   const LZ = backZ - 2.2;
   add(new THREE.PlaneGeometry(W, 4), toon('#3a2e2a'), 0, 0, backZ - 2, statics, { rot: [-Math.PI / 2, 0, 0] });
-  add(box(W, H, 0.2), toon('#4a3a32'), 0, H / 2, backZ - 4);
+  const liveWall = toon('#4a3a32');
+  add(box(W, H, 0.2), liveWall, 0, H / 2, backZ - 4);
+  for (const x of [-W / 2, W / 2]) add(box(0.2, H, 4), liveWall, x, H / 2, backZ - 2);
+  add(box(W, 0.1, 4), liveWall, 0, H + 0.05, backZ - 2);
   for (const [x, r] of [[-1.2, 0.3], [-0.6, 0.18], [-1.7, 0.2]]) add(cyl(r, r, 0.3, 16), toon('#b02a3a'), x, 0.5, LZ);
   add(cyl(0.22, 0.22, 0.02, 16), toon('#e8c25a'), -1.9, 1.0, LZ - 0.2);
   add(cyl(0.012, 0.012, 1.5, 6), toon('#888'), 0.6, 0.75, LZ + 0.3); add(cyl(0.035, 0.03, 0.12, 8), toon('#2a2a2a'), 0.6, 1.55, LZ + 0.3);

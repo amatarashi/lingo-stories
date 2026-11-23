@@ -24,9 +24,11 @@ export function buildGenerator({ THREE, L, scene, add, box, cyl }) {
   scene.add(new THREE.HemisphereLight('#adcad9', '#3a4643', 1.7));
   light('#ffcb83', 9, -1.3, 2.58, 1.1);
   light('#71bdd7', 6, 1.8, 2.3, -0.45);
-  add(box(6.4, .15, 6.2), frame, 0, -.1, .1);
-  add(box(.15, 2.9, 6.2), frame, -3.2, 1.45, .1);
-  add(box(.15, 2.9, 6.2), frame, 3.2, 1.45, .1);
+  add(box(6.4, .15, 6.65), frame, 0, -.1, .875);
+  add(box(6.4, .12, 6.65), frame, 0, 2.94, .875);
+  add(box(.15, 2.9, 6.65), frame, -3.2, 1.45, .875);
+  add(box(.15, 2.9, 6.65), frame, 3.2, 1.45, .875);
+  add(box(6.4, 2.9, .15), frame, 0, 1.45, 4.2);
   for (let i = -3; i <= 3; i++) {
     add(box(.88, 2.85, .12), steel, i * .91, 1.42, -2.35);
     add(box(.035, 2.85, .06), dark, i * .91 + .44, 1.42, -2.27);
