@@ -76,13 +76,13 @@ function pluck(freq, t, vol) { // a soft guitar-like pluck for the seaside town
   o.connect(f).connect(g).connect(musicGain); o.start(t); o.stop(t + 1.7);
 }
 const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
-function epiano(freq, t, dur, vol) {
+function epiano(freq, t, dur, vol, destination = musicGain) {
   const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
   o.type = 'sine'; o2.type = 'triangle'; o.frequency.value = freq; o2.frequency.value = freq * 2.001;
   f.type = 'lowpass'; f.frequency.value = 1800;
   const g2 = ctx.createGain(); g2.gain.value = 0.18;
-  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(vol * 0.35, t + 0.6); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g); o2.connect(g2).connect(g); g.connect(f).connect(musicGain);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(vol * 0.35, t + Math.min(0.6, dur * 0.7)); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); o2.connect(g2).connect(g); g.connect(f).connect(destination);
   o.start(t); o2.start(t); o.stop(t + dur + 0.1); o2.stop(t + dur + 0.1);
 }
 export function startMusic() {
@@ -139,7 +139,7 @@ export function sfx(name) {
   switch (name) {
     case 'demo': case 'second-take': {
       const dates = name === 'demo' ? [0, .23, .48, .78] : [0, .23, .79, 1.09];
-      [57, 64, 60, 67].forEach((note, i) => epiano(mtof(note), ctx.currentTime + dates[i], .42, .075));
+      [57, 64, 60, 67].forEach((note, i) => epiano(mtof(note), ctx.currentTime + dates[i], .42, .075, master));
       break;
     }
     case 'ring': for (let r = 0; r < 2; r++) for (let i = 0; i < 8; i++) tone(i % 2 ? 1320 : 1100, 0.05, { type: 'square', vol: 0.025, at: r * 0.45 + i * 0.05 }); break;

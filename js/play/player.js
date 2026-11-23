@@ -477,8 +477,11 @@ async function fxBeat(b) {
   if (b.fx === 'alarm' && b.v) sfx('alarm');
   if (b.fx === 'lights' && b.v === 'off') sfx('hum');
   if (b.fx === 'channel') sfx('click');
-  if (b.fx === 'demo' || b.fx === 'second-take') sfx(b.fx);
   world.fx(b.fx, b.v);
+  if (b.fx === 'demo' || b.fx === 'second-take') {
+    sfx(b.fx);
+    await sleep(1550);
+  }
 }
 
 function pickEvidence(sub = 'Какая улика опровергает эти слова?') {
