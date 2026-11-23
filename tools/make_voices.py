@@ -12,6 +12,8 @@ from kokoro_onnx.config import EspeakConfig
 import espeakng_loader
 import shutil
 
+sys.stdout.reconfigure(encoding="utf-8")
+
 jobs = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
 out = Path(sys.argv[2]); out.mkdir(parents=True, exist_ok=True)
 home = Path.home() / '.cache' / 'hyperframes' / 'tts'

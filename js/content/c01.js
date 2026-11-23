@@ -8,8 +8,8 @@ export default {
   icon: '📖',
   rel: ['fiona', 'kai'],
   clueOk: 'Взять ✓',
-  teaser: { a1: 'Who is Sam? Why is he sorry? Find out in Chapter 2.', a2: 'Who was Sam, and why is he sorry? Chapter 2 is coming soon.', b1: 'What is Sam sorry for — and why won\'t Fiona talk about him? Chapter 2 is coming soon.' },
-  teaserRu: 'Кто такой Сэм и за что он извиняется? Узнаем во второй главе — она скоро выйдет.',
+  teaser: { a1: 'Who is Sam? Why is he sorry? Find out in Chapter 2.', a2: 'Who was Sam, and why is he sorry? Open Chapter 2.', b1: 'What is Sam sorry for — and why won\'t Fiona talk about him? Continue with Chapter 2.' },
+  teaserRu: 'Кто такой Сэм и за что он извиняется? Продолжай во второй главе.',
 
   words: {
     platform: { ru: 'платформа', form: 'platform', cloze: { text: 'The train is at ___ two.', ru: 'Поезд на второй платформе.' } },

@@ -5,8 +5,8 @@ export default {
   story: 'The Harbor Alibi',
   title: 'Coffee & Lies',
   part: 'Case 1 · Part 2',
-  teaser: { a1: 'A mole? Who is it? Case 2 is coming soon.', a2: 'Who is the mole? Find out in Case 2.', b1: 'A mole in Harbor City — and Oscar knows who. Case 2, coming soon.' },
-  teaserRu: 'Крот в Харбор-Сити — и Оскар знает, кто это. Дело 2 скоро.',
+  teaser: { a1: 'A mole? Who is it? Open Case 2.', a2: 'Who is the mole? Find out in Case 2.', b1: 'Oscar knows more than he can say. Open Case 2 and follow the trail to Dock Nine.' },
+  teaserRu: 'Крот в Харбор-Сити — и Оскар знает, кто это. Продолжай расследование в деле 2.',
 
   words: {
     early: { ru: 'рано', form: 'early', cloze: { text: 'Daisy came very ___. At 5:12!', ru: 'Дейзи пришла очень рано. В 5:12!' } },

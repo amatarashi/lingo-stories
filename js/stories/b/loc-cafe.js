@@ -3,7 +3,7 @@ import { toon, toonMap, canvasTex, glow, rainLines, streakTexture, MOBILE } from
 
 export function buildCafe(ctx) {
   const { THREE, L, scene, statics, add, place, box, cyl, mood = 'night', head, portrait } = ctx;
-  const morning = mood === 'morning';
+  const morning = mood === 'morning' || mood === 'dock';
   scene.background = new THREE.Color(morning ? '#1a2333' : '#0d1424');
   scene.fog = new THREE.Fog(morning ? '#283447' : '#101a2e', 9, 26);
 

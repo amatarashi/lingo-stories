@@ -367,29 +367,23 @@ export const decodeFull = t => mapText(t, v => v.replace(/\{([^}]+)\}/g, '[$1]')
 async function decodeBeat(b) {
   const answer = (L(b.text).match(/\{([^}]+)\}/) || [])[1];
   const opts = shuffle(b.options);
-  fxBeat({ fx: 'static' });
+  const radio = b.mode !== 'word';
+  if (radio) fxBeat({ fx: 'static' });
   for (;;) {
     const pickd = await present({ who: b.who, shot: b.shot, text: decodeGap(b.text), ru: b.ru, noCount: true }, (box, done) => {
-      const info = document.createElement('div'); info.className = 'stmt'; info.textContent = '📡 Помехи! Какое слово пропало?';
+      const info = document.createElement('div'); info.className = 'stmt'; info.textContent = radio ? '📡 Помехи! Какое слово пропало?' : 'Какое слово пропущено?';
       box.appendChild(info);
       opts.forEach((o, n) => { const btn = document.createElement('button'); btn.className = 'btn choice'; btn.innerHTML = `<span class="n">${n + 1}</span><span>${esc(o)}</span>`; btn.onclick = e => { e.stopPropagation(); done(o); }; box.appendChild(btn); });
     });
     if (pickd === answer) { sfx('ok'); haptic('medium'); break; }
-    sfx('bad'); haptic('rigid'); R.helped = true; toast('Не то слово — послушай ещё раз 🎧', 2000);
+    sfx('bad'); haptic('rigid'); R.helped = true; toast(radio ? 'Не то слово — послушай ещё раз 🎧' : 'Не то слово — попробуй ещё раз', 2000);
   }
   await present({ who: b.who, shot: b.shot, text: decodeFull(b.text), ru: b.ru });
 }
 
 // Keep the last finished chapter intact until a replay reaches its own ending.
 function applyChoice(option) {
-  if (option.flag) {
-    if (ep.rel) R.storyFlags.add(option.flag);
-    else {
-      const story = S.stories[storyId] ||= {};
-      (story.flags ||= {})[option.flag] = true;
-      save();
-    }
-  }
+  if (option.flag) R.storyFlags.add(option.flag);
   const run = R.run;
   for (const [id, delta] of Object.entries(option.rel || {})) {
     R.relationships[id] = (R.relationships[id] || 0) + delta;
@@ -400,13 +394,13 @@ function applyChoice(option) {
 }
 
 function saveChapterChoices() {
+  const flagsInChapter = ep.beats.flatMap(beat => beat.options || beat.msgs?.flatMap(msg => msg.reply || []) || [])
+    .map(option => option.flag).filter(Boolean);
+  if (!ep.rel && !flagsInChapter.length) return;
   const story = S.stories[storyId] ||= {};
-  (story.relEp ||= {})[ep.id] = R.relationships;
+  if (ep.rel) (story.relEp ||= {})[ep.id] = R.relationships;
   const flags = story.flags ||= {};
-  for (const beat of ep.beats) {
-    const options = beat.options || beat.msgs?.flatMap(msg => msg.reply || []) || [];
-    for (const { flag } of options) if (flag) delete flags[flag];
-  }
+  for (const flag of flagsInChapter) delete flags[flag];
   for (const flag of R.storyFlags) flags[flag] = true;
 }
 
@@ -684,7 +678,7 @@ $('b-home').onclick = async () => {
 function finish() {
   dlg.classList.add('hidden'); document.body.classList.remove('cine');
   world.shot('wide'); world.setSpeaker(null); sfx('end');
-  if (ep.rel) saveChapterChoices();
+  saveChapterChoices();
   const days = markDay();
   const pct = R.lines ? Math.round(R.clean / R.lines * 100) : 0;
   finishEpisode(ep.id, pct);
@@ -751,7 +745,11 @@ async function runEpisode(mod, story, h) {
   while (i < beats.length && run === R.run) {
     const b = beats[i];
     let go = b.goto;
-    if (b.type === 'line') await present(b);
+    if (b.type === 'branch') {
+      const flags = S.stories[story]?.flags;
+      if (!flags?.[b.flag] || (b.unless && flags[b.unless])) go = undefined;
+    }
+    else if (b.type === 'line') await present(b);
     else if (b.type === 'choice') {
       const option = b.options[await choiceBeat(b)];
       if (run !== R.run) return;

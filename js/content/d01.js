@@ -9,8 +9,8 @@ export default {
   icon: '🎧',
   rel: ['kit', 'leo', 'ava', 'sienna'],
   clueOk: 'Взять ✓',
-  teaser: { a1: 'What is Dana\'s proposal? Find out in Episode 2.', a2: 'What is Dana\'s proposal for you and Kit? Episode 2 is coming soon.', b1: 'What on earth is Dana proposing — and why does it involve Kit? Episode 2 is coming soon.' },
-  teaserRu: 'Что за предложение у Даны для тебя и Кита? Узнаем во втором эпизоде — он скоро выйдет.',
+  teaser: { a1: 'What is Dana\'s proposal? Find out in Episode 2.', a2: 'What is Dana\'s proposal for you and Kit? Open Episode 2.', b1: 'What on earth is Dana proposing — and why does it involve Kit? Continue with Episode 2.' },
+  teaserRu: 'Что за предложение у Даны для тебя и Кита? Продолжай во втором эпизоде.',
 
   words: {
     flat: { ru: 'квартира (брит.; в США — apartment)', form: 'flat', cloze: { text: 'Ava and I share a small ___ in London.', ru: 'Мы с Эйвой снимаем маленькую квартиру в Лондоне.' } },

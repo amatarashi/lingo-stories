@@ -50,6 +50,14 @@ export function buildLabel(ctx) {
   add(box(0.42, 0.02, 0.3), toon('#3a2e2a'), 0, 0, 0, tray);
   for (const [x, z] of [[-0.12, -0.07], [0.0, 0.07], [0.12, -0.07], [-0.04, -0.02]]) { add(cyl(0.04, 0.032, 0.13, 10), toon('#f4efe8'), x, 0.075, z, tray); add(cyl(0.042, 0.042, 0.015, 10), toon('#3a2e2a'), x, 0.145, z, tray); }
   L.clues.tray = tray;
+  const paper = canvasTex(256, 320, (g, w, h) => {
+    g.fillStyle = '#eee8d8'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#4a2942'; g.fillRect(0, 0, w, 60);
+    g.fillStyle = '#fff'; g.font = 'bold 26px monospace'; g.fillText('PRESS CALL', 38, 38);
+    g.fillStyle = '#28232b'; g.font = '19px monospace';
+    ['11:00', 'VELVET STATIC', 'MUSIC FIRST', 'PERSONAL: OPTIONAL'].forEach((text, i) => g.fillText(text, 22, 105 + i * 48));
+  });
+  L.clues.brief = add(new THREE.PlaneGeometry(0.29, 0.37), basic({ map: paper }), 2.51, 1.117, 0.46, scene, { rot: [-Math.PI / 2, 0, 0.13] });
   // waiting corner: a velvet sofa, a big plant, a low table with magazines
   const sofa = place('Couch_Medium1', -2.9, 0, 1.4, Math.PI / 2, 0.55); sofa.traverse(o => { if (o.isMesh) o.material = toon('#7a3a5a'); });
   L.clues.sofa = sofa;
@@ -114,6 +122,7 @@ export function buildLabel(ctx) {
     wide: () => ({ pos: [-0.4, 2.2, 5.0], at: [0.2, 0.9, 0.4], portrait: { pos: [-0.2, 2.4, 5.6], at: [0.0, 0.8, 0.4], fov: 72 } }),
     reception: () => ({ pos: [-0.68, 2.25, 5.9], at: [-0.68, 0.6, 0.2], fov: 65, fixed: true, portrait: { pos: [-0.72, 2.55, 5.95], at: [-0.72, 0.36, 0.2], fov: 105 } }),
     corridor: () => ({ pos: [0, 1.7, 1.6], at: [0, 1.2, -6.5], portrait: { pos: [0, 1.7, 1.2], at: [0, 1.0, -6.5], fov: 70 } }),
+    brief: () => ({ pos: [2.52, 1.95, 1.53], at: [2.51, 0.88, 0.43], fixed: true }),
     tray: () => ({ pos: [1.5, 1.6, 1.2], at: [1.7, 1.1, 0.35], fixed: true }),
   };
 }

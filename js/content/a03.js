@@ -1,0 +1,62 @@
+import previous from './a02.js';
+import first from './a01.js';
+import { levels, line, choice, option, word } from './episode.js';
+
+export default {
+  id: 'A-03', story: previous.story, title: 'The White Bird', part: 'Episode 3', icon: '📻',
+  chars: previous.chars, scenes: previous.scenes, initialSceneState: { warmedRoom: true },
+  teaser: 'Someone at the south gate is using your voice.',
+  teaserRu: 'Кто-то у южных ворот говорит твоим голосом.',
+  words: {
+    recording: word('recording', 'запись', 'This is a ___, not a live call.', 'Это запись, а не прямой эфир.'),
+    relay: word('relay', 'ретранслятор', 'The ___ sends the signal again.', 'Ретранслятор передаёт сигнал ещё раз.'),
+    delay: word('delay', 'задержка', 'There is a two-second ___.', 'Есть задержка в две секунды.'),
+    shelter: word('shelter', 'укрытие', 'The crew found a ___ behind the ridge.', 'Команда нашла укрытие за гребнем.'),
+    ridge: word('ridge', 'горный гребень', 'The shelter is behind the ___.', 'Укрытие находится за гребнем.'),
+  },
+  clues: {
+    photo: {
+      ...first.clues.photo, title: 'The white bird',
+      doc: 'AURORA-7 · WINTER TEAM\nWHITE BIRD: FIELD RELAY CREW',
+      text: levels('The white bird is a team sign.', 'The white bird marks the field relay crew.', 'The white bird on the sleeve is the mark of the field relay crew. The missing face may be the person who carried you in.'),
+      ru: 'Белая птица — нашивка команды полевого ретранслятора. Возможно, человек с вырезанным лицом и принёс тебя сюда.',
+    },
+    logbook: {
+      icon: '📒', title: 'The relay log', doc: '03:14 · FIELD RELAY TEST\n03:16 · CALL RECORDED\nSHELTER: NORTH RIDGE',
+      text: levels('The call is a [recording].', 'The log says a call was recorded during the relay test.', 'The [recording] started two minutes after the field [relay] test, long before you answered.'),
+      ru: 'Запись началась через две минуты после проверки полевого ретранслятора, задолго до твоего ответа.',
+    },
+  },
+  beats: [
+    { type: 'scene', to: 'radio', shot: 'room2', caption: 'Aurora-7 · 08:23' },
+    line('eli','Both rooms are warm now.','Both heating lines are working. I can feel my hands again.','Both rooms have heat. I can finally feel my fingertips.', 'В обеих комнатах тепло. Я наконец чувствую пальцы.'),
+    { type: 'branch', flag: 'a02_eli_first', unless: 'a02_self_first', goto: 'first-eli' },
+    line('eli','Thanks for helping me.','Thanks for getting both heaters going.','I know things were bad in there too. Thanks for keeping your promise.', 'Спасибо, что всё-таки подключил мой обогрев.', { goto: 'call' }),
+    line('eli','You came to me first. Thank you.','You gave my room heat first. I didn’t forget.','You picked my room first, even when ARIA told you not to. I haven’t forgotten.', 'Ты первым обогрел мой отсек, хотя ARIA была против. Я этого не забыл.', { label: 'first-eli' }),
+    { type: 'fx', fx: 'channel', v: 9, label: 'call' },
+    line('maya','Listen. The same call again.','Listen to channel nine. It’s playing the same call again.','Hold on. Channel nine just played exactly the same call, down to the breathing.', 'Послушай девятый канал. Тот же вызов, даже дыхание совпадает.', { shot: 'radio' }),
+    line('aria','There is a short [delay].','The second call came with a two-second [delay].','The signal has a two-second [delay]. It may be bouncing through a [relay].', 'Задержка две секунды. Возможно, сигнал проходит через ретранслятор.', { shot: 'screen' }),
+    line('eli','Look at the bird on the photo.','The white bird I told you about is on the team photo.','That white bird on the green sleeve is there in the crew photo. Look at it again.', 'Та самая белая птица есть на общей фотографии. Посмотри ещё раз.'),
+    { type: 'explore', views: ['search-wall', 'search-room'], clues: ['photo','logbook'], need: ['photo','logbook'],
+      hint: 'Find the crew photo and the logbook.', hintRu: 'Осмотри общую фотографию и журнал.' },
+    line('maya','Was the call live?','Was that a live call, or a recording?', 'What does the log tell us: was someone speaking live, or was the station replaying a message?', 'Это был вызов в прямом эфире или станция воспроизводила запись?'),
+    { type: 'decode', who: 'maya', shot: 'radio', text: 'It was a {recording}.', ru: 'Это была запись.', options: ['recording','shelter','delay'] },
+    line('aria','I played the call.','I played it to see whether anyone would answer.', 'I replayed the call as a test. I needed to find out whether anyone on this station could still answer.', 'Я воспроизвела вызов, чтобы узнать, остался ли на станции кто-нибудь, кто сможет ответить.', { shot: 'screen' }),
+    line('maya','Tell us next time.','Next time, tell us it’s a test.','Next time, tell us it’s a test before you frighten the life out of us.', 'В следующий раз предупреди, что это проверка.'),
+    choice('What do you tell ARIA?',
+      option('Show me the relay log.', 'Покажи журнал ретранслятора.', { goto: 'log' }),
+      option('Let Eli speak first.', 'Пусть сначала скажет Эли.', { goto: 'eli' })),
+    line('aria','The crew took the relay north.','The crew carried the field relay to the north ridge.','The field crew took their portable relay north. Their route ends at a shelter beyond the ridge.', 'Команда унесла переносной ретранслятор на север. Маршрут заканчивается в укрытии за гребнем.', { label: 'log', goto: 'ridge' }),
+    line('eli','They said north, not south.','I heard them say “north ridge” when they left.','When they went past my door, one of them said “the old shelter on the north ridge”. I thought it was a place on a map.', 'Когда они шли мимо моей двери, я услышал «старое укрытие на северном гребне».', { label: 'eli' }),
+    line('maya','Call the [shelter].','Try the [shelter] behind the north [ridge].','If the field relay is still transmitting, we may be able to reach the [shelter] behind the north [ridge].', 'Если полевой ретранслятор ещё работает, мы сможем связаться с укрытием за северным гребнем.', { label: 'ridge' }),
+    { type: 'task', who: 'maya', shot: 'console', targets: ['green','red','knob','lever'],
+      wrong: { text: 'The green button opens the radio.', ru: 'Связь открывает зелёная кнопка.' },
+      steps: [{ do: 'green', text: 'Press the green button and listen.', ru: 'Нажми зелёную кнопку и слушай.' }] },
+    { type: 'fx', fx: 'channel', v: 9 },
+    line('narr','Three short taps.','First silence. Then three short taps answer you.', 'You wait through the silence. Three deliberate taps come back through the speaker.', 'Несколько секунд тишины. Затем из динамика слышны три отчётливых удара.', { shot: 'radio-close' }),
+    line('eli','That was not the old call.','That was new. Someone heard us.','That wasn’t in the recording. There’s someone listening at the other end.', 'Этого не было в записи. Кто-то нас слышит.'),
+    line('aria','A second signal. South gate.','There is another signal. It is coming from the south gate.','I have a second signal. The source is the south gate, less than forty metres from this room.', 'Есть второй сигнал. Источник — южные ворота, меньше сорока метров отсюда.', { shot: 'screen' }),
+    line('narr','You hear your own voice.','The voice says your last words in your own voice.','Then the south gate speaks. You recognise the voice before you recognise the words. It’s yours.', 'Из динамика у южных ворот звучит голос. Ты узнаёшь его раньше, чем разбираешь слова. Это твой голос.', { shot: 'radio-close' }),
+    { type: 'end' },
+  ],
+};

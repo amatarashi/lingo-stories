@@ -1,6 +1,7 @@
 // Fresh Start: The Puffin, Fiona's café on Harbour Street (bright autumn afternoon), and your little room upstairs.
 import { toon, toonMap, canvasTex, glow, MOBILE } from '../stage.js';
 
+const lighthouseX = 372;
 const basicM = (THREE, o = {}) => new THREE.MeshBasicMaterial({ toneMapped: false, ...o });
 // the harbour seen through a window: sky, sea, boats, the far shore
 function harbourTex(evening = false) {
@@ -9,6 +10,11 @@ function harbourTex(evening = false) {
     if (evening) { sky.addColorStop(0, '#3a4a78'); sky.addColorStop(1, '#f0a07a'); } else { sky.addColorStop(0, '#9cc0dc'); sky.addColorStop(1, '#f4dcc0'); }
     g.fillStyle = sky; g.fillRect(0, 0, w, h * 0.55);
     g.fillStyle = evening ? '#4d5866' : '#7d8f8a'; g.beginPath(); g.moveTo(0, h * 0.55); for (let x = 0; x <= w; x += 32) g.lineTo(x, h * 0.55 - 14 - Math.sin(x / 70) * 10); g.lineTo(w, h * 0.55); g.fill();
+    if (evening) {
+      g.fillStyle = '#393844';
+      g.fillRect(lighthouseX - 4, h * 0.55 - 41, 8, 28 - Math.sin(lighthouseX / 70) * 10);
+      g.fillRect(lighthouseX - 6, h * 0.55 - 44, 12, 4);
+    }
     const sea = g.createLinearGradient(0, h * 0.55, 0, h); sea.addColorStop(0, evening ? '#7a7f96' : '#7fa6b8'); sea.addColorStop(1, evening ? '#2e3a4c' : '#3f6478'); g.fillStyle = sea; g.fillRect(0, h * 0.55, w, h);
     for (const [x, c] of [[90, '#c9473a'], [300, '#f2c230'], [420, '#2f6f8a']]) { g.fillStyle = c; g.beginPath(); g.moveTo(x, h * 0.72); g.lineTo(x + 46, h * 0.72); g.lineTo(x + 38, h * 0.79); g.lineTo(x + 6, h * 0.79); g.fill(); g.fillStyle = '#f2ece0'; g.fillRect(x + 20, h * 0.6, 3, 34); g.beginPath(); g.moveTo(x + 23, h * 0.6); g.lineTo(x + 40, h * 0.69); g.lineTo(x + 23, h * 0.69); g.fill(); }
     g.fillStyle = '#6b6258'; g.fillRect(0, h * 0.86, w, h * 0.14); // the quay
@@ -16,7 +22,8 @@ function harbourTex(evening = false) {
 }
 
 export function buildPuffin(ctx) {
-  const { THREE, L, scene, statics, add, place, box, cyl, head } = ctx;
+  const { THREE, L, scene, statics, add, place, box, cyl, head, mood } = ctx;
+  const evening = mood === 'evening';
   const basic = o => basicM(THREE, o);
   scene.background = new THREE.Color('#e9dcc8');
   scene.fog = new THREE.Fog('#efe2cf', 12, 26);
@@ -39,7 +46,19 @@ export function buildPuffin(ctx) {
   add(box(W + 0.2, H, 0.2), wallMat, 0, H / 2, D / 2 + 0.1);
   add(box(W + 0.4, 0.1, D + 0.4), toon('#f2ece0'), 0, H + 0.05, 0);
   for (let x = -3.5; x <= 3.5; x += 1.75) add(box(0.16, 0.16, D), toon('#8a6040'), x, H - 0.08, 0);
-  add(new THREE.PlaneGeometry(wx1 - wx0, wy1 - wy0), basic({ map: harbourTex() }), (wx0 + wx1) / 2, (wy0 + wy1) / 2, backZ - 0.3);
+  add(new THREE.PlaneGeometry(wx1 - wx0, wy1 - wy0), basic({ map: harbourTex(evening) }), (wx0 + wx1) / 2, (wy0 + wy1) / 2, backZ - 0.3);
+  if (evening) {
+    const lamp = glow('#fff2c0', 0.28, 0);
+    lamp.position.set(wx0 + (wx1 - wx0) * lighthouseX / 512, wy1 - (wy1 - wy0) * 0.389, backZ - 0.26);
+    scene.add(lamp);
+    let pulse = 0;
+    L.fx.lighthouse = () => { pulse = 2.8; };
+    L.fx.reset = () => { pulse = lamp.material.opacity = 0; };
+    L.anims.push(dt => {
+      pulse = Math.max(0, pulse - dt);
+      lamp.material.opacity = Math.min(1, pulse, (2.8 - pulse) * 2);
+    });
+  }
   const frame = toon('#f2ece0');
   for (const y of [wy0, wy1]) add(box(wx1 - wx0 + 0.16, 0.1, 0.22), frame, (wx0 + wx1) / 2, y, backZ);
   for (let x = wx0; x <= wx1 + 0.01; x += (wx1 - wx0) / 3) add(box(0.07, wy1 - wy0, 0.16), frame, x, (wy0 + wy1) / 2, backZ);
