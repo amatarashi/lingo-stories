@@ -11,7 +11,7 @@ export const HINT = { who: 'reyes', anim: 'think',
   text: { a1: 'Look at the time, the rain and the camera.', a2: 'Think about the time, the rain and the camera.', b1: 'Think: the time on the receipt, the rain, the camera log.' },
   ru: { a1: 'Посмотри на время, дождь и камеру.', a2: 'Подумай о времени, дожде и камере.', b1: 'Подумай: время на чеке, дождь, журнал камеры.' } };
 export const RECALL_INTRO = { who: 'jenna',
-  text: { a1: 'Hey! One quick question.', a2: 'Hey, quick question before we go on!', b1: 'Hang on — quick memory check before we carry on.' },
+  text: { a1: 'Hey! One quick question.', a2: 'Hey, quick question before we go on!', b1: 'Hang on. Quick memory check before we carry on.' },
   ru: 'Эй, быстрый вопрос, прежде чем продолжим!' };
 export const RECALL_OK = { who: 'jenna',
   text: { a1: 'Yes! Good memory!', a2: 'Exactly! Good memory.', b1: 'Spot on. Nice memory.' }, ru: 'Точно! Хорошая память.' };

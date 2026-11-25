@@ -42,7 +42,7 @@ export default {
       ru: 'На полке у окна стоит маленькая лампа на батарейках. Из гавани её свет можно принять за свет маяка.',
     },
     envelope: {
-      icon: '✉️', title: 'Sam’s envelope', doc: 'I MISSED THE FERRY ON PURPOSE.\nASK WHO CHANGED THE DATE.\n— SAM',
+      icon: '✉️', title: 'Sam’s envelope', doc: 'I MISSED THE FERRY ON PURPOSE.\nASK WHO CHANGED THE DATE.\nSAM',
       text: levels('Sam chose to miss the ferry.','Sam missed the ferry on purpose. He wanted somebody to ask about the changed date.','Sam wrote that he missed the ferry deliberately. He left the note with Duncan and asked who had changed the date.'),
       ru: 'Сэм специально пропустил паром. Он оставил записку Дункану и просил выяснить, кто изменил дату.',
     },

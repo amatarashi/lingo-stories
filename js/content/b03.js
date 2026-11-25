@@ -23,7 +23,7 @@ export default {
   },
   beats: [
     { type: 'scene', to: 'office', shot: 'window', caption: 'Harbor City · The next morning' },
-    line('reyes','Oscar called last night.','Oscar called last night. He said someone we trust is a mole.','Oscar called last night. Just long enough to say we might be working with the mole.', 'Оскар звонил ночью. Успел сказать, что крот — среди тех, кому мы доверяем.', { shot: 'reyes' }),
+    line('reyes','Oscar called last night.','Oscar called last night. He said someone we trust is a mole.','Oscar called last night. Just long enough to say we might be working with the mole.', 'Оскар звонил ночью. Успел сказать, что крот скрывается среди тех, кому мы доверяем.', { shot: 'reyes' }),
     line('jenna','He left a few things on his desk.','He may have left us a way to find his contact. Look at his desk.','If we can place his secret meeting, we might find someone who knows why he vanished.', 'Если выясним, где была встреча, найдём того, кто знает, почему он исчез.', { shot: 'jenna' }),
     { type: 'explore', views: ['search-desk'], clues: ['ticket','note','photo'], need: ['note','photo'],
       hint: 'Find the note and the photo on Oscar’s desk.', hintRu: 'Найди записку и фотографию на столе Оскара.' },
@@ -39,7 +39,7 @@ export default {
     { type: 'explore', label: 'search', views: ['search-left','search-center','search-counter'], clues: ['letter','video'], need: ['letter','video'],
       hint: 'Find the slip by the counter and the recording on the laptop.', hintRu: 'Найди квитанцию у стойки и запись на ноутбуке.' },
     line('reyes','The time on the slip is 05:05.','The slip says 05:05. The video is from 05:12.','The slip says 05:05, but the video is stamped 05:12. Those are two different moments.', 'На квитанции 05:05, а на видео 05:12. Это разные моменты.', { shot: 'reyes' }),
-    line('tom','I thought they were the same.','I thought the camera showed the same visit.','I thought the yellow coat on the recording was the driver. I might have mixed up the two visits.', 'Я решил, что человек в жёлтом на записи — водитель. Возможно, перепутал два визита.', { shot: 'tom' }),
+    line('tom','I thought they were the same.','I thought the camera showed the same visit.','I thought the yellow coat on the recording was the driver. I might have mixed up the two visits.', 'Я решил, что на записи водитель в жёлтом. Возможно, перепутал два визита.', { shot: 'tom' }),
     { type: 'interrogate', who: 'tom', shot: 'tom', hint: { text: 'Compare the time on the slip with the time on the video.', ru: 'Сравни время на квитанции и на видео.' },
       rounds: [{ statements: [
         { text: 'The driver came before my shift.', ru: 'Водитель приехал до моей смены.' },

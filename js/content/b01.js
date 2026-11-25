@@ -15,8 +15,8 @@ export default {
     umbrella: { ru: 'зонт', form: 'umbrella', cloze: { text: 'It\'s raining. Take an ___!', ru: 'Идёт дождь. Возьми зонт!' } },
     wet: { ru: 'мокрый', form: 'wet', cloze: { text: 'Tom\'s apron was ___ from the rain.', ru: 'Фартук Тома был мокрым от дождя.' } },
     apron: { ru: 'фартук', form: 'apron', cloze: { text: 'Tom wears an ___ at work.', ru: 'Том носит фартук на работе.' } },
-    stay: { ru: 'оставаться (stayed — остался)', form: 'stayed', cloze: { text: 'Tom didn\'t go home. He ___ late.', ru: 'Том не пошёл домой. Он остался допоздна.' } },
-    'turn off': { ru: 'выключить (turned off — выключил)', form: 'turned off', cloze: { text: 'Tom ___ the camera.', ru: 'Том выключил камеру.' } },
+    stay: { ru: 'оставаться (stayed: остался)', form: 'stayed', cloze: { text: 'Tom didn\'t go home. He ___ late.', ru: 'Том не пошёл домой. Он остался допоздна.' } },
+    'turn off': { ru: 'выключить (turned off: выключил)', form: 'turned off', cloze: { text: 'Tom ___ the camera.', ru: 'Том выключил камеру.' } },
   },
 
   // model: 3D character · voice: Kokoro voice for the audio lines
@@ -35,8 +35,8 @@ export default {
   clues: {
     till: {
       icon: '🗃️', title: 'The till',
-      text: { a1: 'The [till] is open. It is empty.', a2: 'The [till] is open, and there\'s no money inside.', b1: 'The [till]\'s been left wide open — not a penny inside.' },
-      ru: { a1: 'Касса открыта. Она пустая.', a2: 'Касса открыта, а денег внутри нет.', b1: 'Касса распахнута — внутри ни пенни.' },
+      text: { a1: 'The [till] is open. It is empty.', a2: 'The [till] is open, and there\'s no money inside.', b1: 'The [till]\'s wide open, with not a penny inside.' },
+      ru: { a1: 'Касса открыта. Она пустая.', a2: 'Касса открыта, а денег внутри нет.', b1: 'Касса распахнута. Внутри ни пенни.' },
     },
     receipt: {
       icon: '🧾', title: 'A receipt', doc: 'THE GULL CAFÉ\n1 × Latte ...... £3.50\n22:40\nServed by: TOM',
@@ -45,18 +45,18 @@ export default {
     },
     umbrella: {
       icon: '☂️', title: 'Umbrella',
-      text: { a1: 'A big black [umbrella]. It is [wet].', a2: 'A big black [umbrella] by the door. It\'s still [wet].', b1: 'A big black [umbrella] propped by the door — still dripping [wet].' },
-      ru: { a1: 'Большой чёрный зонт. Он мокрый.', a2: 'Большой чёрный зонт у двери. Он ещё мокрый.', b1: 'Большой чёрный зонт у двери — с него ещё капает.' },
+      text: { a1: 'A big black [umbrella]. It is [wet].', a2: 'A big black [umbrella] by the door. It\'s still [wet].', b1: 'A big black [umbrella] is propped by the door, still dripping [wet].' },
+      ru: { a1: 'Большой чёрный зонт. Он мокрый.', a2: 'Большой чёрный зонт у двери. Он ещё мокрый.', b1: 'У двери стоит большой чёрный зонт. С него ещё капает.' },
     },
     apron: {
       icon: '🥼', title: 'Apron', doc: 'Name tag: TOM',
-      text: { a1: 'An [apron]. The name on it is TOM. It is [wet] too.', a2: 'An [apron] with the name TOM on it. It\'s [wet] too.', b1: 'Tom\'s [apron], tossed over a chair. It\'s [wet] — as if someone popped outside in the rain.' },
-      ru: { a1: 'Фартук. На нём имя ТОМ. Он тоже мокрый.', a2: 'Фартук с именем ТОМ. Он тоже мокрый.', b1: 'Фартук Тома, брошенный на стул. Мокрый — будто кто-то выскакивал под дождь.' },
+      text: { a1: 'An [apron]. The name on it is TOM. It is [wet] too.', a2: 'An [apron] with the name TOM on it. It\'s [wet] too.', b1: 'Tom\'s [apron] is tossed over a chair. It\'s [wet], as if someone popped outside in the rain.' },
+      ru: { a1: 'Фартук. На нём имя ТОМ. Он тоже мокрый.', a2: 'Фартук с именем ТОМ. Он тоже мокрый.', b1: 'Фартук Тома брошен на стул. Он мокрый, будто кто-то выскакивал под дождь.' },
     },
     camera: {
-      icon: '📹', title: 'Camera log', doc: 'CAM 1 — OFF 22:30 → 23:00\nStaff key used',
-      text: { a1: 'The camera was [turned off|turn off] at 22:30. Someone used a staff key.', a2: 'The camera was [turned off|turn off] from 22:30 to 23:00 — with a staff key.', b1: 'Someone [turned off|turn off] the camera between 22:30 and 23:00. Staff key, no less.' },
-      ru: { a1: 'Камеру выключили в 22:30. Кто-то использовал ключ сотрудника.', a2: 'Камеру выключили с 22:30 до 23:00 — ключом сотрудника.', b1: 'Кто-то выключил камеру с 22:30 до 23:00. Да ещё и ключом сотрудника.' },
+      icon: '📹', title: 'Camera log', doc: 'CAM 1: OFF 22:30 → 23:00\nStaff key used',
+      text: { a1: 'The camera was [turned off|turn off] at 22:30. Someone used a staff key.', a2: 'The camera was [turned off|turn off] from 22:30 to 23:00 with a staff key.', b1: 'Someone [turned off|turn off] the camera between 22:30 and 23:00. Staff key, no less.' },
+      ru: { a1: 'Камеру выключили в 22:30. Кто-то использовал ключ сотрудника.', a2: 'Камеру выключили ключом сотрудника с 22:30 до 23:00.', b1: 'Кто-то выключил камеру с 22:30 до 23:00. Да ещё и ключом сотрудника.' },
     },
   },
 
@@ -69,7 +69,7 @@ export default {
 
     { type: 'line', who: 'narr', shot: 'wide',
       text: { a1: 'You are at The Gull, a small café by the sea.', a2: 'You\'re standing in The Gull, a small café near the harbor.', b1: 'You\'re dripping on the floor of The Gull, a tiny café down by the harbor.' },
-      ru: { a1: 'Ты в «Чайке» — маленьком кафе у моря.', a2: 'Ты стоишь в «Чайке», маленьком кафе у гавани.', b1: 'Ты капаешь на пол «Чайки» — крошечного кафе у гавани.' } },
+      ru: { a1: 'Ты в «Чайке», маленьком кафе у моря.', a2: 'Ты стоишь в «Чайке», маленьком кафе у гавани.', b1: 'Ты стоишь в «Чайке», крошечном кафе у гавани. С одежды капает на пол.' } },
 
     { type: 'line', who: 'reyes', shot: 'reyes', anim: 'fold', mood: 'cool',
       text: { a1: 'You are late. I am Inspector Reyes.', a2: 'You\'re late. I\'m Inspector Reyes.', b1: 'You\'re late. Inspector Reyes.' },
@@ -77,10 +77,10 @@ export default {
 
     { type: 'line', who: 'reyes', shot: 'reyes', anim: 'talk',
       text: { a1: 'You are my new intern, right?', a2: 'So you\'re the new intern they sent me?', b1: 'So you\'re the intern they sent me. Don\'t make me regret this.' },
-      ru: { a1: 'Ты мой новый стажёр, да?', a2: 'Значит, ты — новый стажёр, которого мне прислали?', b1: 'Значит, это тебя мне прислали в стажёры. Не заставь меня пожалеть.' } },
+      ru: { a1: 'Ты мой новый стажёр, да?', a2: 'Значит, ты новый стажёр, которого мне прислали?', b1: 'Значит, это тебя мне прислали в стажёры. Не заставь меня пожалеть.' } },
 
     { type: 'choice', prompt: { a1: 'What do you say?', a2: 'What do you say?', b1: 'Your move.' }, options: [
-      { text: { a1: 'Sorry! The bus was late.', a2: 'Sorry, the bus was late.', b1: 'Sorry — the bus had other plans.' }, ru: 'Извините, автобус опоздал.', goto: 'c1-sorry' },
+      { text: { a1: 'Sorry! The bus was late.', a2: 'Sorry, the bus was late.', b1: 'Sorry. The bus had other plans.' }, ru: 'Извините, автобус опоздал.', goto: 'c1-sorry' },
       { text: { a1: 'Yes. I am ready to work.', a2: 'Yes. I\'m ready to start.', b1: 'Yes. And I\'m ready when you are.' }, ru: 'Да. Я готов(а) работать.', goto: 'c1-ready' },
     ] },
     { label: 'c1-sorry', type: 'line', who: 'reyes', shot: 'reyes', anim: 'no', mood: 'cool',
@@ -95,28 +95,28 @@ export default {
       ru: { a1: 'Смотри. Из кассы пропали деньги.', a2: 'Вот дело. Вчера вечером кто-то забрал деньги из кассы.', b1: 'Расклад такой. Вчера вечером кто-то угостился наличными из кассы.' } },
 
     { type: 'line', who: 'reyes', shot: 'reyes', anim: 'phone', sfx: 'ring',
-      text: { a1: 'Wait. My phone.', a2: 'Hold on, that\'s my phone.', b1: 'Hang on — that\'ll be Jenna.' },
-      ru: { a1: 'Подожди. Мой телефон.', a2: 'Подожди, это мой телефон.', b1: 'Секунду — это, наверное, Дженна.' } },
+      text: { a1: 'Wait. My phone.', a2: 'Hold on, that\'s my phone.', b1: 'Hang on. That\'ll be Jenna.' },
+      ru: { a1: 'Подожди. Мой телефон.', a2: 'Подожди, это мой телефон.', b1: 'Секунду. Это, наверное, Дженна.' } },
 
     { type: 'line', who: 'jenna', shot: 'reyes', mood: 'smile',
       text: { a1: 'Hi! It is Jenna from the office. I have the facts.', a2: 'Hey, it\'s Jenna! I\'ve got the facts for you.', b1: 'Hey hey, Jenna here! Got the facts, hot off the press.' },
       ru: { a1: 'Привет! Это Дженна из офиса. У меня есть факты.', a2: 'Привет, это Дженна! У меня для вас факты.', b1: 'Хэй, это Дженна! Факты, прямо с пылу с жару.' } },
 
     { type: 'line', who: 'jenna', shot: 'reyes',
-      text: { a1: 'The café closed at ten. In the morning, the money was gone. Three hundred pounds!', a2: 'The café closed at ten. In the morning, three hundred pounds were gone.', b1: 'They shut at ten. By morning — poof — three hundred quid, gone. Classic.' },
-      ru: { a1: 'Кафе закрылось в десять. Утром денег не было. Триста фунтов!', a2: 'Кафе закрылось в десять. Утром трёхсот фунтов уже не было.', b1: 'Закрылись в десять. К утру — пуф — трёхсот фунтов нет. Классика.' } },
+      text: { a1: 'The café closed at ten. In the morning, the money was gone. Three hundred pounds!', a2: 'The café closed at ten. In the morning, three hundred pounds were gone.', b1: 'They shut at ten. By morning, three hundred quid had vanished. Classic.' },
+      ru: { a1: 'Кафе закрылось в десять. Утром денег не было. Триста фунтов!', a2: 'Кафе закрылось в десять. Утром трёхсот фунтов уже не было.', b1: 'Закрылись в десять. К утру трёхсот фунтов как не бывало. Классика.' } },
 
     { type: 'line', who: 'reyes', shot: 'wide', anim: 'talk',
-      text: { a1: 'Thanks, Jenna. OK, intern. Look around. Find clues.', a2: 'Thanks, Jenna. Right, intern — look around and find me some clues.', b1: 'Cheers, Jenna. Right, intern — have a look around. Find me something I can use.' },
-      ru: { a1: 'Спасибо, Дженна. Так, стажёр. Осмотрись. Найди улики.', a2: 'Спасибо, Дженна. Так, стажёр — осмотрись и найди мне улики.', b1: 'Спасибо, Дженна. Так, стажёр — осмотрись. Найди мне что-нибудь полезное.' } },
+      text: { a1: 'Thanks, Jenna. OK, intern. Look around. Find clues.', a2: 'Thanks, Jenna. Right, intern, look around and find me some clues.', b1: 'Cheers, Jenna. Right, intern, have a look around. Find me something I can use.' },
+      ru: { a1: 'Спасибо, Дженна. Так, стажёр. Осмотрись. Найди улики.', a2: 'Спасибо, Дженна. Так, стажёр, осмотрись и найди мне улики.', b1: 'Спасибо, Дженна. Так, стажёр, осмотрись. Найди что-нибудь полезное.' } },
 
     { type: 'explore', views: ['search-left', 'search-center', 'search-counter', 'search-entry'], clues: ['till', 'receipt', 'umbrella', 'camera', 'apron'], need: ['receipt', 'apron', 'camera'],
       hint: { a1: 'Find three clues. Tap the ? marks.', a2: 'Tap the ? marks to examine things. You need three clues.', b1: 'Tap anything that looks suspicious. Three solid clues should do it.' },
       hintRu: 'Нажимай на «?», чтобы осмотреть предметы. Нужно три улики.' },
 
     { type: 'line', who: 'reyes', shot: 'reyes', anim: 'yes', mood: 'smile',
-      text: { a1: 'Not bad! Now we talk to Tom. He works here.', a2: 'Not bad at all. Now let\'s talk to Tom, the barista.', b1: 'Not bad, intern. Now — time for a little chat with Tom, our barista.' },
-      ru: { a1: 'Неплохо! Теперь говорим с Томом. Он здесь работает.', a2: 'Совсем неплохо. Теперь поговорим с Томом, бариста.', b1: 'Неплохо, стажёр. А теперь — небольшой разговор с Томом, нашим бариста.' } },
+      text: { a1: 'Not bad! Now we talk to Tom. He works here.', a2: 'Not bad at all. Now let\'s talk to Tom, the barista.', b1: 'Not bad, intern. Now it\'s time for a little chat with Tom, our barista.' },
+      ru: { a1: 'Неплохо! Теперь говорим с Томом. Он здесь работает.', a2: 'Совсем неплохо. Теперь поговорим с Томом, бариста.', b1: 'Неплохо, стажёр. А теперь поговорим с Томом, нашим бариста.' } },
 
     { type: 'line', who: 'tom', shot: 'tom', anim: 'no', mood: 'nervous',
       text: { a1: 'Me? Again? I told the police everything!', a2: 'M-me? Again? I already told the police everything!', b1: 'M-me? Again? Look, I\'ve already told the police everything I know!' },
@@ -145,8 +145,8 @@ export default {
           text: { a1: 'I closed the café at ten. Then I went home.', a2: 'I closed the café at ten and went straight home.', b1: 'I locked up at ten on the dot and went straight home.' },
           ru: { a1: 'Я закрыл кафе в десять. Потом пошёл домой.', a2: 'Я закрыл кафе в десять и сразу пошёл домой.', b1: 'Я запер кафе ровно в десять и сразу пошёл домой.' },
           after: [
-            { who: 'reyes', anim: 'point', text: { a1: 'The receipt says 22:40. And "Served by: Tom".', a2: 'Then why does this receipt say 22:40, "Served by: Tom"?', b1: 'Funny. This receipt says 22:40 — "Served by: Tom".' },
-              ru: { a1: 'На чеке 22:40. И «Обслуживал: Том».', a2: 'Тогда почему на чеке 22:40, «Обслуживал: Том»?', b1: 'Забавно. На этом чеке 22:40 — «Обслуживал: Том».' } },
+            { who: 'reyes', anim: 'point', text: { a1: 'The receipt says 22:40. And "Served by: Tom".', a2: 'Then why does this receipt say 22:40, "Served by: Tom"?', b1: 'Funny. This receipt says 22:40 and "Served by: Tom".' },
+              ru: { a1: 'На чеке 22:40. И «Обслуживал: Том».', a2: 'Тогда почему на чеке 22:40, «Обслуживал: Том»?', b1: 'Забавно. На чеке указано время 22:40 и написано «Обслуживал: Том».' } },
             { who: 'tom', anim: 'no', mood: 'nervous', text: { a1: 'OK, OK! I [stayed|stay]. A man came in. He wanted a latte.', a2: 'OK, fine! I [stayed|stay] late. A man came in and ordered a latte.', b1: 'Alright, alright! I [stayed|stay] behind. Some guy turned up wanting a latte.' },
               ru: { a1: 'Ладно, ладно! Я остался. Зашёл мужчина. Он хотел латте.', a2: 'Ладно! Я остался допоздна. Зашёл мужчина и заказал латте.', b1: 'Ладно, ладно! Я задержался. Заявился какой-то тип, хотел латте.' } },
           ] },
@@ -178,8 +178,8 @@ export default {
     { type: 'recall', who: 'jenna', max: 1 },
 
     { type: 'line', who: 'reyes', shot: 'reyes', anim: 'think',
-      text: { a1: 'So. Who took the money? What do you think?', a2: 'So, intern. Who took the money?', b1: 'So, intern — who\'s got the cash?' },
-      ru: { a1: 'Итак. Кто взял деньги? Как думаешь?', a2: 'Итак, стажёр. Кто взял деньги?', b1: 'Итак, стажёр — у кого деньги?' } },
+      text: { a1: 'So. Who took the money? What do you think?', a2: 'So, intern. Who took the money?', b1: 'So, intern, who\'s got the cash?' },
+      ru: { a1: 'Итак. Кто взял деньги? Как думаешь?', a2: 'Итак, стажёр. Кто взял деньги?', b1: 'Итак, стажёр, у кого деньги?' } },
 
     { type: 'choice', prompt: { a1: 'Who took the money?', a2: 'Who took the money?', b1: 'Make the call.' }, options: [
       { text: { a1: 'Tom.', a2: 'It was Tom.', b1: 'Tom did it.' }, ru: 'Это Том.', goto: 'r-tom' },
@@ -188,26 +188,26 @@ export default {
     ] },
 
     { label: 'r-tom', type: 'line', who: 'reyes', shot: 'reyes', anim: 'no',
-      text: { a1: 'Maybe. But look at him. Tom is scared, not rich.', a2: 'Maybe. But look at him — Tom looks scared, not rich.', b1: 'Could be. But look at him. That\'s a terrified kid, not a rich one.' },
-      ru: { a1: 'Может быть. Но посмотри на него. Том напуган, а не богат.', a2: 'Может быть. Но посмотри на него — Том выглядит напуганным, а не богатым.', b1: 'Возможно. Но посмотри на него. Это перепуганный парень, а не разбогатевший.' }, goto: 'cliff' },
+      text: { a1: 'Maybe. But look at him. Tom is scared, not rich.', a2: 'Maybe. But look at him. Tom looks scared, not rich.', b1: 'Could be. But look at him. That\'s a terrified kid, not a rich one.' },
+      ru: { a1: 'Может быть. Но посмотри на него. Том напуган, а не богат.', a2: 'Может быть. Но посмотри на него: Том скорее напуган, чем богат.', b1: 'Возможно. Но посмотри на него. Это перепуганный парень, а не разбогатевший.' }, goto: 'cliff' },
     { label: 'r-man', type: 'line', who: 'reyes', shot: 'reyes', anim: 'think',
       text: { a1: 'Maybe. But we do not know his name.', a2: 'Maybe. But we don\'t even know his name.', b1: 'Maybe. But we don\'t even have a name.' },
       ru: { a1: 'Может быть. Но мы не знаем его имя.', a2: 'Может быть. Но мы даже не знаем его имени.', b1: 'Может быть. Но у нас нет даже имени.' }, goto: 'cliff' },
     { label: 'r-unknown', type: 'line', who: 'reyes', shot: 'reyes', anim: 'yes', mood: 'smile',
-      text: { a1: 'Good. A detective does not guess.', a2: 'Good answer. A detective doesn\'t guess.', b1: 'Good. Detectives don\'t guess — they prove.' },
-      ru: { a1: 'Хорошо. Детектив не гадает.', a2: 'Хороший ответ. Детектив не гадает.', b1: 'Хорошо. Детективы не гадают — они доказывают.' } },
+      text: { a1: 'Good. A detective does not guess.', a2: 'Good answer. A detective doesn\'t guess.', b1: 'Good. Detectives look for proof before they draw a conclusion.' },
+      ru: { a1: 'Хорошо. Детектив не гадает.', a2: 'Хороший ответ. Детектив не гадает.', b1: 'Хорошо. Детектив сначала ищет доказательства, а потом делает выводы.' } },
 
     { label: 'cliff', type: 'line', who: 'jenna', shot: 'umbrella', sfx: 'ring', mood: 'shock',
-      text: { a1: 'Boss! The umbrella! There is a name on it!', a2: 'Boss, wait! I looked at your photo of the umbrella. There\'s a name on it!', b1: 'Boss, hold on — I zoomed in on your umbrella photo. There\'s a name engraved on the handle!' },
-      ru: { a1: 'Шеф! Зонт! На нём имя!', a2: 'Шеф, подожди! Я посмотрела твоё фото зонта. На нём имя!', b1: 'Шеф, стой — я увеличила фото зонта. На ручке выгравировано имя!' } },
+      text: { a1: 'Boss! The umbrella! There is a name on it!', a2: 'Boss, wait! I looked at your photo of the umbrella. There\'s a name on it!', b1: 'Boss, hold on. I zoomed in on your umbrella photo. There\'s a name engraved on the handle!' },
+      ru: { a1: 'Шеф! Зонт! На нём имя!', a2: 'Шеф, подожди! Я посмотрела твоё фото зонта. На нём имя!', b1: 'Шеф, подожди. Я увеличила фото зонта. На ручке выгравировано имя!' } },
     { type: 'line', who: 'reyes', shot: 'reyes', anim: 'phone',
       text: { a1: 'What name?', a2: 'Whose name?', b1: 'Whose?' },
       ru: { a1: 'Какое имя?', a2: 'Чьё имя?', b1: 'Чьё?' } },
     { type: 'line', who: 'jenna', shot: 'umbrella-close', mood: 'shock',
       text: { a1: 'O. Blackwood.', a2: 'O. Blackwood.', b1: 'O. Blackwood.' }, ru: 'О. Блэквуд.' },
     { type: 'line', who: 'narr', shot: 'reyes-close',
-      text: { a1: 'Reyes is quiet. Oscar Blackwood is her partner.', a2: 'Reyes goes quiet. Oscar Blackwood is her business partner.', b1: 'Reyes falls silent. Oscar Blackwood — her own business partner.' },
-      ru: { a1: 'Рейес молчит. Оскар Блэквуд — её партнёр.', a2: 'Рейес замолкает. Оскар Блэквуд — её деловой партнёр.', b1: 'Рейес замолкает. Оскар Блэквуд — её собственный деловой партнёр.' } },
+      text: { a1: 'Reyes is quiet. Oscar Blackwood is her partner.', a2: 'Reyes goes quiet. Oscar Blackwood is her business partner.', b1: 'Reyes falls silent. Oscar Blackwood is her own business partner.' },
+      ru: { a1: 'Рейес молчит. Она работает вместе с Оскаром Блэквудом.', a2: 'Рейес замолкает. Они с Оскаром Блэквудом деловые партнёры.', b1: 'Рейес замолкает. Зонт принадлежит её собственному деловому партнёру.' } },
 
     { type: 'end' },
   ],

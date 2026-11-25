@@ -67,7 +67,7 @@ function renderHome() {
     </div>
     <h3 class="sec">Твои сериалы</h3>
     <div class="rail">${STORIES.map(storyCard).join('')}</div>
-    <p class="hint2">Новые эпизоды выходят регулярно — следи за ботом</p>
+    <p class="hint2">Следи за новыми эпизодами в боте</p>
   </div>`;
   $('home').querySelectorAll('[data-story]').forEach(b => b.onclick = () => { sfx('tap'); haptic(); show('story', b.dataset.story); });
   // phones: the rail scrolls sideways, so start at a series that has something to play
@@ -106,7 +106,7 @@ function renderStory() {
 }
 
 // ---------------------------------------------------------------- loading + playing
-const TIPS = ['🎧 Лучше в наушниках', '👆 Тапни по слову — увидишь перевод', '🔁 Слова вернутся в сюжете, когда придёт время их повторить', 'RU — перевод всей фразы, но попробуй сначала без него 😉', '🎬 Все готовые эпизоды сейчас доступны'];
+const TIPS = ['🎧 Лучше в наушниках', '👆 Тапни по слову, чтобы увидеть перевод', '🔁 Слова вернутся в сюжете, когда придёт время их повторить', 'Кнопка RU переводит всю фразу. Попробуй сначала прочитать без перевода 😉', '🎬 Все готовые эпизоды сейчас доступны'];
 const renderRecovery = $('render-recovery');
 $('c').addEventListener('webglcontextlost', () => {
   if (document.body.classList.contains('playing') && !renderRecovery.open) renderRecovery.showModal();
@@ -158,14 +158,14 @@ function renderNotes() {
   const counts = {}; for (const f in by) counts[f] = all.filter(by[f]).length;
   const flt = [['all', 'Все'], ['due', '🔁 Повторить'], ['hard', '😬 Сложные'], ...STORIES.map(s => [s.id, `${STORY_ICON[s.id]} ${s.title}`])];
   $('notes').innerHTML = `<div class="wrap">
-    <div class="ttl">📓 Блокнот</div><p class="sub2">Слова и фразы из всех историй. Повторять их отдельно не нужно — они сами вернутся в сюжете.</p>
+    <div class="ttl">📓 Блокнот</div><p class="sub2">Слова и фразы из всех историй. Они снова встретятся в сюжете.</p>
     <div class="flt">${flt.map(([k, n]) => `<button data-f="${k}" class="${nbFilter === k ? 'on' : ''}">${n} · ${counts[k] ?? 0}</button>`).join('')}</div>
     <div class="wl">${list.length ? list.map(([k, w]) => {
       const info = trackedInfo(k), d = daysUntil(w), e = epOfWord[k], s = e && storyById(e.story);
       return `<div class="wd"><div><b>${esc(info.form)}</b> <button data-say="${esc(info.form)}">🔊</button><div>${esc(info.ru)}</div>
         ${info.cloze ? `<div class="ex">«${esc(info.cloze.text.replace('___', info.form))}»</div>` : ''}${s ? `<span class="src">${STORY_ICON[s.id]} ${esc(s.title)}, ${s.unit.toLowerCase()} ${e.n}</span>` : ''}</div>
         <div class="m">${MASTERY[mastery(w)]}<small>${d ? `повтор через ${d} дн.` : 'пора повторить'}</small></div></div>`;
-    }).join('') : `<div class="empty">${all.length ? 'Здесь пусто — попробуй другой фильтр' : 'Пока пусто. Подчёркнутые <span style="border-bottom:2px dotted var(--amber)">вот так</span> слова из историй попадут сюда сами.'}</div>`}</div>
+    }).join('') : `<div class="empty">${all.length ? 'Здесь пусто. Попробуй другой фильтр.' : 'Пока пусто. Подчёркнутые <span style="border-bottom:2px dotted var(--amber)">вот так</span> слова из историй попадут сюда сами.'}</div>`}</div>
   </div>`;
   $('notes').querySelectorAll('[data-f]').forEach(b => b.onclick = () => { nbFilter = b.dataset.f; sfx('tap'); renderNotes(); });
   $('notes').querySelectorAll('[data-say]').forEach(b => b.onclick = () => speak(b.dataset.say));
@@ -183,7 +183,7 @@ function renderProfile() {
       <div><b>🔥 ${streakNow()}</b><small>${plural(streakNow(), 'день', 'дня', 'дней')} подряд</small></div>
       <div><b>${S.streak.best || 0}</b><small>рекорд</small></div>
       <div><b>${freezeLeft() ? '🧊 1' : '—'}</b><small>${freezeLeft() ? 'заморозка на неделю' : 'заморозка потрачена'}</small></div></div>
-      <p style="color:var(--muted);font-size:12.5px;margin:10px 0 0">Пропустил(а) один день? Заморозка спасёт серию сама — раз в неделю.</p></div>
+      <p style="color:var(--muted);font-size:12.5px;margin:10px 0 0">Пропустил(а) один день? Раз в неделю заморозка автоматически сохраняет серию дней.</p></div>
     <div class="panel"><h4>Слова</h4><div class="kpis">
       <div><b>${ws.total}</b><small>встречено</small></div><div><b>${ws.known}</b><small>знакомых</small></div><div><b>${ws.mastered}</b><small>освоено</small></div></div></div>
     <div class="panel"><h4>Понято без перевода · по неделям</h4>
@@ -260,7 +260,7 @@ function intro() {
     el.innerHTML = `<div class="bg">${STORIES.map(s => `<img src="${s.poster}" alt="">`).join('')}</div><div class="sh"></div>
       <div class="in"><h1>Choose your <span>story</span></h1>
         <p>Четыре сериала на английском. Эпизоды по 10–15 минут, новые выходят регулярно.</p>
-        <ul><li><i>👆</i>Не понял слово? Тапни — будет перевод</li><li><i>🎯</i>Уровень подберём сами по первым репликам</li><li><i>🔁</i>Новые слова вернутся в сюжете — зубрить не нужно</li></ul>
+        <ul><li><i>👆</i>Если слово непонятно, тапни по нему</li><li><i>🎯</i>Уровень подберём сами по первым репликам</li><li><i>🔁</i>Новые слова снова встретятся в сюжете</li></ul>
         ${pickLevel ? `<div class="lvls">${LV.map(([k, n, d]) => `<button data-lv="${k}"><b>${n}</b><small>${d}</small></button>`).join('')}</div>` : `<button class="btn pri" id="in-go">Выбрать историю</button><button class="lnk" id="in-lv">Я знаю свой уровень английского</button>`}
       </div>`;
     el.querySelector('#in-go')?.addEventListener('click', done);

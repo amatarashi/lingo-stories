@@ -19,7 +19,7 @@ export default {
       ...first.clues.photo, title: 'The white bird',
       doc: 'AURORA-7 · WINTER TEAM\nWHITE BIRD: FIELD RELAY CREW',
       text: levels('The white bird is a team sign.', 'The white bird marks the field relay crew.', 'The white bird on the sleeve is the mark of the field relay crew. The missing face may be the person who carried you in.'),
-      ru: 'Белая птица — нашивка команды полевого ретранслятора. Возможно, человек с вырезанным лицом и принёс тебя сюда.',
+      ru: 'Нашивку с белой птицей носила команда полевого ретранслятора. Возможно, человек с вырезанным лицом и принёс тебя сюда.',
     },
     logbook: {
       icon: '📒', title: 'The relay log', doc: '03:14 · FIELD RELAY TEST\n03:16 · CALL RECORDED\nSHELTER: NORTH RIDGE',
@@ -55,7 +55,7 @@ export default {
     { type: 'fx', fx: 'channel', v: 9 },
     line('narr','Three short taps.','First silence. Then three short taps answer you.', 'You wait through the silence. Three deliberate taps come back through the speaker.', 'Несколько секунд тишины. Затем из динамика слышны три отчётливых удара.', { shot: 'radio-close' }),
     line('eli','That was not the old call.','That was new. Someone heard us.','That wasn’t in the recording. There’s someone listening at the other end.', 'Этого не было в записи. Кто-то нас слышит.'),
-    line('aria','A second signal. South gate.','There is another signal. It is coming from the south gate.','I have a second signal. The source is the south gate, less than forty metres from this room.', 'Есть второй сигнал. Источник — южные ворота, меньше сорока метров отсюда.', { shot: 'screen' }),
+    line('aria','A second signal. South gate.','There is another signal. It is coming from the south gate.','I have a second signal. The source is the south gate, less than forty metres from this room.', 'Есть второй сигнал. Он идёт от южных ворот, меньше сорока метров отсюда.', { shot: 'screen' }),
     line('narr','You hear your own voice.','The voice says your last words in your own voice.','Then the south gate speaks. You recognise the voice before you recognise the words. It’s yours.', 'Из динамика у южных ворот звучит голос. Ты узнаёшь его раньше, чем разбираешь слова. Это твой голос.', { shot: 'radio-close' }),
     { type: 'end' },
   ],

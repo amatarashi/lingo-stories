@@ -14,9 +14,9 @@ export default {
     trust: word('trust', 'доверять; доверие', 'I ___ you with the diary.', 'Я доверяю тебе дневник.'),
   },
   clues: {
-    diary: { ...previous.clues.diary, title: 'The folded page', doc: 'FRIDAY · LOW TIDE\nTHE OLD PATH TO THE LIGHTHOUSE\n— S.',
+    diary: { ...previous.clues.diary, title: 'The folded page', doc: 'FRIDAY · LOW TIDE\nTHE OLD PATH TO THE LIGHTHOUSE\nS.',
       text: levels('One page is folded. It says Friday.', 'A folded page mentions Friday, low [tide] and the [lighthouse].', 'Someone folded a page at a note about the old path to the [lighthouse]. The time is marked “low [tide]”.'),
-      ru: 'Загнута страница с записью о старой тропе к маяку. Указано время — отлив.' },
+      ru: 'На загнутой странице запись о старой тропе к маяку. Рядом пометка «В отлив».' },
   },
   beats: [
     { type: 'scene', to: 'room', shot: 'establish', caption: 'Kinloch · Friday' },

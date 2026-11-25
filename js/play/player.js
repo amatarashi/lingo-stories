@@ -1,5 +1,6 @@
 // Episode player: cinematic dialogue in 3 levels, character voices, tap-to-translate, clues, "Objection!", recall, notebook.
 // The app calls play(); the 3D scene of the story is loaded on first use and kept (paused) between episodes.
+import { branchTarget, episodeProgress } from './progress.js';
 import { WRONG, HINT, RECALL_INTRO, RECALL_OK } from '../content/common.js';
 import { pick, parse, plain, trackedIn, LEVELS, LEVEL_NAME } from '../engine/text.js';
 import { lookup, registerWords, trackedInfo, trackedKeys } from '../engine/lex.js';
@@ -11,6 +12,7 @@ const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const paintProgress = value => { $('ep-progress').value = value; $('ep-percent').textContent = value + '%'; };
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const haptic = (k = 'light') => tg?.HapticFeedback?.impactOccurred(k);
 
@@ -82,7 +84,7 @@ function showPop(el, tok) {
   p.classList.toggle('over-card', !!el.closest('#card'));
   const st = r.key && S.words[r.key];
   p.innerHTML = `<b>${esc(r.word)}</b><button data-say>🔊</button>
-    <div class="ru2">${r.ru ? esc(r.ru) : '<i>нет в словаре — нажми RU для перевода фразы</i>'}</div>
+    <div class="ru2">${r.ru ? esc(r.ru) : '<i>Нет в словаре. Нажми RU для перевода фразы</i>'}</div>
     ${w ? `<span class="tag">${st ? MASTERY[mastery(st)] : '★ новое слово'} · в блокнот</span>` : ''}`;
   p.querySelector('[data-say]').onclick = e => { e.stopPropagation(); speak(w ? w.form : tok.s); };
   p.classList.remove('hide');
@@ -259,18 +261,20 @@ function openClue(k) {
   });
 }
 
-async function exploreBeat(b) {
+async function exploreBeat(b, advance) {
   const all = b.clues || Object.keys(ep.clues);
   const views = b.views;
   let view = views ? Math.floor(views.length / 2) : 0;
   const restoreView = () => world.shot(views ? views[view] : 'wide');
   restoreView(); world.setSpeaker(null);
   const run = R.run;
-  let busy = false, finish, hintTimer, turnButtons = [];
+  let busy = false, finish, hintTimer, counted = 0, turnButtons = [];
   const doneP = new Promise(r => { finish = r; });
   const paint = () => {
     world.setExplore(all, R.found);
     const n = b.need.filter(k => R.found.has(k)).length;
+    advance(n - counted);
+    counted = n;
     const cnt = $('ex-count'); if (cnt) cnt.textContent = `${n}/${b.need.length}`;
     if (n >= b.need.length) finish();
   };
@@ -294,7 +298,7 @@ async function exploreBeat(b) {
   }, views?.length > 1 ? turn : null);
   const line = { who: 'narr', text: b.hint, ru: b.hintRu, noCount: true };
   // some things may be off screen (phones, very wide windows): tell the player the scene moves
-  if (!views) setTimeout(() => { if (run === R.run && world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Потяни сцену влево-вправо — не всё видно', 2600); }, 900);
+  if (!views) setTimeout(() => { if (run === R.run && world.hidden(b.need.filter(k => !R.found.has(k))).length) toast('👆 Проведи по сцене влево или вправо, чтобы осмотреться', 2600); }, 900);
   const p = present(line, (box, done) => {
     const c = document.createElement('div'); c.className = 'btn explore-count'; c.style.flex = 'none'; c.innerHTML = `🔎 ${b.countLabel || 'Улики'}: <b id="ex-count">0/${b.need.length}</b>`;
     const h = document.createElement('button'); h.className = 'btn explore-hint'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
@@ -326,11 +330,11 @@ async function exploreBeat(b) {
   paint();
   await p;
   world.setExplore(null); world.onTap(null);
-  toast(b.doneToast || '🗂️ Улики собраны — они в досье');
+  toast(b.doneToast || '🗂️ Все улики в досье');
 }
 
 // ---------------------------------------------------------------- "Do it by the instruction": tap the right thing in the scene
-async function taskBeat(b) {
+async function taskBeat(b, advance) {
   const run = R.run;
   const done = new Set();
   world.setSpeaker(null);
@@ -371,6 +375,7 @@ async function taskBeat(b) {
       });
     });
     done.add(st.do);
+    advance();
   }
   world.setExplore(null); world.onTap(null);
   sfx('ok');
@@ -392,7 +397,7 @@ async function decodeBeat(b) {
       opts.forEach((o, n) => { const btn = document.createElement('button'); btn.className = 'btn choice'; btn.innerHTML = `<span class="n">${n + 1}</span><span>${esc(o)}</span>`; btn.onclick = e => { e.stopPropagation(); done(o); }; box.appendChild(btn); });
     });
     if (pickd === answer) { sfx('ok'); haptic('medium'); break; }
-    sfx('bad'); haptic('rigid'); R.helped = true; toast(radio ? 'Не то слово — послушай ещё раз 🎧' : 'Не то слово — попробуй ещё раз', 2000);
+    sfx('bad'); haptic('rigid'); R.helped = true; toast(radio ? 'Не то слово. Послушай ещё раз 🎧' : 'Не то слово. Попробуй ещё раз', 2000);
   }
   await present({ who: b.who, shot: b.shot, text: decodeFull(b.text), ru: b.ru });
 }
@@ -425,7 +430,7 @@ function relOf(id) {
 }
 
 // ---------------------------------------------------------------- the hero's phone: a chat with short messages (reading, slang, emoji)
-async function chatBeat(b) {
+async function chatBeat(b, advance) {
   const run = R.run;
   dlg.classList.add('hidden'); hidePop();
   const ph = $('phone'), c = ep.chars[b.with], img = world.portraits[b.with];
@@ -461,6 +466,7 @@ async function chatBeat(b) {
       await sleep(500);
       if (run !== R.run) return;
     }
+    advance();
   }
   await sleep(500);
   if (run === R.run) ph.classList.add('hide');
@@ -502,7 +508,7 @@ async function recordEvidence(message) {
   await sleep(400);
 }
 
-async function interrogateBeat(b) {
+async function interrogateBeat(b, advance) {
   let wrong = 0, wi = 0;
   for (const round of b.rounds) {
     const sts = round.statements, solved = new Set();
@@ -527,8 +533,12 @@ async function interrogateBeat(b) {
       const clue = await pickEvidence();
       if (!clue) continue;
       if (st.lie && st.lie === clue && !solved.has(i)) {
+        advance();
         await recordEvidence('✓ Противоречие записано в досье');
-        for (const a of st.after) await present({ ...a, shot: a.shot || (world.present(a.who) && a.who !== 'reyes' ? a.who : 'reyes') });
+        for (const a of st.after) {
+          await present({ ...a, shot: a.shot || (world.present(a.who) && a.who !== 'reyes' ? a.who : 'reyes') });
+          advance();
+        }
         solved.add(i); wrong = 0; i = (i + 1) % sts.length;
         world.shot(b.shot);
       } else {
@@ -556,7 +566,7 @@ async function recallBeat(b) {
     const ok = ans === info.form;
     meet(k, !ok, ep.id); save();
     if (ok) { sfx('ok'); await present({ ...RECALL_OK, who: b.who, noCount: true }); }
-    else { sfx('bad'); await present({ who: b.who, text: `Not quite. It's "${info.form}". No worries!`, ru: `Не совсем. Правильно — «${info.form}» (${info.ru}). Ничего страшного!`, noCount: true }); }
+    else { sfx('bad'); await present({ who: b.who, text: `Not quite. It's "${info.form}". No worries!`, ru: `Не совсем. Ответ: «${info.form}» (${info.ru}). Ничего страшного!`, noCount: true }); }
   }
 }
 
@@ -578,14 +588,14 @@ async function maybeAdjust() {
     else if (!S.auto) { S.keepUp = level(); save(); }   // said no: don't ask again at this level
   } else if (ratio < 0.4 && i > 0 && S.keepDown !== level()) {
     R.asked = true;
-    if (S.auto || await ask(`<h2>Сделать попроще?</h2><p>Ты часто открываешь перевод — это нормально! Можно упростить текст (${LEVEL_NAME[LEVELS[i - 1]]}), история не изменится.</p>`, 'Да, проще', 'Оставить')) { S.level = LEVELS[i - 1]; save(); paintLevel(); toast(`Уровень текста: <b>${LEVEL_NAME[level()]}</b>`); }
+    if (S.auto || await ask(`<h2>Сделать попроще?</h2><p>Ты часто открываешь перевод, и это нормально. Можно упростить текст (${LEVEL_NAME[LEVELS[i - 1]]}), история не изменится.</p>`, 'Да, проще', 'Оставить')) { S.level = LEVELS[i - 1]; save(); paintLevel(); toast(`Уровень текста: <b>${LEVEL_NAME[level()]}</b>`); }
     else if (!S.auto) { S.keepDown = level(); save(); }
   }
 }
 
 
 // ---------------------------------------------------------------- "Previously on…": polaroids over a sepia, blurred scene
-async function recapBeat(b) {
+async function recapBeat(b, advance) {
   document.body.classList.add('flashback');
   const rc = $('recap');
   rc.innerHTML = `<div class="rt">Previously on<b>${esc(ep.story)}</b></div><div class="pol hide"></div>`;
@@ -599,6 +609,7 @@ async function recapBeat(b) {
     pol.classList.remove('hide', 'in'); void pol.offsetWidth; pol.classList.add('in');
     sfx('paper');
     await present({ who: 'narr', text: f.text, ru: f.ru, noCount: true });
+    advance();
   }
   rc.classList.add('hide'); document.body.classList.remove('flashback');
 }
@@ -619,7 +630,7 @@ async function sceneBeat(b) {
 }
 
 // ---------------------------------------------------------------- final accusation: who did it, then prove when and how we know
-async function accuseBeat(b) {
+async function accuseBeat(b, advance) {
   const run = R.run;
   for (;;) {
     const pick = await present({ who: b.who, shot: b.shot, ...b.ask, noCount: true }, (box, done) => {
@@ -639,6 +650,7 @@ async function accuseBeat(b) {
     sfx('bad'); haptic('rigid');
     await present({ who: b.who, shot: b.shot, anim: 'no', ...b.wrong[pick], noCount: true });
   }
+  advance();
   sfx('ok'); world.play(b.culprit, 'no');
   for (const pr of b.proofs) {
     for (;;) {
@@ -650,7 +662,7 @@ async function accuseBeat(b) {
       if (run !== R.run) return;
       const k = await pickEvidence('Покажи улику, которая это доказывает');
       if (!k) continue;
-      if (k === pr.answer) { sfx('clue'); haptic('medium'); world.shake(0.25); break; }
+      if (k === pr.answer) { advance(); sfx('clue'); haptic('medium'); world.shake(0.25); break; }
       sfx('bad'); haptic('rigid');
       await present({ who: b.who, shot: b.shot, anim: 'no', ...b.wrongProof, noCount: true });
     }
@@ -709,7 +721,7 @@ function finish() {
     ${ep.rel ? `<div class="rel">${ep.rel.map(id => { const n = relOf(id); return `<span style="--c:${ep.chars[id].color}"><b>${esc(ep.chars[id].name)}</b>${'❤️'.repeat(Math.max(0, Math.min(3, n)))}${n <= 0 ? '🤍' : ''}<small>${n > 1 ? 'тепло' : n === 1 ? 'симпатия' : n === 0 ? 'нейтрально' : 'прохладно'}</small></span>`; }).join('')}</div>` : ''}
     <div class="teaser">${ep.icon || '🕵'} ${esc(L(ep.teaser))}<div style="font-family:Inter,sans-serif;font-size:13px;color:#d9a7c0;margin-top:4px">${esc(ep.teaserRu)}</div></div>
     <div class="row"><button class="btn" id="sm-nb" style="text-align:center;flex:none">📓</button><button class="btn pri" id="sm-home">Готово</button></div>
-    <p style="color:var(--muted);font-size:12px;text-align:center;margin:10px 0 0">Слова вернутся в следующих эпизодах — когда придёт время повторить.</p>`;
+    <p style="color:var(--muted);font-size:12px;text-align:center;margin:10px 0 0">Эти слова снова встретятся в следующих эпизодах.</p>`;
   ov.classList.remove('hide');
   playLine(ep.chars.narr.voice, L(ep.teaser));
   el.querySelector('#sm-nb').onclick = () => notebook('words');
@@ -761,14 +773,15 @@ async function runEpisode(mod, story, h) {
   $('top').classList.remove('hide'); $('ep-title').textContent = ep.story; $('ep-part').textContent = `${ep.part} · ${ep.title}`;
   paintLevel();
   const beats = ep.beats;
+  const flags = S.stories[story]?.flags;
+  const progress = episodeProgress(beats, flags, paintProgress);
   let i = 0;
   while (i < beats.length && run === R.run) {
     const b = beats[i];
     let go = b.goto;
-    if (b.type === 'branch') {
-      const flags = S.stories[story]?.flags;
-      if (!flags?.[b.flag] || (b.unless && flags[b.unless])) go = undefined;
-    }
+    const step = i, update = progress.start(i);
+    const advance = amount => { if (run === R.run && step === i) update(amount); };
+    if (b.type === 'branch') go = branchTarget(b, flags);
     else if (b.type === 'line') await present(b);
     else if (b.type === 'choice') {
       const option = b.options[await choiceBeat(b)];
@@ -776,22 +789,26 @@ async function runEpisode(mod, story, h) {
       applyChoice(option);
       go = option.goto;
     }
-    else if (b.type === 'chat') await chatBeat(b);
-    else if (b.type === 'recap') await recapBeat(b);
+    else if (b.type === 'chat') await chatBeat(b, advance);
+    else if (b.type === 'recap') await recapBeat(b, advance);
     else if (b.type === 'scene') await sceneBeat(b);
     else if (b.type === 'clue') await openClue(b.id);
-    else if (b.type === 'accuse') await accuseBeat(b);
+    else if (b.type === 'accuse') await accuseBeat(b, advance);
     else if (b.type === 'stamp') await stampBeat(b);
-    else if (b.type === 'explore') await exploreBeat(b);
-    else if (b.type === 'interrogate') await interrogateBeat(b);
+    else if (b.type === 'explore') await exploreBeat(b, advance);
+    else if (b.type === 'interrogate') await interrogateBeat(b, advance);
     else if (b.type === 'recall') await recallBeat(b);
-    else if (b.type === 'task') await taskBeat(b);
+    else if (b.type === 'task') await taskBeat(b, advance);
     else if (b.type === 'decode') await decodeBeat(b);
     else if (b.type === 'fx') await fxBeat(b);
-    else if (b.type === 'end') return finish();
+    else if (b.type === 'end') {
+      progress.finish();
+      return finish();
+    }
     if (run !== R.run) return;
+    progress.complete(i);
     await maybeAdjust();
-    i = go ? beats.findIndex(x => x.label === go) : i + 1;
+    i = progress.next(i, go);
   }
 }
 
