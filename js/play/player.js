@@ -59,7 +59,10 @@ function paintLevel() { for (const b of $('lvl').children) b.classList.toggle('o
 $('lvl').onclick = e => {
   const l = e.target.dataset?.l; if (!l || l === level()) return;
   S.level = l; S.auto = false; S.placing = false; S.placed = true; save(); paintLevel(); sfx('tap');
-  if (R.line) renderLine(R.line, true);
+  if (R.line) {
+    renderLine(R.line, true);
+    R.onLevel?.();
+  }
   toast(`Уровень текста: <b>${LEVEL_NAME[l]}</b>`);
 };
 function paintVoice() { $('b-voice').classList.toggle('off', !voiceState.on); $('b-voice').textContent = voiceState.on ? '🗣️' : '🔇'; }
@@ -200,7 +203,7 @@ function present(line, fill) {
   const run = R.run;
   return new Promise(async resolve => {
     dlg.classList.remove('hidden'); document.body.classList.add('cine');
-    R.line = line; R.helped = false; R.ruShown = false; R.ruUsed = false; R.tapped = new Set(); R.onRu = null; R.onTyped = null;
+    R.line = line; R.helped = false; R.ruShown = false; R.ruUsed = false; R.tapped = new Set(); R.onRu = null; R.onTyped = null; R.onLevel = null;
     if (line.sfx) { sfx(line.sfx); await sleep(line.sfx === 'ring' ? 700 : 200); }
     if (run !== R.run) return;
     setWho(line.who);
@@ -226,13 +229,17 @@ function present(line, fill) {
 function choiceBeat(b) {
   const line = { who: 'you', text: b.prompt || { a1: 'What do you say?' }, ru: 'Что ответишь?', noCount: true };
   return present(line, (box, done) => {
-    b.options.forEach((o, i) => {
-      const btn = document.createElement('button'); btn.className = 'btn choice';
-      btn.innerHTML = `<span class="n">${i + 1}</span><span>${esc(plain(L(o.text)))}<small class="opt-ru hide">${esc(L(o.ru))}</small></span>`;
-      btn.onclick = e => { e.stopPropagation(); sfx('next'); haptic(); done(i); };
-      box.appendChild(btn);
-    });
+    R.onLevel = () => {
+      box.replaceChildren();
+      b.options.forEach((o, i) => {
+        const btn = document.createElement('button'); btn.className = 'btn choice';
+        btn.innerHTML = `<span class="n">${i + 1}</span><span>${esc(plain(L(o.text)))}<small class="opt-ru${R.ruShown ? '' : ' hide'}">${esc(L(o.ru))}</small></span>`;
+        btn.onclick = e => { e.stopPropagation(); sfx('next'); haptic(); done(i); };
+        box.appendChild(btn);
+      });
+    };
     R.onRu = () => box.querySelectorAll('.opt-ru').forEach(x => x.classList.toggle('hide', !R.ruShown));
+    R.onLevel();
   });
 }
 
