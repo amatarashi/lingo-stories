@@ -30,7 +30,8 @@ function storedMode() {
   return null;
 }
 export let progressMode = storedMode();
-export const S = progressMode === 'local' ? load() : fresh();
+let loadedLocalState = progressMode === 'local';
+export const S = loadedLocalState ? load() : fresh();
 
 export function save() {
   if (progressMode !== 'local' || storedMode() !== 'local') return;
@@ -44,8 +45,8 @@ function replaceState(next) {
 
 export function setProgressMode(mode) {
   if (mode === 'local') {
-    const saved = load();
-    const next = saved.t ? saved : S;
+    const saved = loadedLocalState ? null : load();
+    const next = saved?.t ? saved : S;
     try {
       localStorage.setItem(SAVE_MODE, 'local');
       localStorage.setItem(KEY, JSON.stringify({ ...next, t: Date.now() }));
@@ -57,6 +58,7 @@ export function setProgressMode(mode) {
       return false;
     }
     if (next !== S) replaceState(next);
+    loadedLocalState = true;
   } else {
     try { localStorage.setItem(SAVE_MODE, 'session'); } catch {}
   }
