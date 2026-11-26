@@ -144,9 +144,20 @@ export function createStage(canvas) {
   function checkContext() {
     if (renderer.getContext().isContextLost()) throw new Error('The 3D rendering context was lost');
   }
+  const baseModels = ['props_interior.glb', 'anim_ual1.glb', 'anim_ual2.glb'];
+  const modelFile = def => (MOBILE && def.mobileModel ? 'mobile/' : '') + 'm_' + def.model + '.glb';
+  async function preloadAssets(defs, onProgress) {
+    const files = new Set(baseModels);
+    for (const def of Object.values(defs)) if (def.model) files.add(modelFile(def));
+    let loaded = 0;
+    await Promise.all([...files].map(async file => {
+      await loadOnce(file);
+      onProgress?.(++loaded / files.size);
+    }));
+  }
   let lib = null;
   async function base() {
-    const [props, a1, a2] = await Promise.all([loadOnce('props_interior.glb'), loadOnce('anim_ual1.glb'), loadOnce('anim_ual2.glb')]);
+    const [props, a1, a2] = await Promise.all(baseModels.map(loadOnce));
     if (!lib) {
       const all = [...a1.animations, ...a2.animations];
       lib = { src: a1.scene, rest: all.find(c => c.name === 'A_TPose'), clips: all.filter(c => Object.values(CLIP).includes(c.name)), props: {} };
@@ -156,8 +167,7 @@ export function createStage(canvas) {
   }
   const clipCache = {};
   async function makeChar(def) {
-    const directory = MOBILE && def.mobileModel ? 'mobile/' : '';
-    const g = await loadOnce(`${directory}m_${def.model}.glb`);
+    const g = await loadOnce(modelFile(def));
     let o = SkeletonUtils.clone(g.scene);
     const vrm = o.userData.vrm;
     toonify(o, { skinned: true, tint: def.tint || {}, dark: def.silhouette, painted: !!vrm });
@@ -221,7 +231,7 @@ export function createStage(canvas) {
     if (locs[key]) { onProgress?.(1); return locs[key]; }
     let done = 0; const steps = 3 + cast.length;
     const tick = () => onProgress?.(Math.min(1, ++done / steps));
-    await Promise.all([loadOnce('props_interior.glb').then(tick), loadOnce('anim_ual1.glb').then(tick), loadOnce('anim_ual2.glb').then(tick)]);
+    await Promise.all(baseModels.map(file => loadOnce(file).then(tick)));
     await base();
     const scene = new THREE.Scene(), statics = new THREE.Group(); scene.add(statics);
     const L = { key, scene, statics, clues: {}, shots: {}, spots: {}, anims: [], chars: {}, mixers: [], markers: {}, fx: {}, wide: 'wide', pan: 3.6 };
@@ -399,6 +409,8 @@ export function createStage(canvas) {
   }
   async function makePortraits(defs) {
     checkContext();
+    const missing = Object.entries(defs).filter(([id, def]) => !portraits[id] && (def.icon || def.model));
+    if (!missing.length) return portraits;
     await base();
     const studio = new THREE.Scene();
     studio.add(new THREE.HemisphereLight('#ffe2c4', '#2a3550', 2.2));
@@ -407,8 +419,7 @@ export function createStage(canvas) {
     const cam = new THREE.PerspectiveCamera(26, 1, 0.05, 10);
     const rt = new THREE.WebGLRenderTarget(256, 256, { samples: MOBILE ? 0 : 4 }); rt.texture.colorSpace = THREE.SRGBColorSpace;
     const px = new Uint8Array(256 * 256 * 4);
-    for (const [id, def] of Object.entries(defs)) {
-      if (portraits[id]) continue;
+    for (const [id, def] of missing) {
       if (!def.model) { if (def.icon) portraits[id] = iconPortrait(def); continue; }
       const ch = await makeChar(def);
       ch.o.rotation.set(0, 0.25, 0); studio.add(ch.o);
@@ -510,7 +521,7 @@ export function createStage(canvas) {
     onTap: (tap, turn = null) => { tapHandler = tap; turnHandler = turn; },
     tapClue: k => { if (loc?.exploring?.includes(k)) tapHandler?.(k); },
     shake: (s = 0.5) => { shakeT = s; },
-    makePortraits, portraits,
+    preloadAssets, makePortraits, portraits,
     pause: v => { paused = v; if (!v) clock.getDelta(); },
     get info() { return { calls: renderer.info.render.calls, tris: renderer.info.render.triangles, dpr: renderer.getPixelRatio(), loc: loc?.key }; },
     get loc() { return loc; },

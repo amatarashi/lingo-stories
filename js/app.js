@@ -137,10 +137,11 @@ async function start(entry) {
     $('ld-back').onclick = () => ld.classList.add('hide');
     ld.classList.remove('hide');
   };
+  const bar = $('ld-bar');
   let mod;
-  try { mod = await player.prepare(entry, p => { $('ld-bar').style.width = Math.round(p * 100) + '%'; }); }
+  try { mod = await player.prepare(entry, p => { bar.style.width = Math.round(p * 100) + '%'; }); }
   catch (error) { showError(error); return; }
-  $('ld-bar').style.width = '100%';
+  bar.style.width = '100%';
   // a tap is needed anyway to start sound on phones
   const go = $('ld-go'); go.classList.remove('hide');
   go.onclick = () => {

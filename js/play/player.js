@@ -113,7 +113,7 @@ function renderTokens(container, text, { hidden = false, onTap } = {}) {
 }
 
 // ---------------------------------------------------------------- dialogue panel
-const dlg = $('dlg'), boxEl = dlg.querySelector('.box'), txt = dlg.querySelector('.txt'), ruBox = dlg.querySelector('.ru'), acts = dlg.querySelector('.acts'), por = dlg.querySelector('.por'), more = dlg.querySelector('.more');
+const dlg = $('dlg'), boxEl = dlg.querySelector('.box'), copyEl = dlg.querySelector('.dialog-copy'), txt = dlg.querySelector('.txt'), ruBox = dlg.querySelector('.ru'), acts = dlg.querySelector('.acts'), por = dlg.querySelector('.por'), more = dlg.querySelector('.more');
 const charOf = who => ep.chars[who] || { name: 'You', color: '#8fb3ff' };
 let lastWho = null, lastPhone = false;
 function setWho(who) {
@@ -206,15 +206,15 @@ function present(line, fill) {
     R.line = line; R.helped = false; R.ruShown = false; R.ruUsed = false; R.tapped = new Set(); R.onRu = null; R.onTyped = null; R.onLevel = null;
     if (line.sfx) { sfx(line.sfx); await sleep(line.sfx === 'ring' ? 700 : 200); }
     if (run !== R.run) return;
+    boxEl.classList.toggle('task-controls', line.sceneTask === true);
     setWho(line.who);
     if (line.shot) world.shot(line.shot);
     if (line.anim && world.present(line.who)) world.play(line.who, line.anim);
     if (world.present(line.who)) world.mood(line.who, line.mood);
     acts.innerHTML = ''; more.classList.add('hide');
-    const dur = await voice(line);
-    if (run !== R.run) return;
-    const n = parse(L(line.text)).length;
-    renderLine(line, false, dur ? Math.max(18, Math.min(70, dur * 1000 * 0.8 / n)) : 26);
+    copyEl.scrollTop = 0;
+    voice(line);
+    renderLine(line, false, 26);
     let finished = false;
     const done = v => { if (finished || run !== R.run) return; finished = true; boxEl.onclick = null; stopLine(); clearSpeaking(line.who); finishLine(); resolve(v); };
     if (fill) { fill(acts, done); boxEl.onclick = () => finishTyping(); }
@@ -360,7 +360,7 @@ async function taskBeat(b, advance) {
       world.peek(st.do); world.setExplore([st.do], done, 'dot'); toast('Вот это 👀');
       hintTimer = setTimeout(() => { if (run === R.run) showTargets(); }, 2200);
     };
-    await present({ who: b.who, text: st.text, ru: st.ru }, (box, fin) => {
+    await present({ who: b.who, text: st.text, ru: st.ru, sceneTask: true }, (box, fin) => {
       const info = document.createElement('div'); info.className = 'stmt';
       info.innerHTML = `Шаг ${si + 1}/${b.steps.length} · <span class="ok">нажми в сцене</span>`;
       const h = document.createElement('button'); h.className = 'btn'; h.style.flex = 'none'; h.textContent = '💡 Подсказка';
@@ -750,15 +750,17 @@ function exit(completed = false) {
 // ---------------------------------------------------------------- loading + runner
 // loads the episode data and the story's 3D scene; onProgress(0..1)
 export async function prepare(entry, onProgress) {
-  const mod = (await entry.load()).default;
+  const [{ default: mod }, w] = await Promise.all([entry.load(), getStage()]);
   registerWords(mod.words, mod.id);
-  const st = STORY[entry.story];
-  const w = await getStage(), scenes = Object.values(mod.scenes);
+  const st = STORY[entry.story], scenes = Object.values(mod.scenes);
   w.checkContext();
-  // progress: each location is an equal share; portraits are the last bit
+  const [builders] = await Promise.all([
+    Promise.all(scenes.map(sc => st.locs[sc.loc]())),
+    w.preloadAssets(mod.chars, p => onProgress?.(p * 0.7)),
+  ]);
   for (let i = 0; i < scenes.length; i++) {
     const sc = scenes[i];
-    await w.load(sceneKey(sc), await st.locs[sc.loc](), { chars: mod.chars, cast: sc.cast, mood: sc.mood }, p => onProgress?.((i + p) / (scenes.length + 0.2)));
+    await w.load(sceneKey(sc), builders[i], { chars: mod.chars, cast: sc.cast, mood: sc.mood }, p => onProgress?.(0.7 + 0.3 * (i + p) / (scenes.length + 0.2)));
   }
   await w.makePortraits(mod.chars);
   onProgress?.(1);
