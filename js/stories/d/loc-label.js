@@ -256,6 +256,7 @@ export function buildStudio(ctx) {
     const resetFader = L.fx.reset;
     L.fx.reset = () => { resetFader(); playing = 0; indicator.material.color.set('#253731'); };
     L.fx.demo = L.fx['second-take'] = () => { playing = 1.35; };
+    L.fx['window-light'] = () => { playing = 5.85; };
     L.anims.push(dt => {
       playing = Math.max(0, playing - dt);
       indicator.material.color.set(playing > 0 ? '#8dffc7' : '#253731');

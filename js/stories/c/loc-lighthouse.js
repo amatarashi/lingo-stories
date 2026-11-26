@@ -162,6 +162,7 @@ export function buildLighthouse({ THREE, L, scene, add, box, cyl }) {
   L.spots = {
     duncan: { pos: [-2.55, 0, -0.02], ry: 0.25, base: 'idle' },
     kai: { pos: [1.55, 0, 0.45], ry: -.28, base: 'idle' },
+    sam: { pos: [-0.15, 0, 0.05], ry: 0.18, base: 'idle' },
   };
   L.shots = {
     establish: () => ({ pos: [3.9, 2.35, 10.45], at: [0.85, 2.95, -3.5], fov: 61, fixed: true }),

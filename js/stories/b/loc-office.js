@@ -3,7 +3,7 @@
 import { toon, toonMap, canvasTex, glow, rainLines, streakTexture, MOBILE } from '../stage.js';
 
 export function buildOffice(ctx) {
-  const { THREE, L, scene, statics, add, place, box, cyl, head, portrait } = ctx;
+  const { THREE, L, scene, statics, add, place, box, cyl, head, portrait, mood } = ctx;
   scene.background = new THREE.Color('#141b28');
   scene.fog = new THREE.Fog('#1b2333', 8, 22);
   const W = 9, D = 7, H = 3.2, backZ = -D / 2, leftX = -W / 2, rightX = W / 2;
@@ -197,6 +197,22 @@ export function buildOffice(ctx) {
   add(new THREE.PlaneGeometry(0.14, 0.18), toonMap(photoTex), 0, 0.11, 0.009, photo, { rot: [-0.15, 0, 0] });
   C.photo = photo;
 
+  if (mood === 'archive') {
+    const slip = (heading, destination, ink) => toonMap(canvasTex(320, 200, (g, w, h) => {
+      g.fillStyle = '#f1e6cf'; g.fillRect(0, 0, w, h);
+      g.fillStyle = ink; g.fillRect(0, 0, w, 39);
+      g.fillStyle = '#fff'; g.font = 'bold 23px sans-serif'; g.fillText(heading, 14, 28);
+      g.fillStyle = '#34293c'; g.font = '20px monospace';
+      g.fillText('TRANSFER 061', 14, 83); g.fillText(destination, 14, 120);
+      g.font = 'italic 29px serif'; g.fillText('O. Blackwood', 14, 170);
+    }));
+    C.original = add(new THREE.PlaneGeometry(.29, .18), slip('SIGNED COPY', 'DOCK 9 / LOCKER 4', '#384769'),
+      1.28, .13, -.713, scene, { rot: [-.28, 0, -.09] });
+    add(box(.08, .027, .008), toon('#b69456'), 1.28, .216, -.7, scene);
+    C.duplicate = add(new THREE.PlaneGeometry(.31, .19), slip('DRIVER COPY', 'ANNEX / LOCKER 7', '#664230'),
+      1.78, .831, -.91, scene, { rot: [-Math.PI / 2, 0, .12] });
+  }
+
   // ------------------------------------------------ lights: cold window, warm lamps, cyan screens
   scene.add(new THREE.HemisphereLight('#9fb0cf', '#3a2a24', 1.25));
   const win = new THREE.DirectionalLight('#c9d8f2', 1.8); win.position.set(0.2, 3.2, -8); win.target.position.set(0.2, 0, 1.5); scene.add(win, win.target);
@@ -223,6 +239,9 @@ export function buildOffice(ctx) {
   L.shots = {
     establish: () => ({ pos: [2.15, 2.19, 3.15], at: [0.0, 1.2, -1.4], fov: 68, fixed: true }),
     wide: () => ({ pos: [0.55, 2.45, 3.12], at: [0.4, 1.0, -1.1], fov: 70, fixed: true }),
+    'search-slips': () => ({ pos: [1.44, 1.32, 1.1], at: [1.54, .43, -.8], fov: 57, fixed: true }),
+    original: () => ({ pos: [1.39, .73, .43], at: [1.28, .15, -.713], fov: 52, fixed: true }),
+    duplicate: () => ({ pos: [1.75, 1.53, -.19], at: [1.78, .82, -.91], fov: 53, fixed: true }),
     'search-desk': () => ({ pos: [1.72, 2.18, 1.53], at: [1.94, 0.79, -1.19], fov: 62, fixed: true }),
     window: () => ({ pos: [-1.0, 1.55, 0.5], at: [0.5, 1.75, -6], fixed: true }),
     desk: () => ({ pos: [2.1, 1.75, 0.45], at: [1.95, 0.85, -1.2], fixed: true }),

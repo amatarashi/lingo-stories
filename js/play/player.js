@@ -491,9 +491,10 @@ async function fxBeat(b) {
   if (b.fx === 'lights' && b.v === 'off') sfx('hum');
   if (b.fx === 'channel') sfx('click');
   world.fx(b.fx, b.v);
-  if (b.fx === 'demo' || b.fx === 'second-take') {
+  const cueDuration = { demo: 1550, 'second-take': 1550, knocks: 650, 'window-light': 5900 }[b.fx];
+  if (cueDuration) {
     sfx(b.fx);
-    await sleep(1550);
+    await sleep(cueDuration);
   }
 }
 

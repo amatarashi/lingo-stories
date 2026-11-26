@@ -137,6 +137,20 @@ export function duck(on) {
 export function sfx(name) {
   if (!ctx) return;
   switch (name) {
+    case 'knocks':
+      [0, .28].forEach(at => {
+        tone(122, .11, { type: 'triangle', vol: .1, slide: .58, at });
+        tone(405, .047, { type: 'sine', vol: .035, slide: .71, at });
+      });
+      break;
+    case 'window-light': {
+      const melody = [57, 64, 60, 67, 65, 64, 60, 62, 57, 60, 64, 60, 55, 57];
+      const beats = [0, 1, 3.5, 4.5, 6, 7.5, 8.5, 9.5, 11.5, 13, 14, 15, 16, 17.5];
+      const t = ctx.currentTime;
+      melody.forEach((note, i) => epiano(mtof(note), t + beats[i] * .27, i === melody.length - 1 ? 1.1 : .58, .075, master));
+      [45, 41, 43, 45].forEach((note, i) => epiano(mtof(note), t + [0, 6, 11.5, 17.5][i] * .27, 1.1, .056, master));
+      break;
+    }
     case 'demo': case 'second-take': {
       const dates = name === 'demo' ? [0, .23, .48, .78] : [0, .23, .79, 1.09];
       [57, 64, 60, 67].forEach((note, i) => epiano(mtof(note), ctx.currentTime + dates[i], .42, .075, master));

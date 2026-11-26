@@ -13,6 +13,7 @@ export const STORIES = [
       ['A-01', 'Wake Up', 'один на станции, первый сигнал по рации', () => import('./a01.js')],
       ['A-02', 'Heat for Two', 'запусти генератор и помоги Eli согреться', () => import('./a02.js')],
       ['A-03', 'The White Bird', 'расшифруй повторный вызов и найди след команды', () => import('./a03.js')],
+      ['A-04', 'Three Knocks', 'различи два сигнала и помоги команде вернуться', () => import('./a04.js')],
     ],
   },
   {
@@ -24,6 +25,7 @@ export const STORIES = [
     episodes: [
       ['B-01', 'Coffee & Lies · 1', 'кража выручки в кафе', () => import('./b01.js')], ['B-02', 'Coffee & Lies · 2', 'развязка: кто взял деньги?', () => import('./b02.js')],
       ['B-03', 'The Dock Nine File', 'новое дело: квитанция с девятого причала', () => import('./b03.js')],
+      ['B-04', 'The Real Slip', 'сравни две квитанции и найди архив', () => import('./b04.js')],
     ],
   },
   {
@@ -36,6 +38,7 @@ export const STORIES = [
       ['C-01', 'Arrival', 'вокзал, Fiona и кафе The Puffin', () => import('./c01.js')],
       ['C-02', 'The Friday Question', 'вечер викторины и запись Сэма о маяке', () => import('./c02.js')],
       ['C-03', 'The Road to the Light', 'дорога к маяку, книга посетителей и конверт Сэма', () => import('./c03.js')],
+      ['C-04', 'The Friday Signature', 'встреть Сэма и узнай, почему он остался', () => import('./c04.js')],
     ],
   },
   {
@@ -48,6 +51,7 @@ export const STORIES = [
       ['D-01', 'First Day', 'квартира в Камдене, лейбл, кофе на Ките и папарацци', () => import('./d01.js')],
       ['D-02', 'The Deal', 'договорись с Китом об условиях и подготовься к интервью', () => import('./d02.js')],
       ['D-03', 'The Unfinished Track', 'разберись в утечке и допиши строчку с Китом', () => import('./d03.js')],
+      ['D-04', 'One More Take', 'сравни два дубля и закончи песню', () => import('./d04.js')],
     ],
   },
 ].map(s => ({ ...s, episodes: s.episodes.map(([id, title, about, load], i) => ({ id, title, about, load, n: i + 1, story: s.id })) }));

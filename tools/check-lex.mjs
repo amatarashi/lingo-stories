@@ -4,10 +4,10 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const imp = p => import(pathToFileURL(path.join(root, p)).href);
-const files = ['js/content/a01.js', 'js/content/a02.js', 'js/content/a03.js', 'js/content/c01.js', 'js/content/c02.js', 'js/content/c03.js', 'js/content/b01.js', 'js/content/b02.js', 'js/content/b03.js', 'js/content/d01.js', 'js/content/d02.js', 'js/content/d03.js', 'js/content/common.js'];
+import { STORIES } from '../js/content/catalog.js';
 const { lookup, registerWords } = await imp('js/engine/lex.js');
 const { parse } = await imp('js/engine/text.js');
-const mods = await Promise.all(files.map(imp));
+const mods = await Promise.all([imp('js/content/common.js'), ...STORIES.flatMap(s => s.episodes).map(e => e.load())]);
 const words = {};
 for (const m of mods) if (m.default?.words) { registerWords(m.default.words, m.default.id); Object.assign(words, m.default.words); }
 const texts = [];
@@ -23,3 +23,4 @@ for (const t of texts) for (const tok of parse(t)) if (tok.t === 'w') { const r 
 console.log('texts', texts.length);
 console.log('missing:', [...miss].sort().join(', '));
 console.log('bad tracked keys:', [...bad].join(', '));
+if (miss.size || bad.size) process.exitCode = 1;
